@@ -56,35 +56,8 @@ def _decisions(run):
     }
 
 
-def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
-    """Measure actual cold/warm requests; never infer speedups from FLOP counts."""
-    if not 1 <= questions <= 64 or not 1 <= repeats <= 20:
-        raise ValueError("questions must be 1–64 and repeats 1–20")
-    runtime = Runtime(backend)
-    spec = benchmark_context(runtime, context_tokens)
-    definitions = {
-        f"item_{i:02}": {
-            "type": "choice",
-            "question": f"Should item {i:02} be accepted for return under the stated policy?",
-            "options": [
-                {
-                    "id": "accept",
-                    "description": "Accept the return: the item satisfies the policy.",
-                },
-                {"id": "reject", "description": "Reject the return: the item violates the policy."},
-            ],
-        }
-        for i in range(questions)
-    }
-    # Compile kernels on a small independent snapshot before timing the experiment.
-    warm = runtime.compile_context(
-        ContextSpec(state="An unused item was delivered seven days ago.")
-    )
-    warm_request = DecisionRequest(snapshot_id=warm.snapshot.id, questions=definitions)
-    runtime.decide(warm_request)
-    runtime.clear()
-    compiled = runtime.compile_context(spec)
-    request = DecisionRequest(snapshot_id=compiled.snapshot.id, questions=definitions)
+def _strategies(backend):
+    """Name only modes actually implemented by each readout and cache owner."""
     strategies = {
         "fresh_sequential": ("fresh", "selected", True),
         "fresh_batched": ("fresh", "selected", False),
@@ -92,20 +65,53 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         "cached_batched": ("cached", "selected", False),
         "cached_batched_full": ("cached", "full", False),
     }
-    engine_managed = backend.identity.get("backend") == "vllm-metal"
     if getattr(backend, "default_projection", None) == "head":
         strategies = {
             name: (mode, "head", serial)
             for name, (mode, _, serial) in strategies.items()
             if name != "cached_batched_full"
         }
-    if engine_managed:
+    if backend.identity.get("backend") == "vllm-metal":
         strategies = {
             name: (mode, "full", serial)
             for name, (mode, _, serial) in strategies.items()
             if name != "cached_batched_full"
         }
         strategies["cached_exact_repeat"] = ("cached", "full", False)
+    return strategies
+
+
+def _environment():
+    """Record optional dependency versions and hardware independently of measured model work."""
+    versions = {}
+    for package in (
+        "mlx",
+        "mlx-lm",
+        "torch",
+        "transformers",
+        "busbar-runtime",
+        "vllm",
+        "vllm-metal",
+    ):
+        try:
+            versions[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            pass
+    hardware = {"platform": platform.platform(), "machine": platform.machine()}
+    if platform.system() == "Darwin":
+        hardware["chip"] = subprocess.check_output(
+            ["sysctl", "-n", "machdep.cpu.brand_string"], text=True
+        ).strip()
+        hardware["memory_bytes"] = int(
+            subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True)
+        )
+    return versions, hardware
+
+
+def _warm_runs(runtime, spec, request, repeats):
+    """Warm shapes and alternate execution order; reset engine-owned APC before each warm run."""
+    strategies = _strategies(runtime.backend)
+    engine_managed = runtime.backend.identity.get("backend") == "vllm-metal"
     runs = {name: [] for name in strategies}
     # Warm each measured shape, then alternate strategy order to reduce fixed-order bias.
     for mode, projection, serial in strategies.values():
@@ -137,6 +143,11 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
                 file=sys.stderr,
                 flush=True,
             )
+    return runs
+
+
+def _cold_runs(runtime, spec, request, repeats):
+    """Include context creation in each cold observation and retain its final cache metadata."""
     cold = []
     for _ in range(repeats):
         runtime.clear()
@@ -149,7 +160,11 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         run["prefill_tokens"] = compiled.prefill_tokens
         run["computed_tokens"] += compiled.prefill_tokens
         cold.append(run)
-    runs["cold_compile_and_fanout"] = cold
+    return cold, compiled
+
+
+def _summarize(runs):
+    """Compare timings and decisions against the first fresh sequential observation."""
     reference = _decisions(runs["fresh_sequential"][0])
     summary = {}
     for name, measurements in runs.items():
@@ -177,28 +192,42 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
     summary["warm_speedup_vs_fresh_sequential"] = (
         summary["fresh_sequential"]["median_ms"] / summary["cached_batched"]["median_ms"]
     )
-    versions = {}
-    for package in (
-        "mlx",
-        "mlx-lm",
-        "torch",
-        "transformers",
-        "busbar-runtime",
-        "vllm",
-        "vllm-metal",
-    ):
-        try:
-            versions[package] = importlib.metadata.version(package)
-        except importlib.metadata.PackageNotFoundError:
-            pass
-    hardware = {"platform": platform.platform(), "machine": platform.machine()}
-    if platform.system() == "Darwin":
-        hardware["chip"] = subprocess.check_output(
-            ["sysctl", "-n", "machdep.cpu.brand_string"], text=True
-        ).strip()
-        hardware["memory_bytes"] = int(
-            subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True)
-        )
+    return summary
+
+
+def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
+    """Measure actual cold/warm requests; never infer speedups from FLOP counts."""
+    if not 1 <= questions <= 64 or not 1 <= repeats <= 20:
+        raise ValueError("questions must be 1–64 and repeats 1–20")
+    runtime = Runtime(backend)
+    spec = benchmark_context(runtime, context_tokens)
+    definitions = {
+        f"item_{i:02}": {
+            "type": "choice",
+            "question": f"Should item {i:02} be accepted for return under the stated policy?",
+            "options": [
+                {
+                    "id": "accept",
+                    "description": "Accept the return: the item satisfies the policy.",
+                },
+                {"id": "reject", "description": "Reject the return: the item violates the policy."},
+            ],
+        }
+        for i in range(questions)
+    }
+    # Compile kernels on a small independent snapshot before timing the experiment.
+    warm = runtime.compile_context(
+        ContextSpec(state="An unused item was delivered seven days ago.")
+    )
+    warm_request = DecisionRequest(snapshot_id=warm.snapshot.id, questions=definitions)
+    runtime.decide(warm_request)
+    runtime.clear()
+    compiled = runtime.compile_context(spec)
+    request = DecisionRequest(snapshot_id=compiled.snapshot.id, questions=definitions)
+    runs = _warm_runs(runtime, spec, request, repeats)
+    runs["cold_compile_and_fanout"], compiled = _cold_runs(runtime, spec, request, repeats)
+    summary = _summarize(runs)
+    versions, hardware = _environment()
     return {
         "schema_version": 1,
         "model": backend.identity,

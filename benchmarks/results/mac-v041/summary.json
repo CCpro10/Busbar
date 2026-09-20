@@ -1,0 +1,67 @@
+{
+  "busbar_version": "0.4.1",
+  "baseline_commit": "8b3853ebf4007e4120c58d8bd994a755fc6fbd6f",
+  "purpose": "Refactor and bug-fix regression; the small benchmark/profile runs are command validation, not a performance claim.",
+  "ordinary_mac_tests": {
+    "passed": 72,
+    "model_tests_deselected": 2
+  },
+  "actual_model_gates": {
+    "qwen3_06b_mlx_vs_hf": "passed",
+    "existing_heads": [
+      "Qwen3-0.6B",
+      "MiniCPM5-2B",
+      "Qwen3.5-4B"
+    ]
+  },
+  "quality_vs_v04": {
+    "quick": {
+      "rows": 48,
+      "accuracy": 0.8541666666666666,
+      "same_dataset_sha256": "9aa57a07981e5dd67cef261c84c4f14f7d39dd96340698762f26634d29849b76",
+      "selected_changes": 0,
+      "max_candidate_logit_delta": 0.0
+    },
+    "head": {
+      "rows": 48,
+      "accuracy": 0.6875,
+      "same_dataset_sha256": "9aa57a07981e5dd67cef261c84c4f14f7d39dd96340698762f26634d29849b76",
+      "selected_changes": 0,
+      "max_candidate_logit_delta": 0.0
+    }
+  },
+  "retraining": {
+    "epochs": 40,
+    "seed": 42,
+    "best_epoch": 6,
+    "history_identical": true,
+    "weights_sha256_identical": "8c7bdac3797f18d818221ad6feb64a64bd336fafb188581e77fe0250f0f1f9ed"
+  },
+  "warm_start": {
+    "epochs": 2,
+    "best_epoch": 0,
+    "parameter_delta_l2": 0.0,
+    "optimizer_resumed": false,
+    "provenance_splits": [
+      "ancestor.6829a5d5b5cf5cbc70e3f5c69dc2cf728fbbcb875f1c5853ab48385157a7fd28.train",
+      "ancestor.6829a5d5b5cf5cbc70e3f5c69dc2cf728fbbcb875f1c5853ab48385157a7fd28.validation",
+      "train",
+      "validation"
+    ]
+  },
+  "semif_preflight_and_execution": {
+    "rows": 144,
+    "coverage": 1.0
+  },
+  "real_http": {
+    "result": "passed",
+    "events": 17,
+    "fanout_questions": 64,
+    "observed_openapi_version": "0.4.1",
+    "own_server_stopped_cleanly": true
+  },
+  "not_revalidated": [
+    "vLLM Metal real engine; unchanged adapter and its existing numerical limitations remain",
+    "cross-project quality and latency rankings; use historical v03/v04 reports"
+  ]
+}

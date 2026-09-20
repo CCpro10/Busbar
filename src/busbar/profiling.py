@@ -56,6 +56,33 @@ def staged_score(backend, sequences, labels, prefix, projection):
     return phases, hidden, slots
 
 
+def _head_samples(backend, hidden, slots, repeats, rng):
+    """Time readout alone on a real materialized batch, outside the Transformer execution graph."""
+    mx = backend.mx
+    # Use actual, already materialized hidden states. This isolates head execution
+    # from Transformer graph fusion and does not claim an end-to-end speedup.
+    rows = backend.head.weight[mx.array(slots[0])]
+    mx.eval(rows)
+    if any(ids != slots[0] for ids in slots):
+        raise ValueError("head microbenchmark requires a homogeneous candidate set")
+    methods = {
+        "selected_rowwise": lambda: backend._project(hidden, slots, "selected"),
+        "selected_single_matmul": lambda: hidden @ rows.T,
+        "full_vocabulary": lambda: backend._project(hidden, slots, "full"),
+    }
+    head_samples = {key: [] for key in methods}
+    for function in methods.values():
+        mx.eval(function())
+    for _ in range(max(30, repeats)):
+        order = list(methods)
+        rng.shuffle(order)
+        for name in order:
+            mark = time.perf_counter()
+            mx.eval(methods[name]())
+            head_samples[name].append((time.perf_counter() - mark) * 1000)
+    return head_samples
+
+
 def profile(backend, context_tokens=4096, questions=16, repeats=30):
     """Separate scheduling noise from the actual vocabulary head and KV branch work."""
     if (
@@ -103,27 +130,7 @@ def profile(backend, context_tokens=4096, questions=16, repeats=30):
             outputs[projection] = output.logits
             phases, hidden, slots = staged_score(backend, sequences, labels, prefix, projection)
             staged[projection].append(phases)
-    # Use actual, already materialized hidden states. This isolates head execution
-    # from Transformer graph fusion and does not claim an end-to-end speedup.
-    rows = backend.head.weight[mx.array(slots[0])]
-    mx.eval(rows)
-    if any(ids != slots[0] for ids in slots):
-        raise ValueError("head microbenchmark requires a homogeneous candidate set")
-    methods = {
-        "selected_rowwise": lambda: backend._project(hidden, slots, "selected"),
-        "selected_single_matmul": lambda: hidden @ rows.T,
-        "full_vocabulary": lambda: backend._project(hidden, slots, "full"),
-    }
-    head_samples = {key: [] for key in methods}
-    for function in methods.values():
-        mx.eval(function())
-    for _ in range(max(30, repeats)):
-        order = list(methods)
-        rng.shuffle(order)
-        for name in order:
-            mark = time.perf_counter()
-            mx.eval(methods[name]())
-            head_samples[name].append((time.perf_counter() - mark) * 1000)
+    head_samples = _head_samples(backend, hidden, slots, repeats, rng)
     summary = {
         "end_to_end": {name: distribution(values) for name, values in uninstrumented.items()},
         "staged_medians_ms": {

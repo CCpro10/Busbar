@@ -1,7 +1,11 @@
 """Exercise the public HTTP lifecycle rather than individual endpoint implementations."""
 
+from importlib.metadata import version
+
+import pytest
 from fastapi.testclient import TestClient
 
+from busbar.backends.base import BackendResult
 from busbar.server import create_app
 
 
@@ -39,3 +43,48 @@ def test_http_input_errors_do_not_create_state(runtime):
         assert client.post("/v1/contexts", content="{").status_code == 422
         assert client.post("/v1/contexts", json={"state": "x" * 9000}).status_code == 422
         assert runtime.stats()["contexts"] == 0
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        BackendResult([[float("nan"), 0]], 1, 1),
+        BackendResult([[0]], 1, 1),
+        BackendResult([[0, 1]], -1, 1),
+        BackendResult([[0, 1]], 1, 1, details={"bad": float("inf")}),
+        BackendResult([[0, 1]], 1, 1, details={"logit_space": 7}),
+        BackendResult([[0, 1]], 1, 1, details={"probability_status": None}),
+    ],
+)
+def test_bad_backend_output_is_not_reported_as_bad_input(runtime, backend, monkeypatch, bad):
+    """A failed scorer returns 502; callers can reuse the intact snapshot after recovery."""
+    with TestClient(create_app(runtime)) as client:
+        key = client.post("/v1/contexts", json={"state": "x"}).json()["snapshot"]["id"]
+        payload = {"snapshot_id": key, "questions": {"q": {"type": "boolean", "question": "Q"}}}
+        with monkeypatch.context() as patch:
+            patch.setattr(backend, "score", lambda *args: bad)
+            response = client.post("/v1/decisions", json=payload)
+        assert response.status_code == 502
+        assert response.json()["detail"] == "backend returned invalid decision output"
+        assert client.post("/v1/decisions", json=payload).status_code == 200
+
+
+def test_whitespace_candidate_is_rejected_before_inference(runtime, backend):
+    """Both ordinary callers and training data need meaningful candidate descriptions."""
+    with TestClient(create_app(runtime)) as client:
+        key = client.post("/v1/contexts", json={"state": "x"}).json()["snapshot"]["id"]
+        question = {
+            "type": "choice",
+            "question": "Q",
+            "options": [{"id": "a", "description": "Yes"}, {"id": "b", "description": "  \n"}],
+        }
+        response = client.post(
+            "/v1/decisions", json={"snapshot_id": key, "questions": {"q": question}}
+        )
+        assert response.status_code == 422 and not backend.forwards
+
+
+def test_http_schema_version_matches_installed_distribution(runtime):
+    """The public API must report the installed release rather than a stale second constant."""
+    with TestClient(create_app(runtime)) as client:
+        assert client.get("/openapi.json").json()["info"]["version"] == version("busbar-runtime")

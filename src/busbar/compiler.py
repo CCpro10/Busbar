@@ -135,7 +135,8 @@ class CandidateCompiler:
     def __init__(self, tokenizer):
         """Bound candidate text caching and require an explicit end-of-path token."""
         self.tokenizer = tokenizer
-        if not isinstance(tokenizer.eos_token_id, int) or tokenizer.eos_token_id < 0:
+        eos = getattr(tokenizer, "eos_token_id", None)
+        if type(eos) is not int or eos < 0:
             raise ValueError("candidate encoder requires an EOS token")
         self._suffix = lru_cache(maxsize=512)(self._compile_suffix)
 

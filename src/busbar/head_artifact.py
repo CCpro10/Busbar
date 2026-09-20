@@ -2,14 +2,16 @@
 
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import Field
 
 from .compiler import CandidateCompiler, canonical_json
-from .datasets import file_sha256
 from .schemas import Contract
+from .storage import FileSnapshot, file_sha256
+from .storage import write_json as write_json
 
 Sha256 = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 Revision = Annotated[str, Field(pattern=r"^[0-9a-f]{40}$")]
@@ -45,15 +47,37 @@ class DatasetProvenance(Contract):
     fingerprints: list[Sha256] = Field(min_length=1)
 
 
-def read_training_splits(directory: Path) -> dict:
-    """Validate provenance without importing MLX; corrupted reports fail with a clear error."""
-    report = json.loads((directory / "training.json").read_bytes())
+def _parse_training_splits(payload: bytes) -> dict:
+    """Validate the already-verified report bytes without reopening a mutable file path."""
+    report = json.loads(payload)
     splits = report.get("datasets") if isinstance(report, dict) else None
     if not isinstance(splits, dict) or not {"train", "validation"} <= set(splits):
         raise ValueError("head training report requires train and validation provenance")
     return {
         key: DatasetProvenance.model_validate(value).model_dump() for key, value in splits.items()
     }
+
+
+@dataclass(frozen=True)
+class HeadArtifact:
+    """A coherent in-memory version: decoding cannot race with on-disk replacement."""
+
+    manifest: HeadManifest
+    weights: bytes
+    training_splits: dict
+
+
+def read_artifact(directory: Path) -> HeadArtifact:
+    """Verify the exact bytes later consumed by the tensor loader and leakage checks."""
+    manifest, files = _verified_files(directory)
+    return HeadArtifact(
+        manifest, files["head.safetensors"], _parse_training_splits(files["training.json"])
+    )
+
+
+def read_training_splits(directory: Path) -> dict:
+    """Inspect provenance only after verifying the complete artifact's integrity."""
+    return read_artifact(directory).training_splits
 
 
 def overlaps_provenance(rows, split):
@@ -65,20 +89,30 @@ def overlaps_provenance(rows, split):
     )
 
 
-def read_manifest(directory: Path) -> HeadManifest:
-    """Accept only a complete artifact; fixed file names prevent manifest path traversal."""
+def _verified_files(directory: Path) -> tuple[HeadManifest, dict[str, bytes]]:
+    """Fixed filenames and digest checks bind each captured file to one manifest version."""
     manifest_path = directory / "manifest.json"
     if not manifest_path.is_file():
         raise ValueError(f"incomplete head artifact: {manifest_path} is missing")
     manifest = HeadManifest.model_validate_json(manifest_path.read_bytes())
+    files = {}
     for filename, expected in (
         ("head.safetensors", manifest.weights_sha256),
         ("training.json", manifest.training_sha256),
     ):
         path = directory / filename
-        if not path.is_file() or file_sha256(path) != expected:
+        if not path.is_file():
             raise ValueError(f"head artifact integrity failure: {filename}")
-    return manifest
+        snapshot = FileSnapshot.read(path)
+        if snapshot.sha256 != expected:
+            raise ValueError(f"head artifact integrity failure: {filename}")
+        files[filename] = snapshot.payload
+    return manifest, files
+
+
+def read_manifest(directory: Path) -> HeadManifest:
+    """Inspect metadata after checking all file hashes; does not import accelerator code."""
+    return _verified_files(directory)[0]
 
 
 def check_compatibility(manifest: HeadManifest, *, model=None, revision=None, dtype=None):
@@ -90,8 +124,19 @@ def check_compatibility(manifest: HeadManifest, *, model=None, revision=None, dt
             )
 
 
-def write_json(path: Path, value):
-    """Create artifact files exclusively; existing versions are never silently replaced."""
-    with path.open("x") as file:
-        json.dump(value, file, indent=2, ensure_ascii=False, allow_nan=False)
-        file.write("\n")
+def publish_head(
+    directory: Path, head, identity: dict, hidden_size: int, report: dict
+) -> HeadManifest:
+    """Publish the manifest last to mark an exclusively owned version as ready."""
+    head.save_weights(str(directory / "head.safetensors"))
+    write_json(directory / "training.json", report)
+    manifest = HeadManifest(
+        model=identity["model"],
+        revision=identity["revision"],
+        dtype=identity["dtype"],
+        hidden_size=hidden_size,
+        weights_sha256=file_sha256(directory / "head.safetensors"),
+        training_sha256=file_sha256(directory / "training.json"),
+    )
+    write_json(directory / "manifest.json", manifest.model_dump())
+    return manifest

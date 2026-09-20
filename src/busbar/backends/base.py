@@ -1,5 +1,7 @@
 """The backend boundary owns physical KV state; the runtime owns semantic snapshot lifetime."""
 
+import json
+import math
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
@@ -32,6 +34,35 @@ class BackendResult:
     # None preserves exact native-KV accounting for the MLX/HF backends.
     reused_tokens: int | None = None
     details: dict = field(default_factory=dict)
+
+
+class BackendOutputError(RuntimeError):
+    """A scorer violated its output contract; the caller's input is not responsible."""
+
+
+def validate_result(result: BackendResult, labels: list[tuple[int, ...]]) -> None:
+    """Reject malformed scores and counters before producing any public decision response."""
+    try:
+        if len(result.logits) != len(labels):
+            raise ValueError("wrong number of readout paths")
+        for scores, slots in zip(result.logits, labels, strict=True):
+            if len(scores) != len(slots) or any(
+                isinstance(value, bool) or not math.isfinite(value) for value in scores
+            ):
+                raise ValueError("invalid candidate scores")
+        counters = [result.computed_tokens, result.batches]
+        if result.reused_tokens is not None:
+            counters.append(result.reused_tokens)
+        if any(type(value) is not int or value < 0 for value in counters):
+            raise ValueError("invalid token or batch counters")
+        if not isinstance(result.details, dict):
+            raise ValueError("backend details must be a JSON object")
+        for key in ("logit_space", "probability_status"):
+            if key in result.details and not isinstance(result.details[key], str):
+                raise ValueError(f"backend {key} must be a string")
+        json.dumps(result.details, allow_nan=False)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise BackendOutputError(f"backend returned invalid output: {error}") from error
 
 
 class Backend(Protocol):

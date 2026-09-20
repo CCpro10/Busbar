@@ -10,6 +10,7 @@ jobs:
           python-version: '3.13'
       - run: uv sync --locked --extra dev
       - run: uv run ruff check .
+      - run: uv run ruff check src --select C901 --config 'lint.mccabe.max-complexity=10'
       - run: uv run ruff format --check .
       - run: uv run pytest -m 'not model'
       - run: uv build

@@ -7,7 +7,8 @@ from pathlib import Path
 
 from .backends import DEFAULT_MODEL, load_backend
 from .runtime import Runtime
-from .schemas import ContextSpec, DecisionRequest
+from .schemas import DecisionInput, DecisionRequest
+from .storage import write_json
 
 
 def parser() -> argparse.ArgumentParser:
@@ -82,95 +83,117 @@ def parser() -> argparse.ArgumentParser:
     return result
 
 
-def main():
-    """Emit machine-readable results; invalid configuration fails with a concise nonzero exit."""
-    args = parser().parse_args()
+def _load_backend(args):
+    """Translate shared CLI options at one boundary while keeping optional imports lazy."""
+    options = {"batch_size": args.batch_size, "max_tokens": args.max_tokens}
+    if args.backend == "vllm-metal":
+        options["memory_fraction"] = args.memory_fraction
+    if args.dtype:
+        options["dtype"] = args.dtype
+    return load_backend(args.backend, args.model, args.revision, head=args.head, **options)
+
+
+def _run_command(args):
+    """Validate all one-shot questions before loading a model or creating context state."""
+    payload = DecisionInput.model_validate_json(args.input.read_bytes())
+    runtime = Runtime(_load_backend(args))
+    context = runtime.compile_context(payload.context)
+    decision = runtime.decide(
+        DecisionRequest(
+            snapshot_id=context.snapshot.id,
+            namespace=payload.context.namespace,
+            questions=payload.questions,
+            mode=args.mode,
+            projection=args.projection,
+        )
+    )
+    return {"context": context.model_dump(), "result": decision.model_dump()}
+
+
+def _serve_command(args):
+    """Serve one resident runtime; the worker count must preserve ownership of its cache."""
+    import uvicorn
+
+    from .server import create_app
+
+    runtime = Runtime(
+        _load_backend(args),
+        max_contexts=args.max_contexts,
+        max_cache_bytes=args.cache_mib * 1024 * 1024,
+        ttl_seconds=args.ttl,
+    )
+    uvicorn.run(create_app(runtime), host="127.0.0.1", port=args.port, workers=1)
+
+
+def _evaluate_command(args):
+    """Preflight the whole dataset before model loading; reuse those exact rows for evaluation."""
+    from .evaluation import evaluate, prepare_evaluation
+
+    inputs = prepare_evaluation(args.input, args.format)
+    if args.allow_training_data and args.format != "native":
+        raise ValueError("training-data override is native-only")
+    return evaluate(
+        _load_backend(args),
+        inputs,
+        args.mode,
+        args.projection,
+        data_format=args.format,
+        allow_training_data=args.allow_training_data,
+    )
+
+
+def _measure_command(args):
+    """Choose an implemented latency experiment without duplicating backend setup."""
+    from .benchmark import benchmark
+    from .profiling import profile
+
+    if args.command == "profile" and (args.head or args.backend != "mlx"):
+        raise ValueError("vocabulary phase profiling requires the native MLX vocabulary scorer")
+    measure = profile if args.command == "profile" else benchmark
+    return measure(_load_backend(args), args.context_tokens, args.questions, args.repeats)
+
+
+def _train_command(args):
+    """Keep training configuration validation separate from the accelerator implementation."""
+    from .training import TrainingConfig, train_head
+
+    config = TrainingConfig(**{name: getattr(args, name) for name in TrainingConfig.model_fields})
+    return train_head(
+        args.input,
+        args.validation,
+        args.output,
+        model=args.model,
+        revision=args.revision,
+        dtype=args.dtype,
+        init_head=args.init_head,
+        config=config,
+        batch_size=args.batch_size,
+        max_tokens=args.max_tokens,
+    )
+
+
+def main(argv=None):
+    """Dispatch a command and publish complete reports; expected input errors exit with code 2."""
+    args = parser().parse_args(argv)
+    handlers = {
+        "run": _run_command,
+        "serve": _serve_command,
+        "evaluate": _evaluate_command,
+        "train-head": _train_command,
+        "benchmark": _measure_command,
+        "profile": _measure_command,
+    }
     try:
         if hasattr(args, "output") and args.output.exists():
             raise ValueError("output already exists; choose a new path or version directory")
-        if args.command == "train-head":
-            from .training import TrainingConfig, train_head
-
-            config = TrainingConfig(
-                **{name: getattr(args, name) for name in TrainingConfig.model_fields}
-            )
-            report = train_head(
-                args.input,
-                args.validation,
-                args.output,
-                model=args.model,
-                revision=args.revision,
-                dtype=args.dtype,
-                init_head=args.init_head,
-                config=config,
-                batch_size=args.batch_size,
-                max_tokens=args.max_tokens,
-            )
-            print(json.dumps(report, indent=2))
+        report = handlers[args.command](args)
+        if report is None:
             return
-        options = {"batch_size": args.batch_size, "max_tokens": args.max_tokens}
-        if args.backend == "vllm-metal":
-            options["memory_fraction"] = args.memory_fraction
-        if args.dtype:
-            options["dtype"] = args.dtype
-        backend = load_backend(args.backend, args.model, args.revision, head=args.head, **options)
-        if args.command == "serve":
-            import uvicorn
-
-            from .server import create_app
-
-            runtime = Runtime(
-                backend,
-                max_contexts=args.max_contexts,
-                max_cache_bytes=args.cache_mib * 1024 * 1024,
-                ttl_seconds=args.ttl,
-            )
-            uvicorn.run(create_app(runtime), host="127.0.0.1", port=args.port, workers=1)
-        elif args.command == "run":
-            payload = json.loads(args.input.read_text())
-            if set(payload) != {"context", "questions"}:
-                raise ValueError("input requires exactly context and questions")
-            runtime = Runtime(backend)
-            context = ContextSpec.model_validate(payload["context"])
-            compiled = runtime.compile_context(context)
-            request = DecisionRequest(
-                snapshot_id=compiled.snapshot.id,
-                namespace=context.namespace,
-                questions=payload["questions"],
-                mode=args.mode,
-                projection=args.projection,
-            )
-            decision = runtime.decide(request)
-            print(
-                json.dumps(
-                    {"context": compiled.model_dump(), "result": decision.model_dump()}, indent=2
-                )
-            )
-        else:
-            if args.command == "evaluate":
-                from .evaluation import evaluate
-
-                report = evaluate(
-                    backend,
-                    args.input,
-                    args.mode,
-                    args.projection,
-                    data_format=args.format,
-                    allow_training_data=args.allow_training_data,
-                )
-            elif args.command == "profile":
-                from .profiling import profile
-
-                report = profile(backend, args.context_tokens, args.questions, args.repeats)
-            else:
-                from .benchmark import benchmark
-
-                report = benchmark(backend, args.context_tokens, args.questions, args.repeats)
+        if args.command in ("evaluate", "benchmark", "profile"):
             args.output.parent.mkdir(parents=True, exist_ok=True)
-            with args.output.open("x") as file:
-                json.dump(report, file, indent=2)
-                file.write("\n")
-            print(json.dumps(report["summary"], indent=2))
+            write_json(args.output, report)
+            report = report["summary"]
+        print(json.dumps(report, indent=2, allow_nan=False))
     except (ValueError, OSError, ImportError) as exc:
         print(f"busbar: {exc}", file=sys.stderr)
         raise SystemExit(2) from None

@@ -62,6 +62,15 @@ def test_candidate_paths_keep_ids_and_order_out_of_model_input(backend):
     assert all(path.label_ids == (0,) and path.token_ids[-1] == 0 for path in original.paths)
 
 
+@pytest.mark.parametrize("attributes", [{}, {"eos_token_id": None}, {"eos_token_id": True}])
+def test_candidate_encoder_requires_a_real_eos_token(attributes):
+    """Unsupported tokenizers fail with an input error instead of AttributeError or token True."""
+    from types import SimpleNamespace
+
+    with pytest.raises(ValueError, match="EOS token"):
+        CandidateCompiler(SimpleNamespace(**attributes))
+
+
 def test_candidate_fanout_regroups_three_types_and_accounts_every_path(backend, questions):
     """A cached question with K options reuses K prefix branches without altering the snapshot."""
     runtime = Runtime(candidate_backend(backend))

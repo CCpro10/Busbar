@@ -1,15 +1,18 @@
 """Reproducible scoring of SemIf-compatible, provenance-preserving labeled JSONL."""
 
-import hashlib
 import math
 import statistics
 import time
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
 from .compiler import alternatives, canonical_json
+from .datasets import LabeledDecision, SemIfExample, parse_dataset
+from .head_artifact import overlaps_provenance
 from .runtime import Runtime
-from .schemas import ChoiceQuestion, ContextSpec, DecisionRequest
+from .schemas import ContextSpec, DecisionRequest
+from .storage import FileSnapshot
 
 
 def metrics(records: list[dict]) -> dict:
@@ -62,91 +65,75 @@ def metrics(records: list[dict]) -> dict:
     return result
 
 
-def _evaluation_groups(backend, source, data_format, allow_training_data):
-    """Normalize public datasets while retaining the exact context instructions and labels."""
-    import json
+@dataclass(frozen=True)
+class EvaluationInput:
+    """Validated rows and provenance captured before the CLI loads a heavyweight backend."""
 
+    source: FileSnapshot
+    data_format: str
+    rows: tuple[LabeledDecision | SemIfExample, ...]
+
+
+def prepare_evaluation(source: Path, data_format="semif") -> EvaluationInput:
+    """Reject every malformed row, including the last, without any model execution."""
+    formats = {"native": LabeledDecision, "semif": SemIfExample}
+    if data_format not in formats:
+        raise ValueError("expected semif or native dataset format")
+    snapshot = FileSnapshot.read(source)
+    return EvaluationInput(
+        snapshot, data_format, tuple(parse_dataset(snapshot, formats[data_format]))
+    )
+
+
+def _evaluation_groups(backend, inputs: EvaluationInput, allow_training_data):
+    """Map validated records to runtime questions after checking native training leakage."""
+    if allow_training_data and inputs.data_format != "native":
+        raise ValueError("training-data override is native-only")
+    if inputs.data_format == "native" and not allow_training_data:
+        for split in getattr(backend, "training_splits", {}).values():
+            if overlaps_provenance(inputs.rows, split):
+                raise ValueError(
+                    "evaluation overlaps head training/validation data; "
+                    "use held-out data or explicitly --allow-training-data"
+                )
     groups = defaultdict(list)
-    if data_format == "native":
-        from .datasets import read_dataset
-        from .head_artifact import overlaps_provenance
-
-        rows = read_dataset(source)
-        if not allow_training_data:
-            for split in getattr(backend, "training_splits", {}).values():
-                if overlaps_provenance(rows, split):
-                    raise ValueError(
-                        "evaluation overlaps head training/validation data; "
-                        "use held-out data or explicitly --allow-training-data"
-                    )
-        for item in rows:
+    for item in inputs.rows:
+        if isinstance(item, LabeledDecision):
+            context, question = item.context, item.question
             row = {
                 "id": item.id,
-                "family": item.question.type,
+                "family": question.type,
                 "group_id": item.group_id,
                 "label": item.gold_index,
-                "options": [{"id": key} for key, _ in alternatives(item.question)],
+                "options": [{"id": key} for key, _ in alternatives(question)],
             }
-            groups[canonical_json(item.context.model_dump())].append((row, item.question))
-        return groups
-    if data_format != "semif" or allow_training_data:
-        raise ValueError("expected semif or native format; training override is native-only")
-    rows = [json.loads(line) for line in source.read_bytes().splitlines() if line.strip()]
-    if not rows or len({row["id"] for row in rows}) != len(rows):
-        raise ValueError("evaluation needs nonempty rows with unique IDs")
-    for row in rows:
-        question = ChoiceQuestion(type="choice", question=row["question"], options=row["options"])
-        if (
-            isinstance(row["label"], bool)
-            or not isinstance(row["label"], int)
-            or not 0 <= row["label"] < len(question.options)
-        ):
-            raise ValueError(f"invalid gold label: {row['id']}")
-        groups[canonical_json(ContextSpec(state=row["state"]).model_dump())].append((row, question))
+        else:
+            context, question = ContextSpec(state=item.state), item.as_question()
+            row = item.model_dump()
+        groups[canonical_json(context.model_dump())].append((row, question))
     return groups
 
 
-def evaluate(
-    backend,
-    source: Path,
-    mode="cached",
-    projection="auto",
-    *,
-    data_format="semif",
-    allow_training_data=False,
-) -> dict:
-    """Run all frozen rows, grouping identical states while keeping per-row gold provenance."""
+def _score_group(runtime, context_json, group, mode, projection):
+    """Run one shared context; deletion in finally also releases it after a backend failure."""
     import json
 
-    payload = source.read_bytes()
-    groups = _evaluation_groups(backend, source, data_format, allow_training_data)
-    runtime = Runtime(backend)
-    # Warm an unrelated request; it is excluded from both accuracy and elapsed time.
-    warm = runtime.compile_context(ContextSpec(state="The box is blue."))
-    runtime.decide(
-        DecisionRequest(
-            snapshot_id=warm.snapshot.id,
-            projection=projection,
-            questions={"warm": {"type": "boolean", "question": "Is the box blue?"}},
-        )
-    )
-    runtime.clear()
-    results, timings = [], []
     started = time.perf_counter()
-    for context_json, group in groups.items():
-        mark = time.perf_counter()
-        spec = ContextSpec.model_validate(json.loads(context_json))
-        compiled = runtime.compile_context(spec)
+    spec = ContextSpec.model_validate(json.loads(context_json))
+    compiled = runtime.compile_context(spec)
+    results, timings = [], []
+    try:
         for start in range(0, len(group), 64):
             batch = group[start : start + 64]
-            request = DecisionRequest(
-                snapshot_id=compiled.snapshot.id,
-                namespace=spec.namespace,
-                questions={row["id"]: question for row, question in batch},
-                mode=mode,
-                projection=projection,
+            output = runtime.decide(
+                DecisionRequest(
+                    snapshot_id=compiled.snapshot.id,
+                    namespace=spec.namespace,
+                    questions={row["id"]: question for row, question in batch},
+                    mode=mode,
+                    projection=projection,
+                )
             )
-            output = runtime.decide(request)
             timings.append(
                 {
                     "rows": len(batch),
@@ -172,8 +159,45 @@ def evaluate(
                         **decision.model_dump(),
                     }
                 )
+    finally:
         runtime.delete_context(compiled.snapshot.id, spec.namespace)
-        timings[-1]["state_wall_ms"] = (time.perf_counter() - mark) * 1000
+    timings[-1]["state_wall_ms"] = (time.perf_counter() - started) * 1000
+    return results, timings
+
+
+def evaluate(
+    backend,
+    source: Path | EvaluationInput,
+    mode="cached",
+    projection="auto",
+    *,
+    data_format="semif",
+    allow_training_data=False,
+) -> dict:
+    """Run all frozen rows, grouping identical states while keeping per-row gold provenance."""
+    inputs = (
+        source if isinstance(source, EvaluationInput) else prepare_evaluation(source, data_format)
+    )
+    if inputs.data_format != data_format:
+        raise ValueError("prepared evaluation format does not match requested format")
+    groups = _evaluation_groups(backend, inputs, allow_training_data)
+    runtime = Runtime(backend)
+    # Warm an unrelated request; it is excluded from both accuracy and elapsed time.
+    warm = runtime.compile_context(ContextSpec(state="The box is blue."))
+    runtime.decide(
+        DecisionRequest(
+            snapshot_id=warm.snapshot.id,
+            projection=projection,
+            questions={"warm": {"type": "boolean", "question": "Is the box blue?"}},
+        )
+    )
+    runtime.clear()
+    results, timings = [], []
+    started = time.perf_counter()
+    for context_json, group in groups.items():
+        predictions, measurements = _score_group(runtime, context_json, group, mode, projection)
+        results.extend(predictions)
+        timings.extend(measurements)
     elapsed = time.perf_counter() - started
     families = defaultdict(list)
     for row in results:
@@ -188,8 +212,8 @@ def evaluate(
     return {
         "schema_version": 1,
         "model": backend.identity,
-        "input_name": source.name,
-        "input_sha256": hashlib.sha256(payload).hexdigest(),
+        "input_name": inputs.source.path.name,
+        "input_sha256": inputs.source.sha256,
         "data_format": data_format,
         "allow_training_data": allow_training_data,
         "mode": mode,

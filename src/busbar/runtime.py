@@ -5,7 +5,7 @@ import time
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from .backends.base import Backend, PrefixState
+from .backends.base import Backend, BackendResult, PrefixState, validate_result
 from .compiler import Compiler, context_id, read_decision
 from .schemas import CompileResult, ContextSpec, DecisionRequest, DecisionResult, Snapshot
 
@@ -50,7 +50,7 @@ class Runtime:
         self.max_cache_bytes = max_cache_bytes
         self.ttl_seconds = ttl_seconds
         self._entries: OrderedDict[str, _Entry] = OrderedDict()
-        # ponytail: one model operation at a time; a server scheduler belongs in a later backend.
+        # Serialize model operations; each backend owns any scheduling within a fanout.
         self._lock = threading.RLock()
         self._bytes = 0
         self._hits = self._misses = self._evictions = self._expirations = 0
@@ -199,6 +199,29 @@ class Runtime:
                 ),
             }
 
+    def _compile_questions(self, request, entry):
+        """Validate every candidate path before submitting a single forward pass."""
+        compiled = [self.compiler.question(question) for question in request.questions.values()]
+        paths = [path for question in compiled for path in question.paths]
+        if any(len(entry.tokens) + len(path.token_ids) > self.backend.max_tokens for path in paths):
+            raise ValueError("context plus question exceeds token limit; input was not truncated")
+        return compiled, paths
+
+    @staticmethod
+    def _read_decisions(request, compiled, output: BackendResult):
+        """Regroup one vocabulary path or several scalar paths into each public question."""
+        paths = [path for question in compiled for path in question.paths]
+        validate_result(output, [path.label_ids for path in paths])
+        decisions, offset = {}, 0
+        for (name, question), encoded in zip(request.questions.items(), compiled, strict=True):
+            end = offset + len(encoded.paths)
+            scores = [value for row in output.logits[offset:end] for value in row]
+            decisions[name] = read_decision(question, scores).model_copy(
+                update={"logit_space": output.details.get("logit_space", "raw_logits")}
+            )
+            offset = end
+        return decisions
+
     def decide(self, request: DecisionRequest | dict) -> DecisionResult:
         """Validate the complete fanout before execution; return no partial answers."""
         started = time.perf_counter()
@@ -207,14 +230,7 @@ class Runtime:
         with self._lock:
             entry = self._entry(request.snapshot_id, request.namespace)
             mark = time.perf_counter()
-            compiled = [self.compiler.question(q) for q in request.questions.values()]
-            paths = [path for question in compiled for path in question.paths]
-            if any(
-                len(entry.tokens) + len(path.token_ids) > self.backend.max_tokens for path in paths
-            ):
-                raise ValueError(
-                    "context plus question exceeds token limit; input was not truncated"
-                )
+            compiled, paths = self._compile_questions(request, entry)
             cached = request.mode == "cached"
             projection = request.projection
             if projection == "auto":
@@ -229,23 +245,7 @@ class Runtime:
                 projection,
             )
             inference_ms = (time.perf_counter() - mark) * 1000
-            if len(output.logits) != len(paths) or any(
-                len(scores) != len(path.label_ids)
-                for scores, path in zip(output.logits, paths, strict=True)
-            ):
-                raise RuntimeError("backend returned the wrong number of readout scores")
-            # Group scalar candidate paths back into one categorical decision.
-            grouped, offset = [], 0
-            for question in compiled:
-                end = offset + len(question.paths)
-                grouped.append([value for scores in output.logits[offset:end] for value in scores])
-                offset = end
-            decisions = {
-                name: read_decision(question, logits).model_copy(
-                    update={"logit_space": output.details.get("logit_space", "raw_logits")}
-                )
-                for (name, question), logits in zip(request.questions.items(), grouped, strict=True)
-            }
+            decisions = self._read_decisions(request, compiled, output)
             self._touch(entry)
             return DecisionResult(
                 snapshot_id=entry.id,

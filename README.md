@@ -1,182 +1,111 @@
 # Busbar
 
-A context-reuse decision runtime for LLM agents.
+**让应用基于同一份上下文，反复完成结构化判断。**
 
-Busbar 把上下文编译成可复用的 `ContextSnapshot`：后续 Boolean、Choice、Score 判断复用共同前缀。面向 Apple Silicon Mac，新增 MiniCPM5-2B（实际约 2.52B）和 Qwen3.5-4B；MLX 使用独立缓存分支，vLLM Metal 使用引擎的分页前缀缓存，HF/PyTorch 提供 CPU 正确性参考。
+Busbar 是一个可在 Apple Silicon Mac 上运行的开源 LLM 决策运行时。应用提交上下文后，Busbar 将它编译成可复用的 `ContextSnapshot`；后续问题复用模型已经算过的前缀，返回布尔判断、单选结果或带分布的数值评分。
 
-**两种接入方式：** 默认通过现有词表候选行直接评分，无需训练；也可以接入 NanoJev 风格的**可训练选择头**，让每个候选描述经过底座，再由共享评分层输出结果。0.4 已打通原生 MLX 上的训练、验证、保存、重载、继续训练和 HTTP 服务；三种决策 API 相同。选型、数据格式与完整命令见 [选择头指南](docs/trainable-heads.md)，实测对照见 [0.4 报告](docs/mac-v04.md)。
-
-M4 Pro、48 GiB 本机实测，相同 BF16 和 Busbar 提示词，Qwen3.5-4B 在 SemIf authored144 / 外部 WANLI256 上准确率为 **89.58% / 67.97%**，Qwen2.5-3B 为 68.75% / 55.47%，MiniCPM5 为 72.92% / 52.34%。新版模型的综合榜单能力不等于单步决策能力；本场景优先推荐 Qwen3.5-4B。SemIf、NanoJev 的真实交叉对照、速度与质量边界见 [0.3 本机报告](docs/mac-v03.md)。历史结果：[0.2](docs/mac-v02.md)、[0.1](docs/acceptance.md)。
+例如，一份客服工单可以同时用于判断“是否重复扣款”、选择“交给哪个团队”、评估“处理优先级”。应用负责定义问题和候选描述、执行后续业务动作，Busbar 负责模型计算、上下文复用和结构化结果。它适合工单分流、规则判断、候选筛选等有限选项任务；需要长文本创作或自由对话时，仍应使用生成接口。
 
 ```text
-Context JSON → 稳定序列化与分词 → 一次 prefill → ContextSnapshot
-                                                   ├── question 1 → decision
-                                                   ├── question 2 → decision
-                                                   └── question N → decision
+业务上下文 → 分词与一次 prefill → ContextSnapshot
+                                  ├─ Boolean：是否需要退款？
+                                  ├─ Choice：交给哪个团队？
+                                  └─ Score：处理优先级是多少？
 ```
 
-## 在 Mac 上运行
+## 两种接入方式
 
-需要 Apple Silicon、macOS 15+、Python 3.11–3.13 和 [uv](https://docs.astral.sh/uv/)。首次运行会从 Hugging Face 下载约 1.2 GB 的模型权重；权重保存在用户的 Hugging Face 缓存中，不进入本仓库。
+| | 快捷模式 | 可训练选择头 |
+|---|---|---|
+| 如何得到分数 | 读取已有词表 A/B/C/D 等标签的分数 | 每个候选描述经过底座，再由共享评分层打分 |
+| 是否需要训练 | 不需要 | 需要标注数据；冻结底座，只训练小头 |
+| 适合什么情况 | 现有指令模型已经能理解任务，先快速接入 | 有任务数据，需要学习自己的判断规则或偏好 |
+| 支持后端 | MLX、HF/PyTorch、vLLM Metal | 原生 MLX |
+| 应用接口 | 共用 Boolean / Choice / Score 与 snapshot 生命周期 | 同左 |
+
+原生 MLX/HF 可以只计算标签对应的词表行。选择头采用 NanoJev 风格的候选描述评分：`zᵢ = wᵀ LayerNorm(hᵢ)`，再在候选之间做 softmax。两条路线都复用上下文，但选择头有 K 个候选就要运行 K 条后缀路径，**不能仅凭输出层更小就认定更快或更准**。编码、训练及取舍见 [选择头指南](docs/trainable-heads.md)。
+
+## 在 Mac 上开始
+
+需要 Apple Silicon、macOS 15+、Python 3.11–3.13 和 [uv](https://docs.astral.sh/uv/)。
 
 ```bash
 git clone https://github.com/CCpro10/Busbar.git
 cd Busbar
-uv sync --extra mlx --extra dev
+uv sync --locked --extra mlx
 uv run busbar run examples/returns.json
 ```
 
-默认固定模型 `Qwen/Qwen3-0.6B`、revision `c1899de289a04d12100db370d81485cdf75e47ca`，MLX 使用 FP16，关闭额外思考与文本生成。输入、模型权重和推理均在本机；下载模型需要网络。
-
-运行较强的模型（均未量化，本机 48 GiB 内存已验证）：
+默认加载固定 revision 的 Qwen3-0.6B，首次下载约 1.2 GB 权重；之后模型和输入均在本机运行。返回结果包含每个候选的分数、概率、最终取值，以及实际计算/复用 token 数和耗时。较大模型已在 M4 Pro、48 GiB Mac 上验证：
 
 ```bash
-uv run busbar run examples/returns.json --model Qwen/Qwen3.5-4B --dtype bfloat16
 uv run busbar run examples/returns.json --model openbmb/MiniCPM5-2B --dtype bfloat16
+uv run busbar run examples/returns.json --model Qwen/Qwen3.5-4B --dtype bfloat16
 ```
 
-这两个型号都内置了不可变 revision。MiniCPM5 下载约 5 GB；Qwen3.5 下载约 9.3 GB 的官方多模态 checkpoint，原生后端只加载文本模型，不提供视觉接口。其他型号必须显式指定 `--revision`；默认仍保留 0.6B，避免升级后自动触发大模型下载。
+MiniCPM5 实际约 2.52B；Qwen3.5 加载官方 checkpoint 的文本部分。它们均未量化，内存需求高于默认 0.6B。安装、下载体积、HF 参考路径、vLLM Metal 独立环境与已知限制见 [后端指南](docs/backends.md)。
 
-## vLLM Metal
-
-使用独立 Python 3.12 环境，避免 vLLM Metal 原生扩展需要的 MLX 版本与原生后端依赖冲突：
-
-```bash
-bash scripts/setup-metal.sh
-.venv-metal/bin/busbar run examples/returns.json \
-  --backend vllm-metal --model openbmb/MiniCPM5-2B
-.venv-metal/bin/busbar serve --backend vllm-metal \
-  --model openbmb/MiniCPM5-2B --port 8787
-```
-
-安装脚本使用官方 vLLM 0.29.0 / vLLM Metal 0.29.0 wheels，完整依赖版本记录在 `requirements-metal.lock`；安装后执行依赖兼容性检查。默认 BF16，`--memory-fraction 0.35` 限制引擎缓存预算。后端通过只读 worker 扩展验证真实权重类型，避免当前插件保留 BF16 权重、但命令行声称 FP16 的情况；MLX 对照跑分也要指定 `--dtype bfloat16`。先停掉同端口的旧服务，再启动新后端。
-
-此后端真实执行完整词表头，每题请求一个生成 token，同时读取所有候选 token 的原始 log probabilities，随后在候选内重新归一化。它们与原始 logits 相差一个共同常数，softmax 比例保持一致；响应以 `logit_space="vocabulary_logprobs"` 标注。`projection="auto"` 自动选择 `full`；显式要求 `selected` 会拒绝，不声称已实现候选行投影。
-
-**MiniCPM5 的 Metal 缓存模式仍有限制：** 原始退货示例重复请求时，Score 最大概率变化约 0.122，最高分等级发生变化，严格数值门禁未通过。17 项 HTTP 功能流程可以完成；`mode="fresh"` 的两次实测结果一致，但会失去前缀复用收益。现阶段优先使用 Qwen3.5-4B＋MLX；不要把 MiniCPM5/Metal 的“可以运行”理解成已保证缓存命中前后的数值稳定。失败记录与复现见 [0.3 报告](docs/mac-v03.md)。
-
-**已知上游退出问题：** 当前 macOS 15.6.1 + PyTorch 2.13.0 环境在引擎退出清理时可能发生 `empty_host_cache()` 段错误；独立调用也能复现，上游 [#765](https://github.com/vllm-project/vllm-metal/pull/765) 记录了同类问题。推理与常驻服务可工作，暂不宣称干净的 worker 退出。没有修改依赖源码或屏蔽错误。
-
-## Python：先编译，再反复判断
+## 接入 Python 或 HTTP
 
 ```python
-from busbar import Runtime, ContextSpec, DecisionRequest
+from busbar import ContextSpec, DecisionRequest, Runtime
 from busbar.backends import load_backend
 
 runtime = Runtime(load_backend("mlx"))
 context = runtime.compile_context(
-    ContextSpec(
-        namespace="session-1",
-        state={"delivered_days_ago": 7, "unused": True},
-    )
+    ContextSpec(namespace="ticket-1", state={"message": "我只付款一次，银行卡却扣了两次"})
 )
-answer = runtime.decide(
+result = runtime.decide(
     DecisionRequest(
-        namespace="session-1",
+        namespace="ticket-1",
         snapshot_id=context.snapshot.id,
         questions={
-            "unused": {
+            "billing": {
                 "type": "boolean",
-                "question": "Is the item unused?",
+                "question": "这条诉求是否需要支付或账单团队处理？",
             }
         },
     )
 )
-print(answer.model_dump_json(indent=2))
-runtime.delete_context(context.snapshot.id, namespace="session-1")
+print(result.decisions["billing"].model_dump())
+# 后续问题继续使用 context.snapshot.id；结束后可主动释放。
+runtime.delete_context(context.snapshot.id, namespace="ticket-1")
 ```
 
-相同 namespace、模型版本、指令和 JSON 内容会复用同一个 snapshot；JSON 对象的字段顺序不影响身份。问题不会写回 context。更新 state 时创建新版本，旧版本在未过期或被淘汰时仍可用于回退。删除后再调用会明确报错，重新提交原 state 即可重建。
+需要跨 HTTP 请求保留模型与缓存时，运行 `uv run busbar serve --port 8787`，打开 [本机接口文档](http://127.0.0.1:8787/docs)。先 `POST /v1/contexts`，再用返回的 ID 调用 `POST /v1/decisions`；一次可混合 1–64 道题。上下文支持创建、复用、版本化、列表/筛选、删除和 namespace 清理。
 
-## HTTP：让模型和缓存跨请求驻留
+Choice 支持 2–16 个带 ID 与描述的选项；Score 支持 2–16 个带描述的递增数值等级，返回概率加权期望。概率是候选集合内的归一化分数，未经业务校准；熵也不代表正确率。[接口指南](docs/api.md) 解释完整字段、生命周期、错误码与内存约束。
+
+## 训练自己的选择头
 
 ```bash
-uv run busbar serve --port 8787
+uv run busbar train-head examples/trainable_support/train.jsonl \
+  --validation examples/trainable_support/validation.jsonl \
+  --output models/heads/support-v1 --epochs 40
+
+uv run busbar evaluate examples/trainable_support/test.jsonl --format native \
+  --head models/heads/support-v1 --output local-results/support-v1-test.json
+
+uv run busbar serve --head models/heads/support-v1 --port 8787
 ```
 
-服务只监听 `127.0.0.1`，一个进程、一个模型。交互式接口文档在 <http://127.0.0.1:8787/docs>。
+每个版本保存小头权重、训练记录、数据划分和文件哈希，不复制底座。支持从旧头继续训练、加载校验与版本回退；新版本使用新目录，已有版本不覆盖。应用只需替换 `load_backend("mlx", head="models/heads/support-v1")`，决策 API 保持一致。数据格式、验证集选参、继承链防泄漏及失败处理见 [完整训练指南](docs/trainable-heads.md)。
 
-```bash
-curl http://127.0.0.1:8787/v1/contexts \
-  -H 'Content-Type: application/json' \
-  -d '{"state":{"unused":true},"namespace":"demo"}'
+## 证据与当前边界
 
-# 将响应 snapshot.id 填入下方；之后只需发送 snapshot ID 和新问题。
-curl http://127.0.0.1:8787/v1/decisions \
-  -H 'Content-Type: application/json' \
-  -d '{"namespace":"demo","snapshot_id":"<snapshot.id>","questions":{"unused":{"type":"boolean","question":"Is the item unused?"}}}'
-```
+仓库包含普通回归、实际模型数值测试、真实 HTTP 验证，以及 SemIf、NanoJev 和 Busbar 的对照原始结果。[验证指南](docs/validation.md) 区分实现正确性、任务质量、端到端延迟与输出头微测量；[0.3](docs/mac-v03.md) 和 [0.4](docs/mac-v04.md) 给出实际设置、逐题结果、比较和失败记录。
 
-| 接口 | 行为 |
-|---|---|
-| `POST /v1/contexts` | 创建或复用上下文 |
-| `GET /v1/contexts?namespace=demo&id_prefix=...` | 列表及 ID 前缀过滤 |
-| `GET /v1/contexts/{id}?namespace=demo` | 查询元数据，不延长 TTL |
-| `PUT /v1/contexts/{id}` | 以新内容创建新版本，返回新 ID |
-| `DELETE /v1/contexts/{id}?namespace=demo` | 幂等删除 |
-| `DELETE /v1/contexts?namespace=demo` | 清空一个 namespace |
-| `POST /v1/decisions` | 一次提交 1–64 道题 |
-| `GET /v1/stats`、`GET /health` | 缓存占用、命中、淘汰及模型状态 |
+当前服务面向本机：一个进程驻留一个模型，模型操作串行，请求内部可以分批；KV 在内存中，重启后重建。namespace 不提供认证。MiniCPM5/vLLM Metal 的缓存数值一致性尚未通过已有门禁；首次接入可使用原生 MLX。Linux 服务引擎、连续批处理、量化和底座微调尚未实现。
 
-## 决策语义
+本项目是独立实现，借鉴 Jev 类结构化决策思路；不是 TypeSafe Jev 的官方实现，也不是 NanoJev checkpoint 兼容加载器。底层依赖 [MLX-LM](https://github.com/ml-explore/mlx-lm)、[Transformers](https://github.com/huggingface/transformers) 及所选模型。
 
-- **Boolean**：`type="boolean"`，返回 `true/false` 的概率，`value` 是 `P(true) >= 0.5`。
-- **Choice**：2–16 个互斥选项，每项具有唯一 `id` 和 `description`；`value` 是最大分数选项的 ID。
-- **Score**：2–16 个具有明确描述、严格递增的数值等级；`value = Σ(probability × level.value)`，同时保留完整分布。
+## 阅读与参与
 
-所有结果包含候选分数（`logit_space` 区分词表原始 logits、词表 log probabilities 与训练头分数）、候选内 softmax 概率和归一化熵。熵只描述分布集中程度，**不是正确率**；概率未经业务校准。`temperature` 是显式温度缩放参数，设置它本身不构成校准。小模型可能回答错误；演示结果不构成通用决策质量保证。
+- [接口与运行时](docs/api.md)：应用接入、完整生命周期及错误处理。
+- [后端与模型](docs/backends.md)：安装、平台差异和支持范围。
+- [可训练选择头](docs/trainable-heads.md)：评分原理、数据、训练、评测和回退。
+- [架构与扩展](docs/design.md)：模块职责、数据流、不变量和后端接入契约。
+- [开发指南](CONTRIBUTING.md)：环境、代码规范、测试与提交要求。
+- [变更记录](CHANGELOG.md)：版本变化；[0.4.1 整理记录](docs/quality-v041.md) 说明本次修复与验证。
 
-## 缓存、批处理与边界
-
-- context 与 question 分别分词；暖请求不重新序列化、分词或 prefill 整份 state。问题分词缓存最多 512 项。
-- 默认最多 32 个 context、600 秒滑动 TTL，按 LRU 淘汰；MLX/HF 另外限制 1 GiB 保留 KV。参数可通过 `serve --max-contexts/--cache-mib/--ttl` 调整。
-- vLLM Metal 的物理 KV 由引擎管理，`cache_bytes=0` 表示 Busbar 不直接持有 KV，不表示引擎不占内存。引擎预算使用 `--memory-fraction`。删除、过期或淘汰会立即撤销 snapshot 访问；对应物理块之后按引擎策略淘汰。每个新 snapshot 使用独立 cache salt，防止跨 namespace 复用；全局 `Runtime.clear()` 也重置引擎 APC。
-- 创建响应中的 `reused=true` 表示 Busbar 复用了已有 snapshot 和 token，不能证明引擎物理块仍驻留；vLLM 决策响应会按实际命中记录 token 数，块被淘汰后由引擎重新计算。
-- KV 不写磁盘，重启后 ID 不可用，需重新编译。模型权重缓存与运行时 KV 是不同层次。
-- 缓存字节预算只约束保留的前缀 KV；模型、临时分支、激活和 MLX 分配器缓存另外占内存。默认每批 8 条路径：快捷模式一题一条，选择头每个候选一条，可调 `--batch-size`。
-- MLX 按后缀 token 长度分组，不为 padding 或无关位置计算输出头。每个 batch 使用独立物理 KV 分支，绝不修改已保存的前缀。
-- 一个模型操作占用一把锁。一个请求内可以 GPU batch，多 HTTP 请求目前依次执行；没有声称实现 continuous batching。
-- 原生后端完整输入默认最多 8192 token；vLLM Metal 从此预算预留一个输出 token，因此最多接受 8191 个输入 token。超限拒绝，不静默截断。空题集、重复选项、非有限数值、错误字段会返回 422；缺失、过期、淘汰和跨 namespace ID 返回 404。
-- namespace 提供本地隔离，不是身份认证。此版只提供本机服务。
-- MLX/HF 支持 dense、未量化的 Qwen2/3/3.5 和 Llama 架构（含 MiniCPM5）；vLLM Metal 当前验证 Qwen2/3 和 MiniCPM5，尚未开放 Qwen3.5。模型适配显式检查；HF reference 默认 CPU FP32、串行执行。
-- Qwen3.5 的缓存同时包含注意力 K/V 与递归状态，分支必须独立复制两者。MLX-LM 固定到包含 GDN 归一化修复的提交；其 `A_log` 保持 FP32。FP32 参考加载会在权重转换运算前提升精度，避免继承 BF16 舍入误差。
-
-MLX/HF 的 `projection="selected"` 在词表投影前取出 A–P 对应权重；`projection="full"` 计算完整词表后取相同标签。词表模式下，默认 `auto` 在 MLX/HF 使用 `selected`，在 vLLM Metal 使用 `full`；加载训练头时使用 `head`。候选行投影是次要优化，核心仍是避免重复 prefill；共享词表权重继续保留以处理输入 token。
-
-## 验证与 benchmark
-
-```bash
-# 普通回归无需下载模型；安装 MLX 时还会运行小型 GPU 梯度测试。
-uv run pytest -m 'not model'
-uv run ruff check .
-
-# 实际模型验证：MLX/HF、所有候选分数、缓存分支、16 题批处理。
-uv sync --extra mlx --extra hf --extra dev
-BUSBAR_RUN_MODEL_TESTS=1 uv run pytest -m model -s
-
-# 比较 fresh/cached、serial/batch、full/selected；模型加载不计入延迟。
-uv run busbar benchmark --context-tokens 4096 --questions 16 --repeats 3 \
-  --output local-results/mac-4096-16.json
-
-# 原始 144 条公开样例：质量、Brier、NLL、ECE 与逐条答案。
-uv run busbar evaluate benchmarks/data/semif-authored144.jsonl \
-  --model Qwen/Qwen3.5-4B --dtype bfloat16 --output local-results/quality-qwen35.json
-.venv-metal/bin/busbar evaluate benchmarks/data/semif-authored144.jsonl \
-  --backend vllm-metal --model openbmb/MiniCPM5-2B \
-  --output local-results/quality-minicpm5-metal.json
-
-# 对照正常执行与增加同步点的阶段计时，独占 GPU 运行。
-uv run busbar profile --model Qwen/Qwen2.5-3B-Instruct \
-  --context-tokens 4096 --questions 16 --repeats 30 \
-  --output local-results/profile-3b.json
-```
-
-benchmark 保留硬件、依赖版本、精度、真实 prefix/suffix token 数、完整决策结果、耗时和结果差异；输出文件不会覆盖已有结果。`cold_compile_and_fanout` 包含一次 context prefill；暖路径不包含它。vLLM Metal 暖路径在每次测量前清空 APC、只预热 state，完整重复问题缓存单独列为 `cached_exact_repeat`。`backend_details.engine_cached_tokens` 来自引擎真实报告；`reused_prefix_tokens` 只统计其中的 context 部分。不同执行形状可能存在浮点差异，报告不掩盖选项变化。延迟数据来自合成 workload，不能推断模型质量或生产吞吐。
-
-详见 [第一版设计与验收范围](docs/design.md) 和 [本机验收记录](docs/acceptance.md)。
-
-## 后续阶段
-
-Backend 协议把 context 生命周期与物理 KV 执行分开。Mac 已接入 vLLM Metal；Linux vLLM/SGLang、跨 HTTP 请求的 continuous batching、KV offload、底座微调/LoRA、量化、分布式 KV、跨进程恢复和概率校准属于后续阶段。
-
-本项目是独立的决策 runtime，不是 TypeSafe Jev 的官方实现，也不冒用其接口兼容性或性能结论。依赖 [MLX-LM](https://github.com/ml-explore/mlx-lm)、[Transformers](https://github.com/huggingface/transformers)，使用 [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B) 模型。
+许可证：[MIT](LICENSE)。

@@ -1,46 +1,84 @@
-# Busbar v0.1：上下文复用优先
+# 架构、职责与扩展
 
-第一版的完成条件是：独立 Git 项目与公共 GitHub 仓库；这台 Apple Silicon Mac 上真实运行小模型；一次 context prefill 支持跨请求、多问题独立分支；给出可复现的正确性与性能证据。资料中的 vLLM、SGLang、TP、多层 KV offload、训练专用头等属于后续服务器与模型阶段，不在本版伪造实现或测量。
+本文描述 0.4.1 的当前实现。历史版本的设计与验收记录保留在 Git 历史和各版本报告中；本页以代码中的真实职责为准。
 
-## 分层
+Busbar 把应用问题、上下文生命周期和模型执行分开。应用只需要定义上下文、问题与候选；读出方式和硬件后端通过创建 Runtime 时的配置选择，不由业务路由临时拼接条件。
 
-`schemas` 定义 Boolean/Choice/Score 与上下文生命周期；`compiler` 管理稳定序列化、token 边界及问题分词缓存；`Runtime` 管理 snapshot 身份、namespace、TTL、LRU 和生命周期；`Backend` 管理物理 KV、前向计算、批处理与输出头。当前有两种真实实现：Mac MLX 与 CPU HF reference。
+## 从输入到决策
 
-Compiler 固定 `busbar-qwen3-v1`。稳定 system + context user message 在 `<|im_end|>\n` 后结束；动态 question 从 `<|im_start|>user\n` 开始。两段以 token IDs 拼接，题目不会进入已保存的前缀。候选标签必须是单 token，并验证追加标签不会重新切分答案边界。
+```text
+CLI / Python / HTTP
+        │
+        ▼
+Contract：验证上下文、题目、候选和边界
+        │
+        ▼
+Runtime：snapshot 身份、namespace、TTL、LRU、操作锁
+        │
+        ├─ Compiler：规范文本 → token 路径 → 候选标签
+        │
+        └─ Backend：prefill、独立缓存分支、模型前向与分数
+                       │
+                       ▼
+               输出契约校验 → 候选 softmax → Boolean / Choice / Score
+```
 
-snapshot ID 由 namespace、规范 JSON state、instructions、模型与 tokenizer revision、后端精度及 compiler 版本共同 SHA-256 计算。改变任一项都会得到新的身份；请求方修改原始字典不会影响已编译的 tokens/KV。
+`compile_context` 用规范 JSON、指令、namespace 和后端 identity 计算 snapshot ID。重复内容直接复用；首次创建才分词和 prefill。`decide` 先编译全部问题、检查完整 token 长度，再调用后端，最后按题目把每条路径的分数归并成公开结果。
 
-## 生命周期与一致性
+快捷模式一题一条路径，由 A–P 对应词表行提供候选分数。选择头模式每个候选一条路径，候选描述和 EOS 进入底座，最后的隐藏向量由共享头读成标量。`CompiledQuestion.paths` 把这种差异约束在编译与后端之间，Runtime 的生命周期和三类决策语义不因此分叉。
 
-| 场景 | 约束与验证 |
-|---|---|
-| 重复创建 | 按内容复用，仅一次分词/prefill；并发调用也只创建一次 |
-| 编辑 | 创建新的不可变版本，成功后返回新 ID；旧版本受正常 TTL/LRU 管理 |
-| 回退 | 使用仍存活的旧 ID；淘汰后可重新提交旧 state 重建 |
-| 删除/清空 | 释放 runtime 的引用，之后请求明确 404；幂等删除不报错 |
-| 列表/筛选 | 只返回指定 namespace 的实时元数据，支持 ID 前缀过滤 |
-| 空状态 | JSON null、空对象是合法无额外上下文；空问题集不是合法判断请求 |
-| 请求失败 | 全部题目先验证，再执行；不返回部分答案，已有前缀不被分支修改 |
-| 缓存超限 | 单上下文超预算则拒绝；正常入池根据数量与字节双限制淘汰 LRU |
-| 过期/重启 | 单调时钟控制 TTL；进程退出不保留 KV，重启后明确需重新编译 |
-| 输入超长 | context 或 context+question 超限时拒绝，禁止截断后假装同一输入 |
+## 文件职责
 
-当前锁覆盖创建、推理和删除，避免 GPU 模型并发执行与生命周期竞态。锁也是明确的吞吐上限；下一阶段应在真实服务器后端实现调度，不在本地适配层复制 Paged KV allocator。
+| 模块 | 负责 | 不应承担 |
+|---|---|---|
+| `schemas.py` | 公共字段、结构验证、候选约束 | 模型加载或业务副作用 |
+| `compiler.py` | 稳定序列化、token 边界、两类题目编码、概率读出 | KV 分配、HTTP 错误 |
+| `runtime.py` | snapshot、缓存预算、TTL/LRU、批次预检、后端结果归并 | 训练算法或平台权重修复 |
+| `backends/base.py` | `Backend`、`PrefixState`、`BackendResult` 契约与输出校验 | 引擎特定实现 |
+| `backends/mlx.py` / `hf.py` / `vllm_metal.py` | 各平台加载、物理缓存、前向和词表投影 | HTTP、数据集与训练报告 |
+| `backends/mlx_head.py` | 小头结构、张量加载校验、候选评分 | 数据划分或优化器循环 |
+| `datasets.py` | JSONL 行验证、标签映射、划分检查、来源记录 | 打开模型或选择训练轮次 |
+| `storage.py` | 单次读取的文件快照、哈希、完整且不覆盖的 JSON 发布 | 理解模型、标签或头结构 |
+| `head_artifact.py` | 版本格式、兼容性、完整性、继承来源、manifest 发布 | 梯度计算 |
+| `training.py` | 训练流程、预检、继续训练策略和版本发布 | 张量优化实现 |
+| `mlx_training.py` | 特征提取、mask、损失、优化器与验证集选参 | CLI 或文件格式 |
+| `evaluation.py` | 评测预检、上下文分组、执行、质量指标与逐题记录 | 训练参数或静默忽略失败 |
+| `benchmark.py` / `profiling.py` | 延迟实验、对照统计、明确计时范围 | 推断任务质量 |
+| `cli.py` / `server.py` | 命令分发、参数翻译；路由与错误映射 | 复制运行时和模型算法 |
 
-MLX fanout 按相同 suffix 长度合批，通过原生 `BatchKVCache.merge` 分配新的分支缓存。这样每题都有完整独立的可写 KV，已保存的 prefix 不进入 mutating forward。该策略会复制前缀 KV 到 batch 缓冲区；它复用计算，但不等同于 vLLM 的物理分页共享。前缀很短时，分支复制、启动和批处理成本可能大于所省 prefill。
+文件按职责拆分。命令分发、路由注册、测量执行和统计分别用小函数表达；相关 HTTP 路由仍放在一个文件中，避免每个入口都引入一层目录和转发。
 
-## 数学与质量边界
+## 缓存不变量
 
-先计算候选单 token 的原始 logits，再仅在候选集合内 softmax。Score 是显式数值等级的期望。FP32、FP16、batch shape、attention kernel 与 prefill 分块可能改变浮点累加；测试必须比较每个候选及 argmax，不能仅以概率和为 1 判定正确。
+1. **身份完整。** 模型/分词器 revision、精度、编译器以及训练头 identity 都进入后端身份。不同模型或头不能复用同一个 snapshot。JSON 对象字段顺序不影响身份。
+2. **前缀只读。** MLX 按后缀长度组批，每批复制独立的 KV；混合模型还要复制递归状态。HF 使用独立串行分支。传入 `score` 的 prefix 不可被模型前向修改。
+3. **生命周期归 Runtime。** 编辑创建新版本，删除/过期/淘汰立即撤销访问。旧版本是否还可回退取决于 TTL/LRU。列表检查过期但不延长存活时间；成功复用才刷新滑动 TTL。
+4. **物理回收归后端。** 原生 KV 随引用移除；Metal 的物理块由引擎淘汰。新 snapshot 使用独立 salt；清除整个 Runtime 时重置引擎 APC。单 namespace 删除不承诺立即擦除引擎的物理块。
+5. **先验证再执行。** 无效题目和超长路径在该批前向前被拒绝，输出必须满足全部路径形状和有限数值约束。不做静默截断，不返回部分答案。
 
-HF reference 可以 full vocabulary，也可以 selected rows。MLX 与 HF 使用同一官方 checkpoint 及 tokenizer revision，模型特定适配仅接受 dense Qwen3。后续支持量化模型时，需要保留原量化语义并重新建立数值误差门限。
+当前一把可重入锁覆盖模型操作与缓存修改，防止同一模型并发前向和生命周期竞态。请求内的 fanout 可以分批执行；跨请求的调度不是此锁提供的能力。缓存不落盘；重启、换模型、换头后客户端重新提交上下文。
 
-## 验收门
+## 训练与文件一致性
 
-1. Python/HTTP 生命周期回归覆盖上述边界，确保验证错误不执行部分推理。
-2. 实际模型跑通 Boolean、Choice、Score；完整记录模型回答，包括回答错误。
-3. 实际 MLX selected/full、fresh/cached、问题顺序变化与 16 题 batch 均检查候选分数和选择。
-4. 同 checkpoint 的 HF CPU FP32 与 MLX FP32 做交叉参考；公开容差和差异。
-5. Mac FP16 约 4096-token prefix、16-question workload 比较六种路径，保留原始记录。64 题验证分块与上限行为。
-6. 启动真实 HTTP 进程，用客户端完成创建、跨请求复用、判断、版本化、删除及失效检查。
-7. 代码格式/静态检查、普通测试、实际模型测试、可安装包构建通过；提交并推送到公共仓库，确认远端 SHA 与本地一致、工作区干净。
+训练数据先捕获原始字节，再解析标签、检查划分；哈希和来源记录使用同一份捕获内容。特征只由冻结底座提取一次，优化器只更新 FP32 小头；验证集 NLL 选择最佳权重。继续训练加载旧权重、重建优化器并保留来源链，不能把旧训练集作为新验证集。
+
+训练结束检查源文件是否变化。新目录先保存张量和训练报告，最后原子发布 `manifest.json`；manifest 是可加载版本的完成标记。JSON 在同目录临时文件中完整写入，再用原子且不覆盖的链接操作发布。失败可能留下未完成的版本目录，加载器明确拒绝，旧目录不受影响。
+
+加载器读取 manifest，并捕获权重与训练报告字节，检查其哈希，再从这些已验证字节解析来源、解码 safetensors。校验与使用之间不重新打开文件路径，避免另一个进程替换文件导致读入不一致版本。格式没有变化，0.4 头仍可加载。
+
+哈希用于完整性与可追溯性，不提供数字签名。目录是用户本地管理的模型版本；把文件系统快照、远端发布系统或签名机制加入产品前，需要单独定义其契约。
+
+## 添加业务功能或后端
+
+新增业务判断优先使用现有三种题型：定义上下文和候选描述，准备独立测试集，必要时训练新头。应用接收决策后执行自己的动作；不要把退款、发消息等业务副作用写进 Runtime。
+
+新增执行后端时：
+
+1. 实现 `Backend.prefill` 与 `Backend.score`，明确 prefix 是原生 KV 还是引擎句柄，说明 retained bytes 的含义。
+2. 提供不可变模型 revision、实际 dtype、tokenizer 和 `max_tokens`，把影响数值或编码的配置加入 identity；必要时提供自己的 compiler 和默认 projection。
+3. 按调用顺序返回每条路径的全部分数；分批后还原原顺序。计数必须是非负整数，详情必须能序列化为有限 JSON。显式拒绝未实现的投影。
+4. 通过工厂惰性加载依赖；在未安装可选依赖的平台上，导入核心包和运行普通测试仍可工作。
+5. 补充真实测试：fresh/cached、候选重排、不同长度、批量、清理后重建，以及每个候选的数值容差。引擎缓存要读真实命中计数，不能从 snapshot 命中推断。
+6. 写出支持矩阵、失败限制和原始证据，再给出性能结论。后端边界不能靠更新 README 声称已经支持。
+
+代码规范与测试命令见 [开发指南](../CONTRIBUTING.md)，公开接口见 [接口指南](api.md)。

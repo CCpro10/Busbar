@@ -1,12 +1,13 @@
 """Trainable, candidate-conditioned readout over an unchanged native MLX backbone."""
 
+import io
 from pathlib import Path
 
 import mlx.core as mx
 import mlx.nn as nn
 
 from ..compiler import CandidateCompiler
-from ..head_artifact import check_compatibility, read_manifest, read_training_splits
+from ..head_artifact import HeadArtifact, check_compatibility, read_artifact
 from .mlx import MLXBackend
 
 
@@ -24,10 +25,11 @@ class CandidateHead(nn.Module):
         return self.scalar(self.norm(hidden.astype(mx.float32))).squeeze(-1)
 
 
-def load_head(directory: Path, manifest):
+def load_head(artifact: HeadArtifact):
     """Validate every tensor's name, shape, precision and finiteness before model use."""
+    manifest = artifact.manifest
     try:
-        values = mx.load(str(directory / "head.safetensors"))
+        values = mx.load(io.BytesIO(artifact.weights), format="safetensors")
     except (ValueError, RuntimeError) as error:
         raise ValueError(f"cannot read selection head tensors: {error}") from error
     size = manifest.hidden_size
@@ -55,10 +57,11 @@ class MLXHeadBackend(MLXBackend):
 
     def __init__(self, directory: Path, *, model=None, revision=None, dtype=None, **kwargs):
         """Validate artifact compatibility before loading the expensive frozen base model."""
-        manifest = read_manifest(directory)
+        artifact = read_artifact(directory)
+        manifest = artifact.manifest
         check_compatibility(manifest, model=model, revision=revision, dtype=dtype)
-        self.decision_head = load_head(directory, manifest)
-        self.training_splits = read_training_splits(directory)
+        self.decision_head = load_head(artifact)
+        self.training_splits = artifact.training_splits
         super().__init__(manifest.model, manifest.revision, dtype=manifest.dtype, **kwargs)
         if self.model.model.embed_tokens.weight.shape[1] != manifest.hidden_size:
             raise ValueError("head hidden size does not match backbone")

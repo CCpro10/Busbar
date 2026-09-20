@@ -4,10 +4,18 @@ import json
 import math
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue, field_validator, model_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, JsonValue, model_validator
+
+
+def nonblank_text(value: str) -> str:
+    """Questions and candidate descriptions must contain meaning, without stripping their text."""
+    if not value.strip():
+        raise ValueError("text must not be blank")
+    return value
+
 
 Name = Annotated[str, Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_.:-]+$")]
-Text = Annotated[str, Field(min_length=1, max_length=8192)]
+Text = Annotated[str, Field(min_length=1, max_length=8192), AfterValidator(nonblank_text)]
 
 
 class Contract(BaseModel):
@@ -44,14 +52,6 @@ class BaseQuestion(Contract):
 
     question: Text
     temperature: float = Field(default=1.0, ge=0.01, le=100.0)
-
-    @field_validator("question")
-    @classmethod
-    def nonblank_question(cls, value):
-        """Whitespace alone is not a meaningful decision question."""
-        if not value.strip():
-            raise ValueError("question must not be blank")
-        return value
 
 
 class BooleanQuestion(BaseQuestion):
@@ -99,6 +99,14 @@ class ScoreQuestion(BaseQuestion):
 
 
 Question = Annotated[BooleanQuestion | ChoiceQuestion | ScoreQuestion, Field(discriminator="type")]
+Questions = Annotated[dict[Name, Question], Field(min_length=1, max_length=64)]
+
+
+class DecisionInput(Contract):
+    """Validate a complete one-shot input before loading or prefilling any model."""
+
+    context: ContextSpec
+    questions: Questions
 
 
 class DecisionRequest(Contract):
@@ -106,7 +114,7 @@ class DecisionRequest(Contract):
 
     snapshot_id: str = Field(pattern=r"^[0-9a-f]{64}$")
     namespace: Name = "default"
-    questions: dict[Name, Question] = Field(min_length=1, max_length=64)
+    questions: Questions
     mode: Literal["cached", "fresh"] = "cached"
     projection: Literal["auto", "selected", "full", "head"] = "auto"
 
