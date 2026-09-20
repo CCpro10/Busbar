@@ -4,4 +4,4 @@ from .runtime import Runtime
 from .schemas import ContextSpec, DecisionRequest
 
 __all__ = ["ContextSpec", "DecisionRequest", "Runtime"]
-__version__ = "0.1.0"
+__version__ = "0.2.0"

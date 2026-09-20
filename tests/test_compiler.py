@@ -41,3 +41,23 @@ def test_empty_context_is_valid_but_nonfinite_state_is_not(runtime):
     assert runtime.compile_context({"state": None}).snapshot.token_count > 0
     with pytest.raises(ValueError):
         runtime.compile_context({"state": {"value": float("nan")}})
+
+
+def test_qwen25_default_system_is_not_injected_inside_cached_conversation(backend, monkeypatch):
+    """A standalone-turn template must not add a second system message to the suffix."""
+    original = backend.tokenizer.apply_chat_template
+
+    def auto_system(messages, **kwargs):
+        """Model Qwen2.5's default system insertion for conversations starting with user."""
+        if messages[0]["role"] != "system":
+            messages = [{"role": "system", "content": "DEFAULT"}] + messages
+        return original(messages, **kwargs)
+
+    monkeypatch.setattr(backend.tokenizer, "apply_chat_template", auto_system)
+    compiler = Compiler(backend.tokenizer)
+    prefix = compiler.context(ContextSpec(state="An unused item"))
+    suffix = compiler.question(BooleanQuestion(type="boolean", question="Is it unused?"))
+    text = backend.tokenizer.decode(prefix + suffix.token_ids)
+    assert text.count("<|im_start|>system") == 1
+    assert "DEFAULT" not in text
+    assert text.count("<|im_start|>user") == 2

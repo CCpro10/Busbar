@@ -1,0 +1,254 @@
+{
+  "checkpoint": {
+    "backend": "mlx",
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "dtype": "float32"
+  },
+  "gate": "real float32 model, same prompts, every candidate compared",
+  "tolerances": {
+    "mlx_projection": 0.001,
+    "mlx_cache": 0.002,
+    "mlx_vs_hf": 0.005
+  },
+  "mlx_fresh_full": {
+    "snapshot_id": "bf1b016e95733636d3c9378f32af30b969c4d17029193a4b601f6b178b4424d1",
+    "decisions": {
+      "eligible": {
+        "type": "boolean",
+        "option_ids": [
+          "true",
+          "false"
+        ],
+        "logits": [
+          43.318641662597656,
+          50.50039291381836
+        ],
+        "probabilities": [
+          0.000759757467404659,
+          0.9992402425325954
+        ],
+        "selected": "false",
+        "value": false,
+        "normalized_entropy": 0.008968420482521158,
+        "logit_space": "raw_logits"
+      },
+      "route": {
+        "type": "choice",
+        "option_ids": [
+          "returns",
+          "delivery",
+          "payment"
+        ],
+        "logits": [
+          45.512535095214844,
+          28.689870834350586,
+          26.771669387817383
+        ],
+        "probabilities": [
+          0.9999999433076784,
+          4.943217457589936e-08,
+          7.260146973072293e-09
+        ],
+        "selected": "returns",
+        "value": "returns",
+        "normalized_entropy": 9.323895698244309e-07,
+        "logit_space": "raw_logits"
+      },
+      "condition": {
+        "type": "score",
+        "option_ids": [
+          "0.0",
+          "1.0",
+          "2.0"
+        ],
+        "logits": [
+          46.97163391113281,
+          35.58089828491211,
+          35.9752197265625
+        ],
+        "probabilities": [
+          0.9999719394039758,
+          1.1299368856528083e-05,
+          1.6761227167715375e-05
+        ],
+        "selected": "0.0",
+        "value": 4.4821823191958836e-05,
+        "normalized_entropy": 0.00031046667947739543,
+        "logit_space": "raw_logits"
+      }
+    },
+    "mode": "fresh",
+    "projection": "full",
+    "prefix_tokens": 118,
+    "reused_prefix_tokens": 0,
+    "computed_tokens": 502,
+    "batches": 3,
+    "compile_ms": 1.8160420004278421,
+    "inference_ms": 618.957999999111,
+    "total_ms": 620.8768750002491,
+    "backend_details": {},
+    "probability_status": "conditional label probabilities; uncalibrated"
+  },
+  "mlx_cached_selected": {
+    "snapshot_id": "bf1b016e95733636d3c9378f32af30b969c4d17029193a4b601f6b178b4424d1",
+    "decisions": {
+      "eligible": {
+        "type": "boolean",
+        "option_ids": [
+          "true",
+          "false"
+        ],
+        "logits": [
+          43.31855773925781,
+          50.500343322753906
+        ],
+        "probabilities": [
+          0.0007597314034664656,
+          0.9992402685965336
+        ],
+        "selected": "false",
+        "value": false,
+        "normalized_entropy": 0.008968150431407291,
+        "logit_space": "raw_logits"
+      },
+      "route": {
+        "type": "choice",
+        "option_ids": [
+          "returns",
+          "delivery",
+          "payment"
+        ],
+        "logits": [
+          45.51253890991211,
+          28.689849853515625,
+          26.771642684936523
+        ],
+        "probabilities": [
+          0.9999999433091257,
+          4.9430948894088954e-08,
+          7.259925414361086e-09
+        ],
+        "selected": "returns",
+        "value": "returns",
+        "normalized_entropy": 9.323670218330373e-07,
+        "logit_space": "raw_logits"
+      },
+      "condition": {
+        "type": "score",
+        "option_ids": [
+          "0.0",
+          "1.0",
+          "2.0"
+        ],
+        "logits": [
+          46.971614837646484,
+          35.580909729003906,
+          35.97520065307617
+        ],
+        "probabilities": [
+          0.9999719390591507,
+          1.1299713687265122e-05,
+          1.676122716193552e-05
+        ],
+        "selected": "0.0",
+        "value": 4.4822168011136164e-05,
+        "normalized_entropy": 0.0003104702547214399,
+        "logit_space": "raw_logits"
+      }
+    },
+    "mode": "cached",
+    "projection": "selected",
+    "prefix_tokens": 118,
+    "reused_prefix_tokens": 354,
+    "computed_tokens": 148,
+    "batches": 3,
+    "compile_ms": 0.00695799826644361,
+    "inference_ms": 316.1861249973299,
+    "total_ms": 316.2676249994547,
+    "backend_details": {},
+    "probability_status": "conditional label probabilities; uncalibrated"
+  },
+  "hf_fresh_full": {
+    "snapshot_id": "67b778054c714e09ba18c5f9ac090313b3a336bf886b5f6699e03beae6708929",
+    "decisions": {
+      "eligible": {
+        "type": "boolean",
+        "option_ids": [
+          "true",
+          "false"
+        ],
+        "logits": [
+          43.31743621826172,
+          50.499332427978516
+        ],
+        "probabilities": [
+          0.0007596474257431954,
+          0.9992403525742569
+        ],
+        "selected": "false",
+        "value": false,
+        "normalized_entropy": 0.008967280320896456,
+        "logit_space": "raw_logits"
+      },
+      "route": {
+        "type": "choice",
+        "option_ids": [
+          "returns",
+          "delivery",
+          "payment"
+        ],
+        "logits": [
+          45.51146697998047,
+          28.689098358154297,
+          26.770832061767578
+        ],
+        "probabilities": [
+          0.9999999432913865,
+          4.944679081609515e-08,
+          7.2618227297195916e-09
+        ],
+        "selected": "returns",
+        "value": "returns",
+        "normalized_entropy": 9.326419670901196e-07,
+        "logit_space": "raw_logits"
+      },
+      "condition": {
+        "type": "score",
+        "option_ids": [
+          "0.0",
+          "1.0",
+          "2.0"
+        ],
+        "logits": [
+          46.96919631958008,
+          35.57855987548828,
+          35.97278594970703
+        ],
+        "probabilities": [
+          0.9999719382193188,
+          1.1300489594177308e-05,
+          1.6761291086987834e-05
+        ],
+        "selected": "0.0",
+        "value": 4.482307176815298e-05,
+        "normalized_entropy": 0.0003104789393560687,
+        "logit_space": "raw_logits"
+      }
+    },
+    "mode": "fresh",
+    "projection": "full",
+    "prefix_tokens": 118,
+    "reused_prefix_tokens": 0,
+    "computed_tokens": 502,
+    "batches": 3,
+    "compile_ms": 1.5454169988515787,
+    "inference_ms": 1811.9280000028084,
+    "total_ms": 1813.5590419988148,
+    "backend_details": {},
+    "probability_status": "conditional label probabilities; uncalibrated"
+  },
+  "fanout_16_batches": 2,
+  "cache_bytes_unchanged": 18874368
+}

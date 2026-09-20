@@ -4,6 +4,7 @@ import importlib.metadata
 import platform
 import statistics
 import subprocess
+import sys
 import time
 
 from .runtime import Runtime
@@ -91,9 +92,18 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         "cached_batched": ("cached", "selected", False),
         "cached_batched_full": ("cached", "full", False),
     }
+    engine_managed = backend.identity.get("backend") == "vllm-metal"
+    if engine_managed:
+        strategies = {
+            name: (mode, "full", serial)
+            for name, (mode, _, serial) in strategies.items()
+            if name != "cached_batched_full"
+        }
+        strategies["cached_exact_repeat"] = ("cached", "full", False)
     runs = {name: [] for name in strategies}
     # Warm each measured shape, then alternate strategy order to reduce fixed-order bias.
     for mode, projection, serial in strategies.values():
+        print(f"warm-up: {mode}, {projection}, serial={serial}", file=sys.stderr, flush=True)
         _invoke(
             runtime, request.model_copy(update={"mode": mode, "projection": projection}), serial
         )
@@ -103,10 +113,24 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
             names.reverse()
         for name in names:
             mode, projection, serial = strategies[name]
+            if engine_managed and mode == "cached":
+                # Reset and prime only the state before each timed run. Otherwise
+                # vLLM could also cache the questions, or fresh baselines could evict
+                # the prefix, making a supposedly warm comparison misleading.
+                runtime.clear()
+                compiled = runtime.compile_context(spec)
+                request = request.model_copy(update={"snapshot_id": compiled.snapshot.id})
+                if name == "cached_exact_repeat":
+                    _invoke(runtime, request.model_copy(update={"projection": "full"}), False)
             run = _invoke(
                 runtime, request.model_copy(update={"mode": mode, "projection": projection}), serial
             )
             runs[name].append(run)
+            print(
+                f"run {iteration + 1}/{repeats} {name}: {run['elapsed_ms']:.1f} ms",
+                file=sys.stderr,
+                flush=True,
+            )
     cold = []
     for _ in range(repeats):
         runtime.clear()
@@ -148,7 +172,15 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         summary["fresh_sequential"]["median_ms"] / summary["cached_batched"]["median_ms"]
     )
     versions = {}
-    for package in ("mlx", "mlx-lm", "torch", "transformers", "busbar-runtime"):
+    for package in (
+        "mlx",
+        "mlx-lm",
+        "torch",
+        "transformers",
+        "busbar-runtime",
+        "vllm",
+        "vllm-metal",
+    ):
         try:
             versions[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
@@ -176,7 +208,9 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         "cache_bytes": compiled.snapshot.cache_bytes,
         "scope": (
             "resident model; kernel warm-up excluded; "
-            "synthetic latency workload, not a quality benchmark"
+            "synthetic latency workload, not a quality benchmark; "
+            "vLLM cached modes reset and prime state only before each timed run; "
+            "cached_exact_repeat separately measures reuse of question tokens"
         ),
         "summary": summary,
         "runs": runs,

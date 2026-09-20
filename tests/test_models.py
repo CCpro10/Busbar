@@ -1,5 +1,6 @@
 """Opt-in real-checkpoint gates for cache isolation, projection and cross-backend agreement."""
 
+import gc
 import json
 import os
 from pathlib import Path
@@ -31,7 +32,8 @@ def test_real_cache_branches_selected_projection_and_hf_reference():
     """One pinned model must preserve decisions across backends and repeated branch fanout."""
     example = json.loads((Path(__file__).parents[1] / "examples/returns.json").read_text())
     spec = ContextSpec.model_validate(example["context"])
-    mlx = Runtime(load_backend("mlx", dtype="float32"))
+    model = os.environ.get("BUSBAR_TEST_MODEL", "Qwen/Qwen3-0.6B")
+    mlx = Runtime(load_backend("mlx", model=model, dtype="float32"))
     compiled = mlx.compile_context(spec)
     request = DecisionRequest(
         snapshot_id=compiled.snapshot.id, namespace=spec.namespace, questions=example["questions"]
@@ -57,7 +59,12 @@ def test_real_cache_branches_selected_projection_and_hf_reference():
     assert mlx.stats()["cache_bytes"] == before_bytes
     assert mlx.compile_context(spec).reused
 
-    hf = Runtime(load_backend("hf", dtype="float32"))
+    checkpoint = mlx.backend.identity
+    accelerator = mlx.backend.mx
+    del mlx
+    gc.collect()
+    accelerator.clear_cache()
+    hf = Runtime(load_backend("hf", model=model, dtype="float32"))
     hf_context = hf.compile_context(spec)
     hf_request = request.model_copy(update={"snapshot_id": hf_context.snapshot.id})
     reference = hf.decide(hf_request.model_copy(update={"mode": "fresh", "projection": "full"}))
@@ -65,7 +72,7 @@ def test_real_cache_branches_selected_projection_and_hf_reference():
     _assert_close(hf.decide(hf_request), reference, 0.002)
 
     report = {
-        "checkpoint": mlx.backend.identity,
+        "checkpoint": checkpoint,
         "gate": "real float32 model, same prompts, every candidate compared",
         "tolerances": {"mlx_projection": 0.001, "mlx_cache": 0.002, "mlx_vs_hf": 0.005},
         "mlx_fresh_full": fresh.model_dump(),

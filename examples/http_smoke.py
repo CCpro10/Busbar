@@ -22,7 +22,7 @@ def exercise(base_url: str) -> dict:
             events.append({"method": method, "path": path, "status": expected, "body": body})
             return body
 
-        call("GET", "/health")
+        health = call("GET", "/health")
         call("DELETE", "/v1/contexts?namespace=http-smoke")
         compiled = call("POST", "/v1/contexts", context)
         key = compiled["snapshot"]["id"]
@@ -40,11 +40,24 @@ def exercise(base_url: str) -> dict:
             },
         )
         assert len(fanout["decisions"]) == 64
-        assert fanout["batches"] == 8
+        engine_managed = "engine_cached_tokens" in fanout["backend_details"]
+        assert fanout["batches"] == (1 if engine_managed else 8)
         assert fanout["computed_tokens"] < fanout["reused_prefix_tokens"]
         repeated = call("POST", "/v1/decisions", request)
-        assert decisions["decisions"] == repeated["decisions"]
+        for name, first in decisions["decisions"].items():
+            second = repeated["decisions"][name]
+            assert first["selected"] == second["selected"]
+            # APC changes prefill shapes; low-precision kernels can differ slightly.
+            assert (
+                max(
+                    abs(a - b)
+                    for a, b in zip(first["probabilities"], second["probabilities"], strict=True)
+                )
+                < 0.02
+            )
         call("POST", "/v1/decisions", {**request, "questions": {}}, expected=422)
+        if engine_managed:
+            call("POST", "/v1/decisions", {**request, "projection": "selected"}, expected=422)
         call("POST", "/v1/decisions", {**request, "namespace": "wrong"}, expected=404)
         changed = call("PUT", f"/v1/contexts/{key}", {**context, "state": {"unused": False}})
         assert changed["snapshot"]["id"] != key
@@ -54,7 +67,7 @@ def exercise(base_url: str) -> dict:
         call("POST", "/v1/decisions", request, expected=404)
         call("DELETE", "/v1/contexts?namespace=http-smoke")
         assert call("GET", "/v1/contexts?namespace=http-smoke") == []
-    return {"result": "passed", "transport": "real HTTP/TCP", "events": events}
+    return {"result": "passed", "transport": "real HTTP/TCP", "health": health, "events": events}
 
 
 def main():

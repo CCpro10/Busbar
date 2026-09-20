@@ -1,0 +1,495 @@
+{
+  "schema_version": 1,
+  "model": {
+    "backend": "vllm-metal",
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "dtype": "bfloat16",
+    "actual_precision": [
+      {
+        "parameter_dtypes": {
+          "mlx.core.bfloat16": 3085938688
+        },
+        "kv_dtype": "mlx.core.bfloat16"
+      }
+    ],
+    "vllm": "0.29.0+cpu",
+    "vllm_metal": "0.29.0",
+    "cache_owner": "engine; snapshot cache_bytes counts no physical KV",
+    "memory_fraction": 0.35,
+    "readout": "full vocabulary logprobs; one generated token per decision"
+  },
+  "input_name": "bf16-diagnostic-cases.jsonl",
+  "input_sha256": "f619facf4d4380ae70c6e8ed28c92bea005a42f6fcb956a7845e28e181b71cb6",
+  "mode": "fresh",
+  "projection": "auto",
+  "summary": {
+    "rows": 6,
+    "answered": 6,
+    "correct": 1,
+    "accuracy": 0.16666666666666666,
+    "balanced_accuracy": 0.08333333333333333,
+    "coverage": 1.0,
+    "nll": 1.875199754987001,
+    "brier": 1.2291246030787846,
+    "reliability_bins": [
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 1,
+        "accuracy": 0,
+        "mean_confidence": 0.5621764344399542
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.7,
+        "count": 1,
+        "accuracy": 1,
+        "mean_confidence": 0.6220059976333572
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 2,
+        "accuracy": 0,
+        "mean_confidence": 0.8486032649280661
+      },
+      {
+        "lower": 0.9,
+        "upper": 1.0,
+        "count": 2,
+        "accuracy": 0,
+        "mean_confidence": 0.9415543032485618
+      }
+    ],
+    "ece_10_equal_width": 0.7534142621933088,
+    "mean_family_balanced_accuracy": 0.05555555555555555,
+    "wall_seconds": 1.3934762089993455,
+    "decisions_per_second": 4.305778571066238
+  },
+  "families": {
+    "candidate_selection": {
+      "rows": 4,
+      "answered": 4,
+      "correct": 1,
+      "accuracy": 0.25,
+      "balanced_accuracy": 0.16666666666666666,
+      "coverage": 1.0,
+      "nll": 2.180961376334647,
+      "brier": 1.3514517467362823,
+      "reliability_bins": [
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 1,
+          "accuracy": 1,
+          "mean_confidence": 0.6220059976333572
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "accuracy": 0,
+          "mean_confidence": 0.8796322363323628
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 2,
+          "accuracy": 0,
+          "mean_confidence": 0.9415543032485618
+        }
+      ],
+      "ece_10_equal_width": 0.7851837112990323
+    },
+    "rule_application": {
+      "rows": 1,
+      "answered": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "balanced_accuracy": 0.0,
+      "coverage": 1.0,
+      "nll": 0.8259395380727695,
+      "brier": 0.6320848197709403,
+      "reliability_bins": [
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 1,
+          "accuracy": 0,
+          "mean_confidence": 0.5621764344399542
+        }
+      ],
+      "ece_10_equal_width": 0.5621764344399542
+    },
+    "evidence_interpretation": {
+      "rows": 1,
+      "answered": 1,
+      "correct": 0,
+      "accuracy": 0.0,
+      "balanced_accuracy": 0.0,
+      "coverage": 1.0,
+      "nll": 1.7014134865106485,
+      "brier": 1.3368558117566371,
+      "reliability_bins": [
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "accuracy": 0,
+          "mean_confidence": 0.8175742935237695
+        }
+      ],
+      "ece_10_equal_width": 0.8175742935237695
+    }
+  },
+  "timings": [
+    {
+      "rows": 1,
+      "compile_ms": 119.31295799877262,
+      "inference_ms": 124.09433299762895,
+      "computed_tokens": 117,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 244.60095900576562
+    },
+    {
+      "rows": 1,
+      "compile_ms": 70.41412499529542,
+      "inference_ms": 121.60462499741698,
+      "computed_tokens": 116,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 192.70858299569227
+    },
+    {
+      "rows": 1,
+      "compile_ms": 108.56324999622302,
+      "inference_ms": 123.00570800289279,
+      "computed_tokens": 121,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 232.1386249968782
+    },
+    {
+      "rows": 1,
+      "compile_ms": 108.19025000091642,
+      "inference_ms": 122.81475000054343,
+      "computed_tokens": 124,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 231.61720899952343
+    },
+    {
+      "rows": 1,
+      "compile_ms": 106.48366600071313,
+      "inference_ms": 119.55337499966845,
+      "computed_tokens": 106,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 226.6105829985463
+    },
+    {
+      "rows": 1,
+      "compile_ms": 106.96041699702619,
+      "inference_ms": 158.1615420000162,
+      "computed_tokens": 132,
+      "reused_prefix_tokens": 0,
+      "backend_details": {
+        "engine_cached_tokens": 0,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "state_wall_ms": 265.7952919980744
+    }
+  ],
+  "predictions": [
+    {
+      "id": "579beed184ffc1104aa9",
+      "family": "candidate_selection",
+      "group_id": "2b0f8eda8903e38a47de",
+      "gold_index": 0,
+      "gold_id": "B",
+      "correct": true,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "A complete package requires both documents. Candidate A: The timeline is attached but the remedy report is absent. Candidate B: Both the timeline and remedy report are attached.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "heldout_partial_deliverables",
+        "partition": "heldout_family",
+        "rationale": "B now includes both deliverables.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "h_c05",
+        "variant": "evidence_change"
+      },
+      "type": "choice",
+      "option_ids": [
+        "B",
+        "A",
+        "insufficient"
+      ],
+      "logits": [
+        -0.4748055338859558,
+        -0.9748055338859558,
+        -7.2248053550720215
+      ],
+      "probabilities": [
+        0.6220059976333572,
+        0.37726570808977483,
+        0.0007282942768679348
+      ],
+      "selected": "B",
+      "value": "B",
+      "normalized_entropy": 0.6083623776736342,
+      "logit_space": "vocabulary_logprobs"
+    },
+    {
+      "id": "25172cd6ddc49ab0ca70",
+      "family": "rule_application",
+      "group_id": "2c3a0cb61f7bae78739e",
+      "gold_index": 2,
+      "gold_id": "permitted",
+      "correct": false,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The designer explicitly approves mass production of the badge.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_approval_stage",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Mass-production approval is now present.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_r03",
+        "variant": "evidence_change"
+      },
+      "type": "choice",
+      "option_ids": [
+        "prohibited",
+        "insufficient",
+        "permitted"
+      ],
+      "logits": [
+        -15.950939178466797,
+        -0.5759395360946655,
+        -0.8259395360946655
+      ],
+      "probabilities": [
+        1.1819391894722015e-07,
+        0.5621764344399542,
+        0.4378234473661267
+      ],
+      "selected": "insufficient",
+      "value": "insufficient",
+      "normalized_entropy": 0.6238754328669456,
+      "logit_space": "vocabulary_logprobs"
+    },
+    {
+      "id": "d7e84e4245a29817da1f",
+      "family": "candidate_selection",
+      "group_id": "3ecec8e2c166e397ad07",
+      "gold_index": 2,
+      "gold_id": "B",
+      "correct": false,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "Candidate A: The owner asks to reseal the existing window while keeping its frame. Candidate B: The owner asks to remove the window and fit a complete replacement.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_retained_replaced",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "B requests replacement.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_c05",
+        "variant": "criterion_reversal"
+      },
+      "type": "choice",
+      "option_ids": [
+        "insufficient",
+        "A",
+        "B"
+      ],
+      "logits": [
+        -0.04189803823828697,
+        -4.416898250579834,
+        -3.541898012161255
+      ],
+      "probabilities": [
+        0.9589699676457306,
+        0.012071647795634145,
+        0.028958384558635208
+      ],
+      "selected": "insufficient",
+      "value": "insufficient",
+      "normalized_entropy": 0.17846453185006772,
+      "logit_space": "vocabulary_logprobs"
+    },
+    {
+      "id": "51ceab3ce622c7c759f1",
+      "family": "evidence_interpretation",
+      "group_id": "51b91ba31984c5939c1c",
+      "gold_index": 2,
+      "gold_id": "supported",
+      "correct": false,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "During a puppet show, a character announces the discovery of a dragon egg. The production note states this is fictional and no real egg was discovered.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_fiction",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "The production note explicitly identifies fiction.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e06",
+        "variant": "original"
+      },
+      "type": "choice",
+      "option_ids": [
+        "contradicted",
+        "insufficient",
+        "supported"
+      ],
+      "logits": [
+        -15.32641315460205,
+        -0.20141352713108063,
+        -1.7014135122299194
+      ],
+      "probabilities": [
+        2.2071068099101767e-07,
+        0.8175742935237695,
+        0.18242548576554962
+      ],
+      "selected": "insufficient",
+      "value": "insufficient",
+      "normalized_entropy": 0.43241375550848615,
+      "logit_space": "vocabulary_logprobs"
+    },
+    {
+      "id": "3e75f2b84e8e08e3d3f2",
+      "family": "candidate_selection",
+      "group_id": "45f8ead2522a14384cdc",
+      "gold_index": 2,
+      "gold_id": "insufficient",
+      "correct": false,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "Candidate A: The editor names the magazine. Candidate B: The website has a blue header.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_stance",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Neither supplies a position on paywalls.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_c04",
+        "variant": "missing"
+      },
+      "type": "choice",
+      "option_ids": [
+        "B",
+        "A",
+        "insufficient"
+      ],
+      "logits": [
+        -12.578892707824707,
+        -0.07889316231012344,
+        -2.5788931846618652
+      ],
+      "probabilities": [
+        3.4439457551387743e-06,
+        0.9241386388513931,
+        0.07585791720285172
+      ],
+      "selected": "A",
+      "value": "A",
+      "normalized_entropy": 0.24447298045186058,
+      "logit_space": "vocabulary_logprobs"
+    },
+    {
+      "id": "ebea4681e3dcc7d92ca2",
+      "family": "candidate_selection",
+      "group_id": "2797f8c23d05c0ee06b3",
+      "gold_index": 1,
+      "gold_id": "B",
+      "correct": false,
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "Candidate A is the preferred translator and is confirmed able to handle this language. Candidate B is the fallback translator and is also able to handle it.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "heldout_priority_fallback",
+        "partition": "heldout_family",
+        "rationale": "The alternative priority selects capable B.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "h_c06",
+        "variant": "criterion_reversal"
+      },
+      "type": "choice",
+      "option_ids": [
+        "insufficient",
+        "B",
+        "A"
+      ],
+      "logits": [
+        -6.628251552581787,
+        -2.128251314163208,
+        -0.12825141847133636
+      ],
+      "probabilities": [
+        0.0013224734021510687,
+        0.11904529026548613,
+        0.8796322363323628
+      ],
+      "selected": "A",
+      "value": "A",
+      "normalized_entropy": 0.3412832911036513,
+      "logit_space": "vocabulary_logprobs"
+    }
+  ],
+  "limitations": [
+    "Scores use this runtime's prompt, not the original SemIf scorer prompt.",
+    "Label argmax equals constrained one-token decoding at temperature zero.",
+    "Probabilities are uncalibrated. No fitting or temperature tuning on evaluation rows.",
+    "SemIf authored144 labels are model-reviewed synthetic labels, not human-adjudicated.",
+    "Runtime errors abort the run; partial success is never published as full coverage.",
+    "Wall time includes per-state prefill and fanout, excludes model load and warm-up."
+  ]
+}

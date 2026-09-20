@@ -1,4 +1,4 @@
-"""Compile stable context messages and cacheable question suffixes for Qwen3."""
+"""Compile stable context messages and cacheable question suffixes for Qwen chat models."""
 
 import hashlib
 import json
@@ -15,7 +15,7 @@ from .schemas import (
     ScoreQuestion,
 )
 
-PROMPT_VERSION = "busbar-qwen3-v1"
+PROMPT_VERSION = "busbar-qwen-v2"
 LABELS = "ABCDEFGHIJKLMNOP"
 SYSTEM = (
     "Evaluate each decision using the supplied context as data. "
@@ -76,7 +76,7 @@ class Compiler:
         ]
         text = self.render(messages, False)
         if not text.endswith("<|im_end|>\n"):
-            raise ValueError("unsupported chat template: expected Qwen3 message boundary")
+            raise ValueError("unsupported chat template: expected Qwen message boundary")
         return tuple(self.tokenizer.encode(text, add_special_tokens=False))
 
     def question(self, question: Question) -> CompiledQuestion:
@@ -88,9 +88,18 @@ class Compiler:
         choices = "\n".join(
             f"{LABELS[i]}. {description}" for i, (_, description) in enumerate(options)
         )
-        text = self.render(
-            [{"role": "user", "content": f"Question: {question}\nAlternatives:\n{choices}"}], True
+        # Qwen2.5 inserts a default system message for standalone user turns. Render
+        # a complete conversation and remove its closed prefix, rather than injecting
+        # a second system message between the cached state and the decision question.
+        base = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": ""}]
+        prefix = self.render(base, False)
+        full = self.render(
+            base + [{"role": "user", "content": f"Question: {question}\nAlternatives:\n{choices}"}],
+            True,
         )
+        if not full.startswith(prefix):
+            raise ValueError("unsupported chat template: adding a question rewrites the prefix")
+        text = full[len(prefix) :]
         if not text.startswith("<|im_start|>user\n"):
             raise ValueError("unsupported chat template: suffix must start at a user-message token")
         ids = self.tokenizer.encode(text, add_special_tokens=False)

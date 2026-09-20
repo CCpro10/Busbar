@@ -1,10 +1,14 @@
 """The backend boundary owns physical KV state; the runtime owns semantic snapshot lifetime."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 DEFAULT_MODEL = "Qwen/Qwen3-0.6B"
 DEFAULT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"
+MODEL_REVISIONS = {
+    DEFAULT_MODEL: DEFAULT_REVISION,
+    "Qwen/Qwen2.5-3B-Instruct": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+}
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,10 @@ class BackendResult:
     logits: list[list[float]]
     computed_tokens: int
     batches: int
+    # Engine-managed APC can reuse question tokens as well as context tokens.
+    # None preserves exact native-KV accounting for the MLX/HF backends.
+    reused_tokens: int | None = None
+    details: dict = field(default_factory=dict)
 
 
 class Backend(Protocol):
@@ -32,7 +40,7 @@ class Backend(Protocol):
     max_tokens: int
 
     def prefill(self, token_ids: tuple[int, ...]) -> PrefixState:
-        """Compute and materialize one prefix, without projecting unused vocabulary logits."""
+        """Prepare one prefix; the backend documents native KV versus engine-managed APC."""
         ...
 
     def score(

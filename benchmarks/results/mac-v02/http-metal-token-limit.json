@@ -1,0 +1,61 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+  "engine_max_model_len": 8192,
+  "reserved_output_tokens": 1,
+  "prefix_tokens": 8154,
+  "accepted": {
+    "input_tokens": 8191,
+    "status": 200,
+    "body": {
+      "snapshot_id": "cf569b2d3bd3997a9c1c5bc85d9e5d6b5d9a629a2ddc073fef6cc0bdfa26ffd4",
+      "decisions": {
+        "box": {
+          "type": "boolean",
+          "option_ids": [
+            "true",
+            "false"
+          ],
+          "logits": [
+            -7.152555099310121e-07,
+            -14.125000953674316
+          ],
+          "probabilities": [
+            0.9999992661791943,
+            7.33820805568835e-07
+          ],
+          "selected": "true",
+          "value": true,
+          "normalized_entropy": 1.601253015207123e-05,
+          "logit_space": "vocabulary_logprobs"
+        }
+      },
+      "mode": "cached",
+      "projection": "full",
+      "prefix_tokens": 8154,
+      "reused_prefix_tokens": 8144,
+      "computed_tokens": 47,
+      "batches": 1,
+      "compile_ms": 0.38337500154739246,
+      "inference_ms": 135.80912500037812,
+      "total_ms": 136.2269169985666,
+      "backend_details": {
+        "engine_cached_tokens": 8144,
+        "generated_tokens": 1,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "probability_status": "conditional label probabilities; uncalibrated"
+    }
+  },
+  "rejected": {
+    "input_tokens": 8192,
+    "status": 422,
+    "body": {
+      "detail": "context plus question exceeds token limit; input was not truncated"
+    }
+  },
+  "deleted": {
+    "deleted": true
+  }
+}

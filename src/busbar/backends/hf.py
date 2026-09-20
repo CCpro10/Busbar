@@ -18,7 +18,7 @@ class HFBackend:
 
         if not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise ValueError("revision must be a full immutable Hugging Face commit SHA")
-        if dtype not in ("float16", "float32") or max_tokens < 1:
+        if dtype not in ("float16", "bfloat16", "float32") or max_tokens < 1:
             raise ValueError("invalid dtype or context limit")
         self.torch = torch
         self.model = AutoModelForCausalLM.from_pretrained(
@@ -28,8 +28,8 @@ class HFBackend:
             trust_remote_code=False,
             attn_implementation="eager",
         ).eval()
-        if self.model.config.model_type != "qwen3":
-            raise ValueError("v0.1 supports dense Qwen3 checkpoints only")
+        if self.model.config.model_type not in ("qwen2", "qwen3"):
+            raise ValueError("HF supports dense Qwen2/3 checkpoints only")
         self.tokenizer = AutoTokenizer.from_pretrained(
             model, revision=revision, trust_remote_code=False
         )

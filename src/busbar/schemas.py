@@ -108,7 +108,7 @@ class DecisionRequest(Contract):
     namespace: Name = "default"
     questions: dict[Name, Question] = Field(min_length=1, max_length=64)
     mode: Literal["cached", "fresh"] = "cached"
-    projection: Literal["selected", "full"] = "selected"
+    projection: Literal["auto", "selected", "full"] = "auto"
 
 
 class Snapshot(Contract):
@@ -143,6 +143,7 @@ class Decision(Contract):
     selected: str
     value: str | bool | float
     normalized_entropy: float
+    logit_space: str = "raw_logits"
 
 
 class DecisionResult(Contract):
@@ -159,4 +160,5 @@ class DecisionResult(Contract):
     compile_ms: float
     inference_ms: float
     total_ms: float
+    backend_details: dict = Field(default_factory=dict)
     probability_status: str = "conditional label probabilities; uncalibrated"

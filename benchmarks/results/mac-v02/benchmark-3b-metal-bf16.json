@@ -1,0 +1,4271 @@
+{
+  "schema_version": 1,
+  "model": {
+    "backend": "vllm-metal",
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "tokenizer_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "dtype": "bfloat16",
+    "actual_precision": [
+      {
+        "parameter_dtypes": {
+          "mlx.core.bfloat16": 3085938688
+        },
+        "kv_dtype": "mlx.core.bfloat16"
+      }
+    ],
+    "vllm": "0.29.0+cpu",
+    "vllm_metal": "0.29.0",
+    "cache_owner": "engine; snapshot cache_bytes counts no physical KV",
+    "memory_fraction": 0.35,
+    "readout": "full vocabulary logprobs; one generated token per decision"
+  },
+  "hardware": {
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "chip": "Apple M4 Pro",
+    "memory_bytes": 51539607552
+  },
+  "versions": {
+    "mlx": "0.32.1",
+    "mlx-lm": "0.32.0",
+    "torch": "2.13.0",
+    "transformers": "5.17.0",
+    "busbar-runtime": "0.2.0",
+    "vllm": "0.29.0+cpu",
+    "vllm-metal": "0.29.0"
+  },
+  "target_prefix_tokens": 2048,
+  "actual_prefix_tokens": 2048,
+  "suffix_tokens": [
+    51,
+    51,
+    51,
+    51,
+    51,
+    51,
+    51,
+    51
+  ],
+  "questions": 8,
+  "repeats": 3,
+  "cache_bytes": 0,
+  "scope": "resident model; kernel warm-up excluded; synthetic latency workload, not a quality benchmark; vLLM cached modes reset and prime state only before each timed run; cached_exact_repeat separately measures reuse of question tokens",
+  "summary": {
+    "fresh_sequential": {
+      "median_ms": 14636.970165993262,
+      "min_ms": 14630.931499996223,
+      "max_ms": 14646.808792000229,
+      "computed_tokens_per_run": 16792,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 0.0
+    },
+    "fresh_batched": {
+      "median_ms": 14485.550666002382,
+      "min_ms": 14472.771000000648,
+      "max_ms": 14496.19525000162,
+      "computed_tokens_per_run": 16792,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 3.7090994720045956e-09
+    },
+    "cached_sequential": {
+      "median_ms": 697.8089580006781,
+      "min_ms": 697.5549579947256,
+      "max_ms": 698.2120410029893,
+      "computed_tokens_per_run": 408,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 0.0
+    },
+    "cached_batched": {
+      "median_ms": 482.3517080003512,
+      "min_ms": 482.22858300141525,
+      "max_ms": 483.53954200138105,
+      "computed_tokens_per_run": 408,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 3.7090994720045956e-09
+    },
+    "cached_exact_repeat": {
+      "median_ms": 142.06904200545978,
+      "min_ms": 141.3819999943371,
+      "max_ms": 143.26754200010328,
+      "computed_tokens_per_run": 24,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 4.762577827582191e-09
+    },
+    "cold_compile_and_fanout": {
+      "median_ms": 2234.580750002351,
+      "min_ms": 2230.5277500054217,
+      "max_ms": 2250.981666998996,
+      "computed_tokens_per_run": 2456,
+      "argmax_changes_vs_first_fresh": 0,
+      "comparisons": 24,
+      "max_probability_delta_vs_first_fresh": 3.7090994720045956e-09
+    },
+    "warm_speedup_vs_fresh_sequential": 30.345015728611465
+  },
+  "runs": {
+    "fresh_sequential": [
+      {
+        "elapsed_ms": 14636.970165993262,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006499998562503606,
+            "inference_ms": 1826.2882499984698,
+            "total_ms": 1826.331707998179,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.0061250029830262065,
+            "inference_ms": 1833.3494999969844,
+            "total_ms": 1833.3930829976453,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006917005521245301,
+            "inference_ms": 1825.0834159989608,
+            "total_ms": 1825.1282920027734,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.005875001079402864,
+            "inference_ms": 1834.954124999058,
+            "total_ms": 1834.9979159975192,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006750000466126949,
+            "inference_ms": 1826.6329580001184,
+            "total_ms": 1826.676791999489,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006417001713998616,
+            "inference_ms": 1833.5934580027242,
+            "total_ms": 1833.6423329965328,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007000002369750291,
+            "inference_ms": 1830.3779999987455,
+            "total_ms": 1830.4261670054984,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007208000170066953,
+            "inference_ms": 1826.2172089962405,
+            "total_ms": 1826.2622920010472,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 14630.931499996223,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.005750000127591193,
+            "inference_ms": 1833.5965000005672,
+            "total_ms": 1833.6425419984153,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.0064589985413476825,
+            "inference_ms": 1824.3800830023247,
+            "total_ms": 1824.4270840004901,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007125003321561962,
+            "inference_ms": 1836.6485000005923,
+            "total_ms": 1836.6937500031781,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006624999514315277,
+            "inference_ms": 1824.0249590016901,
+            "total_ms": 1824.0667920035776,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006582995411008596,
+            "inference_ms": 1831.8657919953694,
+            "total_ms": 1831.9169579990557,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007874994480516762,
+            "inference_ms": 1824.6661250013858,
+            "total_ms": 1824.7144580018357,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007208000170066953,
+            "inference_ms": 1823.0439160033711,
+            "total_ms": 1823.0905840027845,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.007125003321561962,
+            "inference_ms": 1832.2264159942279,
+            "total_ms": 1832.2729999999865,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 14646.808792000229,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.012959004379808903,
+            "inference_ms": 1825.088167002832,
+            "total_ms": 1825.139833999856,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006416004907805473,
+            "inference_ms": 1831.9440409977688,
+            "total_ms": 1831.9893750012852,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006417001713998616,
+            "inference_ms": 1825.3069170023082,
+            "total_ms": 1825.3515000033076,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.0070829992182552814,
+            "inference_ms": 1846.524833003059,
+            "total_ms": 1846.570542002155,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.00695799826644361,
+            "inference_ms": 1824.2573750030715,
+            "total_ms": 1824.3037499996717,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006916998245287687,
+            "inference_ms": 1834.9625839982764,
+            "total_ms": 1835.009207999974,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006166999810375273,
+            "inference_ms": 1824.1241249997984,
+            "total_ms": 1824.1700419966946,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 2099,
+            "batches": 1,
+            "compile_ms": 0.006917005521245301,
+            "inference_ms": 1834.1242500027874,
+            "total_ms": 1834.1695829949458,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      }
+    ],
+    "fresh_batched": [
+      {
+        "elapsed_ms": 14485.550666002382,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 16792,
+            "batches": 1,
+            "compile_ms": 0.03470800584182143,
+            "inference_ms": 14485.42958300095,
+            "total_ms": 14485.534291998192,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 14496.19525000162,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 16792,
+            "batches": 1,
+            "compile_ms": 0.026749999960884452,
+            "inference_ms": 14496.062291000271,
+            "total_ms": 14496.172917002696,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 14472.771000000648,
+        "computed_tokens": 16792,
+        "reused_prefix_tokens": 0,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "fresh",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 0,
+            "computed_tokens": 16792,
+            "batches": 1,
+            "compile_ms": 0.03491700044833124,
+            "inference_ms": 14472.63587499765,
+            "total_ms": 14472.750458000519,
+            "backend_details": {
+              "engine_cached_tokens": 0,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      }
+    ],
+    "cached_sequential": [
+      {
+        "elapsed_ms": 697.5549579947256,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.44245900062378496,
+            "inference_ms": 88.1575410021469,
+            "total_ms": 88.64145899860887,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4702500009443611,
+            "inference_ms": 86.41354200517526,
+            "total_ms": 86.92074999999022,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4417080053826794,
+            "inference_ms": 86.72020899393829,
+            "total_ms": 87.20066699606832,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4492919979384169,
+            "inference_ms": 85.98625000013271,
+            "total_ms": 86.47241599828703,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.48266700468957424,
+            "inference_ms": 86.26616700348677,
+            "total_ms": 86.7823340013274,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4385409993119538,
+            "inference_ms": 86.56566699937684,
+            "total_ms": 87.04162499634549,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4945839973515831,
+            "inference_ms": 86.76275000470923,
+            "total_ms": 87.2941669949796,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.43720900430344045,
+            "inference_ms": 86.63304199581034,
+            "total_ms": 87.10908300417941,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 697.8089580006781,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4607499940902926,
+            "inference_ms": 87.23545799875865,
+            "total_ms": 87.7354589974857,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.43879199802177027,
+            "inference_ms": 87.2367919946555,
+            "total_ms": 87.71104100014782,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.41533300100127235,
+            "inference_ms": 86.98216600168962,
+            "total_ms": 87.43433299969183,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.41775000136112794,
+            "inference_ms": 87.27562499552732,
+            "total_ms": 87.73233300598804,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.44020800123689696,
+            "inference_ms": 86.40079100587172,
+            "total_ms": 86.87670800281921,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4391249967738986,
+            "inference_ms": 86.2254580060835,
+            "total_ms": 86.70245800021803,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4382499973871745,
+            "inference_ms": 86.30424999864772,
+            "total_ms": 86.77845900092507,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4436669987626374,
+            "inference_ms": 86.27004199661314,
+            "total_ms": 86.75195799878566,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 698.2120410029893,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 8,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4586669965647161,
+            "inference_ms": 86.98812499642372,
+            "total_ms": 87.48470799764618,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.45029199827695265,
+            "inference_ms": 86.44412500143517,
+            "total_ms": 86.93154099455569,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4450409978744574,
+            "inference_ms": 87.07133300049463,
+            "total_ms": 87.55625000048894,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.625
+                ],
+                "probabilities": [
+                  0.9999999918479795,
+                  8.152020648014727e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.3080726517035716e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.44600000546779484,
+            "inference_ms": 87.19487499911338,
+            "total_ms": 87.67954100039788,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.44175000221002847,
+            "inference_ms": 86.37025000643916,
+            "total_ms": 86.8520419971901,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.4499580027186312,
+            "inference_ms": 86.88375000201631,
+            "total_ms": 87.36987500014948,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.41208299808204174,
+            "inference_ms": 86.47404099610867,
+            "total_ms": 86.92012499523116,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          },
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 2048,
+            "computed_tokens": 51,
+            "batches": 1,
+            "compile_ms": 0.5152499943505973,
+            "inference_ms": 86.77229200111469,
+            "total_ms": 87.32720799889648,
+            "backend_details": {
+              "engine_cached_tokens": 2048,
+              "generated_tokens": 1,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      }
+    ],
+    "cached_batched": [
+      {
+        "elapsed_ms": 482.22858300141525,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.196166999056004,
+            "inference_ms": 479.8987920003128,
+            "total_ms": 482.2139169991715,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 482.3517080003512,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.564124995842576,
+            "inference_ms": 479.70799999893643,
+            "total_ms": 482.3432089979178,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 483.53954200138105,
+        "computed_tokens": 408,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.2287500032689422,
+            "inference_ms": 481.2295419978909,
+            "total_ms": 483.5310829948867,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      }
+    ],
+    "cached_exact_repeat": [
+      {
+        "elapsed_ms": 141.3819999943371,
+        "computed_tokens": 24,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.125
+                ],
+                "probabilities": [
+                  0.9999999950555496,
+                  4.944450477491054e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.4355835036149192e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 24,
+            "batches": 1,
+            "compile_ms": 0.011541000276338309,
+            "inference_ms": 141.28162500128383,
+            "total_ms": 141.37400000618072,
+            "backend_details": {
+              "engine_cached_tokens": 16768,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 142.06904200545978,
+        "computed_tokens": 24,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.125
+                ],
+                "probabilities": [
+                  0.9999999950555496,
+                  4.944450477491054e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.4355835036149192e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 24,
+            "batches": 1,
+            "compile_ms": 0.008082999556791037,
+            "inference_ms": 141.97866700123996,
+            "total_ms": 142.05991700146114,
+            "backend_details": {
+              "engine_cached_tokens": 16768,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      },
+      {
+        "elapsed_ms": 143.26754200010328,
+        "computed_tokens": 24,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.0
+                ],
+                "probabilities": [
+                  0.9999999943972036,
+                  5.60279640614594e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.6166253188963077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.25
+                ],
+                "probabilities": [
+                  0.9999999956365377,
+                  4.363462233903899e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.2747669289944077e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.375
+                ],
+                "probabilities": [
+                  0.9999999895325983,
+                  1.0467401685178159e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.9258707736395596e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.0
+                ],
+                "probabilities": [
+                  0.9999999847700205,
+                  1.522997951276035e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 4.1747210255066675e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 24,
+            "batches": 1,
+            "compile_ms": 0.007667003956157714,
+            "inference_ms": 143.18145799916238,
+            "total_ms": 143.2591249977122,
+            "backend_details": {
+              "engine_cached_tokens": 16768,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ]
+      }
+    ],
+    "cold_compile_and_fanout": [
+      {
+        "elapsed_ms": 2230.5277500054217,
+        "computed_tokens": 2456,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.38304199592676,
+            "inference_ms": 482.6187500002561,
+            "total_ms": 485.07579199940665,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ],
+        "prefill_ms": 1745.4125000003842,
+        "prefill_tokens": 2048
+      },
+      {
+        "elapsed_ms": 2234.580750002351,
+        "computed_tokens": 2456,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.2017500014044344,
+            "inference_ms": 480.4274999987683,
+            "total_ms": 482.701458997326,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ],
+        "prefill_ms": 1751.8384580034763,
+        "prefill_tokens": 2048
+      },
+      {
+        "elapsed_ms": 2250.981666998996,
+        "computed_tokens": 2456,
+        "reused_prefix_tokens": 16384,
+        "batches": 1,
+        "responses": [
+          {
+            "snapshot_id": "e61d0d3b7cac7b5f5918ce7b8e98f7ca25ef510962beb43aff6ba5fba2320ceb",
+            "decisions": {
+              "item_00": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.875
+                ],
+                "probabilities": [
+                  0.9999999936511998,
+                  6.348800075736417e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.8204272503858653e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_01": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -19.375
+                ],
+                "probabilities": [
+                  0.999999996149258,
+                  3.850741907939403e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 1.1319221749973719e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_02": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_03": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_04": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.25
+                ],
+                "probabilities": [
+                  0.99999998813888,
+                  1.1861120010657661e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.294055961613861e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_05": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_06": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.125
+                ],
+                "probabilities": [
+                  0.9999999865595903,
+                  1.3440409770490404e-08
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 3.7084163950131557e-07,
+                "logit_space": "vocabulary_logprobs"
+              },
+              "item_07": {
+                "type": "choice",
+                "option_ids": [
+                  "accept",
+                  "reject"
+                ],
+                "logits": [
+                  0.0,
+                  -18.5
+                ],
+                "probabilities": [
+                  0.9999999907625504,
+                  9.237449576640118e-09
+                ],
+                "selected": "accept",
+                "value": "accept",
+                "normalized_entropy": 2.5987304261704633e-07,
+                "logit_space": "vocabulary_logprobs"
+              }
+            },
+            "mode": "cached",
+            "projection": "full",
+            "prefix_tokens": 2048,
+            "reused_prefix_tokens": 16384,
+            "computed_tokens": 408,
+            "batches": 1,
+            "compile_ms": 2.845416995114647,
+            "inference_ms": 483.58529200049816,
+            "total_ms": 486.5075839989004,
+            "backend_details": {
+              "engine_cached_tokens": 16384,
+              "generated_tokens": 8,
+              "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+              "logit_space": "vocabulary_logprobs"
+            },
+            "probability_status": "conditional label probabilities; uncalibrated"
+          }
+        ],
+        "prefill_ms": 1764.4304999994347,
+        "prefill_tokens": 2048
+      }
+    ]
+  }
+}

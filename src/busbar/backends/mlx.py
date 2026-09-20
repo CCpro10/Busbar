@@ -6,7 +6,7 @@ from .base import BackendResult, PrefixState, length_batches
 
 
 class MLXBackend:
-    """Validated Qwen3 dense-model adapter with native prefix reuse and suffix batching."""
+    """Dense Qwen2/3 adapter with native prefix reuse and suffix batching."""
 
     def __init__(
         self, model: str, revision: str, *, batch_size=8, max_tokens=8192, dtype="float16"
@@ -19,7 +19,11 @@ class MLXBackend:
             raise RuntimeError("MLX backend requires an Apple Silicon Mac with Metal")
         if not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise ValueError("revision must be a full immutable Hugging Face commit SHA")
-        if dtype not in ("float16", "float32") or not 1 <= batch_size <= 32 or max_tokens < 1:
+        if (
+            dtype not in ("float16", "bfloat16", "float32")
+            or not 1 <= batch_size <= 32
+            or max_tokens < 1
+        ):
             raise ValueError("invalid dtype, batch size or context limit")
         self.mx = mx
         self.model, self.tokenizer, config = load(
@@ -28,8 +32,8 @@ class MLXBackend:
             tokenizer_config={"trust_remote_code": False},
             return_config=True,
         )
-        if config.get("model_type") != "qwen3" or config.get("quantization"):
-            raise ValueError("v0.1 supports dense, unquantized Qwen3 checkpoints only")
+        if config.get("model_type") not in ("qwen2", "qwen3") or config.get("quantization"):
+            raise ValueError("MLX supports dense, unquantized Qwen2/3 checkpoints only")
         self.model.set_dtype(getattr(mx, dtype))
         self.model.eval()
         mx.eval(self.model.parameters())

@@ -172,6 +172,8 @@ class Runtime:
                 self._remove(key)
             if namespace is None:
                 self.compiler.clear()
+                if hasattr(self.backend, "reset_cache"):
+                    self.backend.reset_cache()
             return len(keys)
 
     def stats(self) -> dict:
@@ -190,7 +192,11 @@ class Runtime:
                 "expirations": self._expirations,
                 "model": self.backend.identity,
                 "persistence": "process-memory",
-                "scheduler": "serialized; length-grouped fanout",
+                "scheduler": (
+                    "serialized submissions; vLLM engine schedules fanout"
+                    if self.backend.identity.get("backend") == "vllm-metal"
+                    else "serialized; length-grouped fanout"
+                ),
             }
 
     def decide(self, request: DecisionRequest | dict) -> DecisionResult:
@@ -209,6 +215,9 @@ class Runtime:
                     "context plus question exceeds token limit; input was not truncated"
                 )
             cached = request.mode == "cached"
+            projection = request.projection
+            if projection == "auto":
+                projection = getattr(self.backend, "default_projection", "selected")
             sequences = [q.token_ids if cached else entry.tokens + q.token_ids for q in compiled]
             compile_ms = (time.perf_counter() - mark) * 1000
             mark = time.perf_counter()
@@ -216,13 +225,15 @@ class Runtime:
                 sequences,
                 [q.label_ids for q in compiled],
                 entry.prefix if cached else None,
-                request.projection,
+                projection,
             )
             inference_ms = (time.perf_counter() - mark) * 1000
             if len(output.logits) != len(compiled):
                 raise RuntimeError("backend returned the wrong number of decisions")
             decisions = {
-                name: read_decision(question, logits)
+                name: read_decision(question, logits).model_copy(
+                    update={"logit_space": output.details.get("logit_space", "raw_logits")}
+                )
                 for (name, question), logits in zip(
                     request.questions.items(), output.logits, strict=True
                 )
@@ -232,12 +243,19 @@ class Runtime:
                 snapshot_id=entry.id,
                 decisions=decisions,
                 mode=request.mode,
-                projection=request.projection,
+                projection=projection,
                 prefix_tokens=len(entry.tokens),
-                reused_prefix_tokens=len(entry.tokens) * len(compiled) if cached else 0,
+                reused_prefix_tokens=(
+                    output.reused_tokens
+                    if output.reused_tokens is not None
+                    else len(entry.tokens) * len(compiled)
+                    if cached
+                    else 0
+                ),
                 computed_tokens=output.computed_tokens,
                 batches=output.batches,
                 compile_ms=compile_ms,
                 inference_ms=inference_ms,
                 total_ms=(time.perf_counter() - started) * 1000,
+                backend_details=output.details,
             )

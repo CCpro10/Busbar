@@ -3,6 +3,7 @@
 from fastapi import FastAPI, Query, Request
 from fastapi.responses import JSONResponse
 
+from . import __version__
 from .runtime import CapacityError, Runtime, SnapshotNotFound
 from .schemas import CompileResult, ContextSpec, DecisionRequest, DecisionResult, Snapshot
 
@@ -10,7 +11,7 @@ from .schemas import CompileResult, ContextSpec, DecisionRequest, DecisionResult
 def create_app(runtime: Runtime) -> FastAPI:
     """Expose the full snapshot lifecycle and document a stable versioned decision contract."""
     app = FastAPI(
-        title="Busbar", version="0.1.0", description="Local context-reuse decision runtime"
+        title="Busbar", version=__version__, description="Local context-reuse decision runtime"
     )
 
     @app.exception_handler(SnapshotNotFound)
