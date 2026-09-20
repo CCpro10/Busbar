@@ -1,0 +1,35 @@
+{
+  "context": {
+    "namespace": "demo",
+    "instructions": "Evaluate the shop's return policy using only the provided facts.",
+    "state": {
+      "policy": "Unused shoes may be returned within 30 days of delivery. Items worn outdoors are not eligible.",
+      "order": {"days_since_delivery": 7, "worn_outdoors": false, "packaging_available": true},
+      "customer": "The shoes are too small. I want to return them."
+    }
+  },
+  "questions": {
+    "eligible": {
+      "type": "boolean",
+      "question": "Is this order eligible for a return under the policy?"
+    },
+    "route": {
+      "type": "choice",
+      "question": "Which team should handle this request?",
+      "options": [
+        {"id": "returns", "description": "The returns team, for returning a delivered item."},
+        {"id": "delivery", "description": "The delivery team, for an item that has not arrived."},
+        {"id": "payment", "description": "The payments team, for a failed card charge."}
+      ]
+    },
+    "condition": {
+      "type": "score",
+      "question": "How well does the stated condition satisfy the return policy?",
+      "levels": [
+        {"value": 0, "description": "Clearly fails the return conditions."},
+        {"value": 1, "description": "Missing information prevents a decision."},
+        {"value": 2, "description": "Clearly satisfies the stated return conditions."}
+      ]
+    }
+  }
+}

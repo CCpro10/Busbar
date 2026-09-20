@@ -1,0 +1,92 @@
+{
+  "context": {
+    "snapshot": {
+      "id": "00e683d70e517bb54ff2b6b8ea747ae8ed879c951a110e909cbb328c294fb428",
+      "namespace": "demo",
+      "token_count": 118,
+      "cache_bytes": 29360128,
+      "model": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "created_at": 1789919785.488356,
+      "expires_at": 1789920385.4883564
+    },
+    "reused": false,
+    "prefill_tokens": 118,
+    "elapsed_ms": 430.2647500007879
+  },
+  "result": {
+    "snapshot_id": "00e683d70e517bb54ff2b6b8ea747ae8ed879c951a110e909cbb328c294fb428",
+    "decisions": {
+      "eligible": {
+        "type": "boolean",
+        "option_ids": [
+          "true",
+          "false"
+        ],
+        "logits": [
+          33.28125,
+          34.34375
+        ],
+        "probabilities": [
+          0.25683199138751883,
+          0.7431680086124811
+        ],
+        "selected": "false",
+        "value": false,
+        "normalized_entropy": 0.821928076314486
+      },
+      "route": {
+        "type": "choice",
+        "option_ids": [
+          "returns",
+          "delivery",
+          "payment"
+        ],
+        "logits": [
+          36.53125,
+          27.25,
+          24.359375
+        ],
+        "probabilities": [
+          0.9999016811146156,
+          9.314544854116274e-05,
+          5.173436843241166e-06
+        ],
+        "selected": "returns",
+        "value": "returns",
+        "normalized_entropy": 0.000933723708020244
+      },
+      "condition": {
+        "type": "score",
+        "option_ids": [
+          "0.0",
+          "1.0",
+          "2.0"
+        ],
+        "logits": [
+          30.671875,
+          27.359375,
+          37.375
+        ],
+        "probabilities": [
+          0.0012255127399121515,
+          4.463929828820606e-05,
+          0.9987298479617995
+        ],
+        "selected": "2.0",
+        "value": 1.9975043352218873,
+        "normalized_entropy": 0.009041237772494656
+      }
+    },
+    "mode": "cached",
+    "projection": "selected",
+    "prefix_tokens": 118,
+    "reused_prefix_tokens": 354,
+    "computed_tokens": 160,
+    "batches": 3,
+    "compile_ms": 1.3233330028015189,
+    "inference_ms": 176.2081670021871,
+    "total_ms": 177.66754199692514,
+    "probability_status": "conditional label probabilities; uncalibrated"
+  }
+}
