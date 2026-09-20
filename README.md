@@ -4,6 +4,8 @@ A context-reuse decision runtime for LLM agents.
 
 Busbar 把上下文编译成可复用的 `ContextSnapshot`：后续 Boolean、Choice、Score 判断复用共同前缀。面向 Apple Silicon Mac，新增 MiniCPM5-2B（实际约 2.52B）和 Qwen3.5-4B；MLX 使用独立缓存分支，vLLM Metal 使用引擎的分页前缀缓存，HF/PyTorch 提供 CPU 正确性参考。
 
+**两种接入方式：** 默认通过现有词表候选行直接评分，无需训练；也可以接入 NanoJev 风格的**可训练选择头**，让每个候选描述经过底座，再由共享评分层输出结果。0.4 已打通原生 MLX 上的训练、验证、保存、重载、继续训练和 HTTP 服务；三种决策 API 相同。选型、数据格式与完整命令见 [选择头指南](docs/trainable-heads.md)，实测对照见 [0.4 报告](docs/mac-v04.md)。
+
 M4 Pro、48 GiB 本机实测，相同 BF16 和 Busbar 提示词，Qwen3.5-4B 在 SemIf authored144 / 外部 WANLI256 上准确率为 **89.58% / 67.97%**，Qwen2.5-3B 为 68.75% / 55.47%，MiniCPM5 为 72.92% / 52.34%。新版模型的综合榜单能力不等于单步决策能力；本场景优先推荐 Qwen3.5-4B。SemIf、NanoJev 的真实交叉对照、速度与质量边界见 [0.3 本机报告](docs/mac-v03.md)。历史结果：[0.2](docs/mac-v02.md)、[0.1](docs/acceptance.md)。
 
 ```text
@@ -122,7 +124,7 @@ curl http://127.0.0.1:8787/v1/decisions \
 - **Choice**：2–16 个互斥选项，每项具有唯一 `id` 和 `description`；`value` 是最大分数选项的 ID。
 - **Score**：2–16 个具有明确描述、严格递增的数值等级；`value = Σ(probability × level.value)`，同时保留完整分布。
 
-所有结果包含候选分数（`logit_space` 区分原始 logits 与词表 log probabilities）、候选内 softmax 概率和归一化熵。熵只描述分布集中程度，**不是正确率**；概率未经业务校准。`temperature` 是显式温度缩放参数，设置它本身不构成校准。小模型可能回答错误；演示结果不构成通用决策质量保证。
+所有结果包含候选分数（`logit_space` 区分词表原始 logits、词表 log probabilities 与训练头分数）、候选内 softmax 概率和归一化熵。熵只描述分布集中程度，**不是正确率**；概率未经业务校准。`temperature` 是显式温度缩放参数，设置它本身不构成校准。小模型可能回答错误；演示结果不构成通用决策质量保证。
 
 ## 缓存、批处理与边界
 
@@ -131,7 +133,7 @@ curl http://127.0.0.1:8787/v1/decisions \
 - vLLM Metal 的物理 KV 由引擎管理，`cache_bytes=0` 表示 Busbar 不直接持有 KV，不表示引擎不占内存。引擎预算使用 `--memory-fraction`。删除、过期或淘汰会立即撤销 snapshot 访问；对应物理块之后按引擎策略淘汰。每个新 snapshot 使用独立 cache salt，防止跨 namespace 复用；全局 `Runtime.clear()` 也重置引擎 APC。
 - 创建响应中的 `reused=true` 表示 Busbar 复用了已有 snapshot 和 token，不能证明引擎物理块仍驻留；vLLM 决策响应会按实际命中记录 token 数，块被淘汰后由引擎重新计算。
 - KV 不写磁盘，重启后 ID 不可用，需重新编译。模型权重缓存与运行时 KV 是不同层次。
-- 缓存字节预算只约束保留的前缀 KV；模型、临时分支、激活和 MLX 分配器缓存另外占内存。默认 8 题一批，可调 `--batch-size`。
+- 缓存字节预算只约束保留的前缀 KV；模型、临时分支、激活和 MLX 分配器缓存另外占内存。默认每批 8 条路径：快捷模式一题一条，选择头每个候选一条，可调 `--batch-size`。
 - MLX 按后缀 token 长度分组，不为 padding 或无关位置计算输出头。每个 batch 使用独立物理 KV 分支，绝不修改已保存的前缀。
 - 一个模型操作占用一把锁。一个请求内可以 GPU batch，多 HTTP 请求目前依次执行；没有声称实现 continuous batching。
 - 原生后端完整输入默认最多 8192 token；vLLM Metal 从此预算预留一个输出 token，因此最多接受 8191 个输入 token。超限拒绝，不静默截断。空题集、重复选项、非有限数值、错误字段会返回 422；缺失、过期、淘汰和跨 namespace ID 返回 404。
@@ -139,12 +141,12 @@ curl http://127.0.0.1:8787/v1/decisions \
 - MLX/HF 支持 dense、未量化的 Qwen2/3/3.5 和 Llama 架构（含 MiniCPM5）；vLLM Metal 当前验证 Qwen2/3 和 MiniCPM5，尚未开放 Qwen3.5。模型适配显式检查；HF reference 默认 CPU FP32、串行执行。
 - Qwen3.5 的缓存同时包含注意力 K/V 与递归状态，分支必须独立复制两者。MLX-LM 固定到包含 GDN 归一化修复的提交；其 `A_log` 保持 FP32。FP32 参考加载会在权重转换运算前提升精度，避免继承 BF16 舍入误差。
 
-MLX/HF 的 `projection="selected"` 在词表投影前取出 A–P 对应权重；`projection="full"` 计算完整词表后取相同标签。默认 `auto` 在 MLX/HF 使用 `selected`，在 vLLM Metal 使用 `full`。候选行投影是次要优化，核心仍是避免重复 prefill；共享词表权重继续保留以处理输入 token。
+MLX/HF 的 `projection="selected"` 在词表投影前取出 A–P 对应权重；`projection="full"` 计算完整词表后取相同标签。词表模式下，默认 `auto` 在 MLX/HF 使用 `selected`，在 vLLM Metal 使用 `full`；加载训练头时使用 `head`。候选行投影是次要优化，核心仍是避免重复 prefill；共享词表权重继续保留以处理输入 token。
 
 ## 验证与 benchmark
 
 ```bash
-# 普通回归，无需权重或 GPU。
+# 普通回归无需下载模型；安装 MLX 时还会运行小型 GPU 梯度测试。
 uv run pytest -m 'not model'
 uv run ruff check .
 
@@ -175,6 +177,6 @@ benchmark 保留硬件、依赖版本、精度、真实 prefix/suffix token 数�
 
 ## 后续阶段
 
-Backend 协议把 context 生命周期与物理 KV 执行分开。Mac 已接入 vLLM Metal；Linux vLLM/SGLang、跨 HTTP 请求的 continuous batching、KV offload、训练专用决策头、量化、分布式 KV、跨进程恢复和概率校准属于后续阶段。
+Backend 协议把 context 生命周期与物理 KV 执行分开。Mac 已接入 vLLM Metal；Linux vLLM/SGLang、跨 HTTP 请求的 continuous batching、KV offload、底座微调/LoRA、量化、分布式 KV、跨进程恢复和概率校准属于后续阶段。
 
 本项目是独立的决策 runtime，不是 TypeSafe Jev 的官方实现，也不冒用其接口兼容性或性能结论。依赖 [MLX-LM](https://github.com/ml-explore/mlx-lm)、[Transformers](https://github.com/huggingface/transformers)，使用 [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B) 模型。

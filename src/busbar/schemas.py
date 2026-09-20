@@ -108,7 +108,7 @@ class DecisionRequest(Contract):
     namespace: Name = "default"
     questions: dict[Name, Question] = Field(min_length=1, max_length=64)
     mode: Literal["cached", "fresh"] = "cached"
-    projection: Literal["auto", "selected", "full"] = "auto"
+    projection: Literal["auto", "selected", "full", "head"] = "auto"
 
 
 class Snapshot(Contract):

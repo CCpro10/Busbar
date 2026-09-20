@@ -1,0 +1,907 @@
+{
+  "schema_version": 1,
+  "method": "frozen-backbone-head-only",
+  "base": {
+    "backend": "mlx",
+    "model": "openbmb/MiniCPM5-2B",
+    "revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+    "tokenizer_revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+    "dtype": "float32"
+  },
+  "config": {
+    "epochs": 40,
+    "learning_rate": 0.003,
+    "train_batch_size": 32,
+    "seed": 42,
+    "feature_cache_mib": 256
+  },
+  "init_head_id": null,
+  "optimizer_resumed": false,
+  "encoder_version": "busbar-candidate-v1",
+  "datasets": {
+    "train": {
+      "file": "train.jsonl",
+      "sha256": "ddffd1a2f0e83178e1a071b64235e32693a17bf0fae0339b10dad1a34313ba11",
+      "rows": 96,
+      "ids": [
+        "train-account-0-money",
+        "train-account-0-route",
+        "train-account-0-urgency",
+        "train-account-1-money",
+        "train-account-1-route",
+        "train-account-1-urgency",
+        "train-account-2-money",
+        "train-account-2-route",
+        "train-account-2-urgency",
+        "train-account-3-money",
+        "train-account-3-route",
+        "train-account-3-urgency",
+        "train-account-4-money",
+        "train-account-4-route",
+        "train-account-4-urgency",
+        "train-account-5-money",
+        "train-account-5-route",
+        "train-account-5-urgency",
+        "train-account-6-money",
+        "train-account-6-route",
+        "train-account-6-urgency",
+        "train-account-7-money",
+        "train-account-7-route",
+        "train-account-7-urgency",
+        "train-billing-0-money",
+        "train-billing-0-route",
+        "train-billing-0-urgency",
+        "train-billing-1-money",
+        "train-billing-1-route",
+        "train-billing-1-urgency",
+        "train-billing-2-money",
+        "train-billing-2-route",
+        "train-billing-2-urgency",
+        "train-billing-3-money",
+        "train-billing-3-route",
+        "train-billing-3-urgency",
+        "train-billing-4-money",
+        "train-billing-4-route",
+        "train-billing-4-urgency",
+        "train-billing-5-money",
+        "train-billing-5-route",
+        "train-billing-5-urgency",
+        "train-billing-6-money",
+        "train-billing-6-route",
+        "train-billing-6-urgency",
+        "train-billing-7-money",
+        "train-billing-7-route",
+        "train-billing-7-urgency",
+        "train-delivery-0-money",
+        "train-delivery-0-route",
+        "train-delivery-0-urgency",
+        "train-delivery-1-money",
+        "train-delivery-1-route",
+        "train-delivery-1-urgency",
+        "train-delivery-2-money",
+        "train-delivery-2-route",
+        "train-delivery-2-urgency",
+        "train-delivery-3-money",
+        "train-delivery-3-route",
+        "train-delivery-3-urgency",
+        "train-delivery-4-money",
+        "train-delivery-4-route",
+        "train-delivery-4-urgency",
+        "train-delivery-5-money",
+        "train-delivery-5-route",
+        "train-delivery-5-urgency",
+        "train-delivery-6-money",
+        "train-delivery-6-route",
+        "train-delivery-6-urgency",
+        "train-delivery-7-money",
+        "train-delivery-7-route",
+        "train-delivery-7-urgency",
+        "train-returns-0-money",
+        "train-returns-0-route",
+        "train-returns-0-urgency",
+        "train-returns-1-money",
+        "train-returns-1-route",
+        "train-returns-1-urgency",
+        "train-returns-2-money",
+        "train-returns-2-route",
+        "train-returns-2-urgency",
+        "train-returns-3-money",
+        "train-returns-3-route",
+        "train-returns-3-urgency",
+        "train-returns-4-money",
+        "train-returns-4-route",
+        "train-returns-4-urgency",
+        "train-returns-5-money",
+        "train-returns-5-route",
+        "train-returns-5-urgency",
+        "train-returns-6-money",
+        "train-returns-6-route",
+        "train-returns-6-urgency",
+        "train-returns-7-money",
+        "train-returns-7-route",
+        "train-returns-7-urgency"
+      ],
+      "groups": [
+        "train-account-0",
+        "train-account-1",
+        "train-account-2",
+        "train-account-3",
+        "train-account-4",
+        "train-account-5",
+        "train-account-6",
+        "train-account-7",
+        "train-billing-0",
+        "train-billing-1",
+        "train-billing-2",
+        "train-billing-3",
+        "train-billing-4",
+        "train-billing-5",
+        "train-billing-6",
+        "train-billing-7",
+        "train-delivery-0",
+        "train-delivery-1",
+        "train-delivery-2",
+        "train-delivery-3",
+        "train-delivery-4",
+        "train-delivery-5",
+        "train-delivery-6",
+        "train-delivery-7",
+        "train-returns-0",
+        "train-returns-1",
+        "train-returns-2",
+        "train-returns-3",
+        "train-returns-4",
+        "train-returns-5",
+        "train-returns-6",
+        "train-returns-7"
+      ],
+      "fingerprints": [
+        "0014efb06b30af5fa0c323fb3a555fabe4786e2e00af0109e2b6deda071e6c4b",
+        "0055fa5346e448d7d33a97102e2efd8accba80346be6403b39a15447decc4a6a",
+        "01fd99903ac0db43007d5a7a813bc854ccd1883602f98f2b9c699afc5e6ecb2e",
+        "03613782f09c98cfe69bd66cbc368e5ad95b854ab64070ac575165609a4187c0",
+        "059c0b968c50285cbd42007e0fc229044f677c306a850ae10053f5d952f2fcdc",
+        "08e5a288e3a316bf1c71d934827d1fb66a2993b46bc53fcff77175d27d9198fd",
+        "0bf6627f2b82e26438a45baa5e1cd30d6fa528d1a623d93ecc205a2460cb0664",
+        "0faa47c8f8961254964b7787d90a2c16259eaf8ad59f01c98fac803bd82569f2",
+        "12a0f3d572717efe70fa6f9b4e6d2f92ea96027ef65f1508e2fee8517e01d3d0",
+        "13e5cf7cbfe772eed15a27927e5e39bb7f876b0b7c528a8637629e6ed39e2ff9",
+        "1723ee9d717a62a28af50918bfde9bf524c5f275983af78a0530f53e44d685af",
+        "1781e71c90bcb82a6a8017afa373effa6a4db42dc5047a5c3b3cc554532b9e3e",
+        "1806b22bed8707d4b6a92d95020b3763b1204cfa943524e2eeba1d5c1237b392",
+        "1d6f369a7f4340bd6e48f601c30f9735dfea55d98c8e7ac3610c7257926da52c",
+        "1ea9f93e4c9947a0170f401f8986091da3b5acd7a4cf131806e2cd20ede196cc",
+        "200efa5f08f84e59014d0428d12eee20e9c5185786f78fb1e11f072fa0ca33ef",
+        "2088b6d47e9fab16b821eabeebe5893a6f5eb0afcf1543490a13ceffb45cec09",
+        "2699d604b7ebfb89b9b800dcb93644c9b18e8d389b4f32de8fe67a2c1c9ee132",
+        "2723ebf839684078243cd01123f1f77287a0846d3aa90518b01eeeb97cc22894",
+        "27c3cbf43667ba06e760341e892150b0fccc0e47ee26537ccd69aa43ae4e9d8b",
+        "291abd4ef2927a5d5935c4f26ba28dae7860d1d2b8f019bac8fb41324614e070",
+        "2cc8f144afc4f9eef7ac998c281429bb2d40f3e3ee27ebbd423775e39fda49aa",
+        "2f45ddc1460fdf5023e43670f3b2eab219ef004b42d09fdc9fc63b6529953499",
+        "33c91bf03f8d09d2235a00a942ef276a97768a2a21cb542dddead355ed11465a",
+        "33e8dcd41f23af367eea8e44ae6da9e68a6959acdc4a11ef5aa15f4bdf3400a8",
+        "34a2bedefa13eef3cd620f5406515e369284d26f1ba4c7cf2d3a8ff25396b4fe",
+        "44cb883f951ddeedb6e89f80a34e68bc0c3caceef1f733c8c9886f0d4926e214",
+        "452867f27ef454dc5232f077d66ec0384b1ae92e9f588521f91afbed9c3f1d71",
+        "48aab9de1c0c98d6878b89618a0bc1ce6d94cd75a7c02bc8176368190ef0a242",
+        "49caa7f0c40d41ee8d31396e8c760510ef7e7647402c2d36513ac42cdea7df91",
+        "4db427c1f8d05cf861d7888c6da9228704823a9f85a4bc4f051ffec0edc56c3c",
+        "549e30bc36ead9738828ed2f759f7ee78b2f76db2572fe705a514c00b5a9b0a7",
+        "55801a82910b6f97dcff9e0311db3cea2da1671dda2555fb1262e91bf4db303d",
+        "574e538d7d9a3fa1da857a0c981ff36ff2c3ec5035b416592b62515640260ada",
+        "5923e6be37bf387af9a81c1122b8b1dc86c34e500ffc4dc8c2b93fee88b22f2f",
+        "5a5fd4096806c3d9529e3fffc3af88df17f20c7a30ff5ccb347ae0cae1de6fb1",
+        "5bf6ffe755a3983972da486d786ba63ec3abdc22594fce35b38b1da36d2f96a4",
+        "5ce5829997b00ae1b5e31c43daa98d22fbce532149cd25164f0ce7c3d598ccd8",
+        "6121595293f91f42eb73495784c29767f6e9a58864836324e40923731ee250e7",
+        "63d0fb4dbd0343d6659f339f7fc43655e8686c4c6248e62fbee1617237f60c49",
+        "64457af069b0720353d9836e93b12712274ab61dadeae7eb86c0361174edc289",
+        "69d39a30504f21a185bb2d510e5af679ff0edd2c5d5fd9995371026562fee58a",
+        "6afc8b52c2c065de1c1789a1fc6fd530937f4f9ea22ec30706b8f0105d012b56",
+        "6afe5d07d62dc31b02337a37fbd4a84c277fb351813648a636cf788c702b8070",
+        "6c97fe18e83c4bbabf9a11c9019cfb41f381ca5b289d53362762548ef7e77c82",
+        "745b5d1e194890168a2312001cbbbb286c116eb21fd5aa1ffa9657c6eb4f8f80",
+        "74f249d561e030f66f29e07380a928c8a0360c8ba93408105de72acc68ee2bd4",
+        "77b7d8bdf929defa153b01d2930d620e736afa08fd360b68c0e1c109fdd04163",
+        "7cc11efaf3a7a85f364a554e605d31bd1c811b34dad76d76abff0918fecb24f1",
+        "7de3c085e122344203469e7a71da1689ba0d5d51050c2ca54fd9daf0c47f841b",
+        "7ede687fe318c83167d039f25ba79b271b7f86356b110762b1a2275a7d095b05",
+        "83a5d6f59ad94d715b503f15d97e39dcc2ecac967e3c3aad097aa4665dc1b1b7",
+        "84ced94e6e00c50437d33d9ded1d1393f8321d63be65976abace1cde2944623a",
+        "8761b1309e6da5521ff749c5682902491d4bb93dee1056f063312f4dd7c1dda8",
+        "884c4fc36b0d527e029a26e32485135568b434aeaa37ab384441cdad253d9bf7",
+        "8a357875f5ba5ce3c87c282aee6735315aa114352f93f6727c12c4efbedbbb22",
+        "8ae97f4189cbe2ec7f6b19635d09ced7f94f9630976c8df0fcafb2534b03306c",
+        "8b034e8a52a2faf7a138fce217dcaca24b3b958c627abf3b450dcbcd415efe61",
+        "8d9d86c1074adc72ffe4b9fc5535ca21a13ab5841aafb6a4d490d6991e89850f",
+        "904f4515b21dbfb919071c208c7cadbb5b14562e0abb2a51a013b1104912722e",
+        "908e7208bf27681aad48c774bb574f77dfa4c0c8231a8036cd4efb596f0c8d58",
+        "91695de1da9d3ec59074644182db6c6a5930c551238ffab107e2326916b572db",
+        "93dedd7fa593343332a3af6c6d616467b992e683250db294f05fb619c35863b8",
+        "96589b698abafdac62e71807533d46732874274c14568479a38fcfd261c96ca8",
+        "98e566d93c44352fe029418ff1e2f33cbc1c4d019e1aae087fdf048f3c9c225b",
+        "9e51349b249a9c29bab7668f74fddc94b5350575196132d4812fede2a954273e",
+        "a5b73b8394f2422c394ce836a6c143dab39730c0724b6d2734b387a2e3078d37",
+        "a8a67be662fcd3a4b6c5f0ad395c730c39e5543a94f5b607ff0a5432edeb2aad",
+        "ab100b8e71efbe7fc1f3386fd1aa8c124ca4de5356cdb9b704e7c9facfaf3029",
+        "b1138d33981e2cd80fe8cc9e3eae11abdc47e07633f1f409e11b8a7065cd95f1",
+        "b678b67d5757b2722e64597aabe648533fdfc88d50a10effa343b527abb81547",
+        "b9de04d96098efafe46b2de5ef4f20a2091567cbc6ec35d49bfccca4737a608e",
+        "bbda7764c5c77e241ca7fb3cf41618bf82626cf53f884be9a7c5d7b78ef12b03",
+        "bbe5db283030e9acb4bb6f2a1d1c2a2fd7dff2a88e98176d3de80e74aa5c6c95",
+        "be4cf67a7c8d63c94879d42b84216e9f092bd8eebdbd3b6e5ea85e88f8494680",
+        "c11b5e5c1d8de5cfba43c7bb79595a8df92f8dc79522f835ee5c3f4b71e5daa1",
+        "c4a22029757bf0762485b14c9a8d1b98a74f84d613d45a8bdd36ea2579ff36f5",
+        "c4fa5e358f979ccc1816059706253f2074af50c45b31f72e5b80f7e9afe378c2",
+        "c6e04a5411a4c37e46c675c1fcde736d8237309592bed2b85f0174eeb827c384",
+        "c8049a255056d7c3ddaf1af2e6d49caf764080114e69b2a687ae5f0d2c157f50",
+        "cfab645d34e8b5c2cadd39876e22815499c0cd2db55f0fe0f9476bc2c7b46d55",
+        "d2c2629905bf4864439dfb7d401c1c5177b7ae66bb734783aee6a9076a53a9c1",
+        "d5a62307834cbca6fe03945282a3a1e6eea018066b825dae5e7a8b7073f37d7d",
+        "d89aee9a166f6dd6570fcc67107c78d512da42523d5d850b2d446a4c3013177a",
+        "d974d47fc1fb2502cb6f9083a0601b8a80e9d8bcd25dfbd25cb767672766a6a3",
+        "d9a310e66c327926845de1d1e92263383b8b795e0eb50b921079614e3e39012f",
+        "dafa6d65f2f614260a5f8481c175688712f50ed1d69b2e11c077db86e4d73820",
+        "dfd4c2b081d0ab6dc56b79f90a6a82332ec6add11300eeff9bd565d35871f259",
+        "e05568068c2fe97a190fb9ed82f859a1de93f9288409e5ef2993a38395b181db",
+        "e1abddf48dc95bd9b532315948129e8424a716328d4c825f782561aa4d9ad95e",
+        "e22bc7c59ed9146bf22ff91efd5ac2a5e9fbe105f2075f8649e93cdd4a913fda",
+        "e3a54f7e0eb41edcf97c8de22505ecaec10142e77231ae5c10845b6435c12afc",
+        "e8f7d065ba458b42a054353cbf845f827e03706f96e258c16d9229139b8cab67",
+        "ee575b3a7eff7eba28509331a0cd53e504ce085cfe83b169143d451b28bf5a12",
+        "f5228a8da3d7c3868b0d1d87a484322f691e1acd23a00034fba06e689162cd71",
+        "f8b53365b6e7318b3b541aef5edabbaa687e3ca441432ffdff21a786840df610"
+      ]
+    },
+    "validation": {
+      "file": "validation.jsonl",
+      "sha256": "45e749bab9beac19b3345e273e9396a4a5a1c042303265fc4af7d83913395f03",
+      "rows": 36,
+      "ids": [
+        "validation-account-0-money",
+        "validation-account-0-route",
+        "validation-account-0-urgency",
+        "validation-account-1-money",
+        "validation-account-1-route",
+        "validation-account-1-urgency",
+        "validation-account-2-money",
+        "validation-account-2-route",
+        "validation-account-2-urgency",
+        "validation-billing-0-money",
+        "validation-billing-0-route",
+        "validation-billing-0-urgency",
+        "validation-billing-1-money",
+        "validation-billing-1-route",
+        "validation-billing-1-urgency",
+        "validation-billing-2-money",
+        "validation-billing-2-route",
+        "validation-billing-2-urgency",
+        "validation-delivery-0-money",
+        "validation-delivery-0-route",
+        "validation-delivery-0-urgency",
+        "validation-delivery-1-money",
+        "validation-delivery-1-route",
+        "validation-delivery-1-urgency",
+        "validation-delivery-2-money",
+        "validation-delivery-2-route",
+        "validation-delivery-2-urgency",
+        "validation-returns-0-money",
+        "validation-returns-0-route",
+        "validation-returns-0-urgency",
+        "validation-returns-1-money",
+        "validation-returns-1-route",
+        "validation-returns-1-urgency",
+        "validation-returns-2-money",
+        "validation-returns-2-route",
+        "validation-returns-2-urgency"
+      ],
+      "groups": [
+        "validation-account-0",
+        "validation-account-1",
+        "validation-account-2",
+        "validation-billing-0",
+        "validation-billing-1",
+        "validation-billing-2",
+        "validation-delivery-0",
+        "validation-delivery-1",
+        "validation-delivery-2",
+        "validation-returns-0",
+        "validation-returns-1",
+        "validation-returns-2"
+      ],
+      "fingerprints": [
+        "07ad36ec6c51369248b493367dbde4dd7c98902e58cc0d3a5a57ae518aa49f92",
+        "16d2b1f5e92d5b08a0f02d99ca15a2fc8077435f69ccdc52e1106d81a1ea3478",
+        "280c443c753d341bc36cc981c07b0f177129a1ea5b059804c5c9a4b792534085",
+        "2b35956ec13ab57e0824344936ade3055084bb994c4e54411342d2d13c98b1b2",
+        "2cd2c48a25782a9344a0a98f284679e30382ebf064d718b087ea1c15c084f562",
+        "4a137c9ff54890f7933f7b0424e2fb8bfdc028b0e1b2c3730a1243c959981ab4",
+        "4f061139f51ba29f804e1932cbb9fdc469b6f14e0a9b6c680f244671868c7faf",
+        "566407171e373578e973826b8b05cec21f17308f8c5cd98eeedb5859c3bdb7f4",
+        "58a15252b0063a7147deffec0f1de82db8743981a750adf3a105cf9c5e155d14",
+        "5a59558a0926fd6594ddc00ced3e73ddff72c5fe4e6b111265e7783709958d00",
+        "5b84df14549a43fa8d34292cd66f995123e818c5169b0a6a720461a675c6ec57",
+        "6529af9da12c688c6986ab4c3059c9f43287eae884e6911d2b69dbcb62fec354",
+        "67fecf48b15799195f33739eb1fd28ddbc7b0fad17d9da2dfda28c2a443247e5",
+        "6ae28449f541e19e664c63bb6d0959d8e26345097ba98bb57ef0a6c90d1bdf3c",
+        "6b2b85392393b23fbd89c94edb7bb9d72b83f5d26e15cd05304818a49d8cc22d",
+        "6b73f1cd5458af4e0e58eb0244564bc21b6b60ccbf2aefd7e36032e2e287559e",
+        "6df3bda411bf0a0a608bbb9a0af851c36a8daf2594fb7c7a545704a819ef7883",
+        "71748bdf157bd8a873576cc2c671e516f145482ff1d41ce715c8841cc1c930e3",
+        "72090940d86a7410fd8ed4133ab8aa2c8effcfc2135d00087dce34a76fa1588c",
+        "837432559d209c084aeac45d8f8ebdbc0740d8f075ff9cc2c0a55922dd6edd3d",
+        "916d195fe353d9575293bae1c532f2e32cbf94d3aa4aa4a3bbf5db84e7d39b20",
+        "a22f5cf94a0efebdc77e364d76ee4745c3fce2f8e930378a37c545abfa849f94",
+        "a5e75978cbbeb8e33b0b7696fe078a6ae3d1ac386b03b675a3bb36b2bec21c17",
+        "a91c1ec1d4a8aae40b645bc6e6d360dfdc26532368a9cd2417ced3f767e13920",
+        "a9ac0c66c20cd4fc74ee9b47a878016c715ed96205870475feadd2063e37660d",
+        "bf0761490a647bb6a2cd9b101407e0aab563689806780196d2616c2bf7aa3330",
+        "c3d9fa750bba69212e45a3cbbca855191e6bd86b513a02763e50801acb5b3229",
+        "c6462e89cc9db93b754c050510fee29d00450e735ac1ac7685b444c1218f7062",
+        "c9674e6a9ef63046de31e7abacc130e651ca5802cd52d1696d6716526118ea42",
+        "cfaa39c35c024d8907d675ed16a68095e02bb72307d69da366f9dd43372b571e",
+        "d2529c4f007b90e0db7dfa8ba22e7374538ee68228bff8962edb4a9ffbf89557",
+        "ddd7534c5e885745139e57479ea6554e5ed74748f1dcf6c8c584c5a398f9fc07",
+        "e1e53d217fe672d47ce100628a013e31b6f8e2121414c40ea946f7b96b284849",
+        "f4faffa4b20d45134927c14fb431e6ec95e3098f68ec77e8cdc17bb30c111bd3",
+        "faaf7cd2d18495242d980c26a6e7ca6ad476b9850a6a36063c21389b58f6b201",
+        "fbe227b7cf622bbbc05a5fb99705e523b8ddbbdff2cabc15342a616c95702752"
+      ]
+    }
+  },
+  "elapsed_seconds": 22.837377416995878,
+  "versions": {
+    "mlx": "0.32.2",
+    "mlx-lm": "0.32.0",
+    "transformers": "5.17.0"
+  },
+  "history": [
+    {
+      "epoch": 0,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.2291666716337204,
+        "nll": 0.9524143934249878
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.3055555522441864,
+        "nll": 0.9612702131271362
+      }
+    },
+    {
+      "epoch": 1,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9270833730697632,
+        "nll": 0.32895275950431824
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.8055555820465088,
+        "nll": 0.477493554353714
+      }
+    },
+    {
+      "epoch": 2,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9375,
+        "nll": 0.1704041212797165
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.8888888955116272,
+        "nll": 0.34545063972473145
+      }
+    },
+    {
+      "epoch": 3,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.96875,
+        "nll": 0.12015828490257263
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.8888888955116272,
+        "nll": 0.34597545862197876
+      }
+    },
+    {
+      "epoch": 4,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.96875,
+        "nll": 0.09809353947639465
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.8888888955116272,
+        "nll": 0.3614703118801117
+      }
+    },
+    {
+      "epoch": 5,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.96875,
+        "nll": 0.08418824523687363
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.37322255969047546
+      }
+    },
+    {
+      "epoch": 6,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.0732569694519043
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.38256749510765076
+      }
+    },
+    {
+      "epoch": 7,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.06514590978622437
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.389168918132782
+      }
+    },
+    {
+      "epoch": 8,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.05805591866374016
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.39015188813209534
+      }
+    },
+    {
+      "epoch": 9,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.05271318554878235
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.39248982071876526
+      }
+    },
+    {
+      "epoch": 10,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.04853709042072296
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.39574217796325684
+      }
+    },
+    {
+      "epoch": 11,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.045551102608442307
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.3997679054737091
+      }
+    },
+    {
+      "epoch": 12,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.04253885895013809
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.4027783274650574
+      }
+    },
+    {
+      "epoch": 13,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.96875,
+        "nll": 0.040149107575416565
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.40370815992355347
+      }
+    },
+    {
+      "epoch": 14,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.038573190569877625
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.4058727025985718
+      }
+    },
+    {
+      "epoch": 15,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9791666865348816,
+        "nll": 0.0370866060256958
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.40807265043258667
+      }
+    },
+    {
+      "epoch": 16,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9895833730697632,
+        "nll": 0.03504414111375809
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.4133659899234772
+      }
+    },
+    {
+      "epoch": 17,
+      "train": {
+        "rows": 96,
+        "accuracy": 0.9895833730697632,
+        "nll": 0.03376659378409386
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.41645967960357666
+      }
+    },
+    {
+      "epoch": 18,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.03124040924012661
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.4146086871623993
+      }
+    },
+    {
+      "epoch": 19,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.030639715492725372
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.41501563787460327
+      }
+    },
+    {
+      "epoch": 20,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.028751706704497337
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.41739514470100403
+      }
+    },
+    {
+      "epoch": 21,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.027631280943751335
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.41877809166908264
+      }
+    },
+    {
+      "epoch": 22,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.026709649711847305
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.420833021402359
+      }
+    },
+    {
+      "epoch": 23,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.026323219761252403
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.42320042848587036
+      }
+    },
+    {
+      "epoch": 24,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.02487250044941902
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.4213747978210449
+      }
+    },
+    {
+      "epoch": 25,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.023965967819094658
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.9166666865348816,
+        "nll": 0.42084789276123047
+      }
+    },
+    {
+      "epoch": 26,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.02323758415877819
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4201219379901886
+      }
+    },
+    {
+      "epoch": 27,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.022620465606451035
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4201185703277588
+      }
+    },
+    {
+      "epoch": 28,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.02200694940984249
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4207123816013336
+      }
+    },
+    {
+      "epoch": 29,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.0211234912276268
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.42127469182014465
+      }
+    },
+    {
+      "epoch": 30,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.020594939589500427
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4228103458881378
+      }
+    },
+    {
+      "epoch": 31,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.02014273963868618
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4238807260990143
+      }
+    },
+    {
+      "epoch": 32,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.019438082352280617
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.42345869541168213
+      }
+    },
+    {
+      "epoch": 33,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.018882904201745987
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.422885000705719
+      }
+    },
+    {
+      "epoch": 34,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.018394555896520615
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4232717752456665
+      }
+    },
+    {
+      "epoch": 35,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.017881888896226883
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.42363420128822327
+      }
+    },
+    {
+      "epoch": 36,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.017451386898756027
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4241872727870941
+      }
+    },
+    {
+      "epoch": 37,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.016980864107608795
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.42491865158081055
+      }
+    },
+    {
+      "epoch": 38,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.016540540382266045
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.42599353194236755
+      }
+    },
+    {
+      "epoch": 39,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.016169171780347824
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.4274905025959015
+      }
+    },
+    {
+      "epoch": 40,
+      "train": {
+        "rows": 96,
+        "accuracy": 1.0,
+        "nll": 0.015832481905817986
+      },
+      "validation": {
+        "rows": 36,
+        "accuracy": 0.944444477558136,
+        "nll": 0.428510844707489
+      }
+    }
+  ],
+  "best_epoch": 2,
+  "parameter_delta_l2": 3.5139354914310266,
+  "trainable_parameters": 6144,
+  "selected_train": {
+    "rows": 96,
+    "accuracy": 0.9375,
+    "nll": 0.1704041212797165
+  },
+  "selected_validation": {
+    "rows": 36,
+    "accuracy": 0.8888888955116272,
+    "nll": 0.34545063972473145
+  }
+}

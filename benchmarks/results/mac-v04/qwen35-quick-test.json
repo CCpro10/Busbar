@@ -1,0 +1,1624 @@
+{
+  "schema_version": 1,
+  "model": {
+    "backend": "mlx",
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "dtype": "float32"
+  },
+  "input_name": "test.jsonl",
+  "input_sha256": "9aa57a07981e5dd67cef261c84c4f14f7d39dd96340698762f26634d29849b76",
+  "data_format": "native",
+  "allow_training_data": false,
+  "mode": "cached",
+  "projection": "auto",
+  "summary": {
+    "rows": 48,
+    "answered": 48,
+    "correct": 48,
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "coverage": 1.0,
+    "nll": 0.04553015781199694,
+    "brier": 0.010588796744873405,
+    "reliability_bins": [
+      {
+        "lower": 0.7,
+        "upper": 0.8,
+        "count": 3,
+        "accuracy": 1,
+        "mean_confidence": 0.7832842681313412
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 4,
+        "accuracy": 1,
+        "mean_confidence": 0.8599647128893101
+      },
+      {
+        "lower": 0.9,
+        "upper": 1.0,
+        "count": 41,
+        "accuracy": 1,
+        "mean_confidence": 0.9799028080258978
+      }
+    ],
+    "ece_10_equal_width": 0.0423806919788943,
+    "mean_family_balanced_accuracy": 1.0,
+    "wall_seconds": 7.670211458003905,
+    "decisions_per_second": 6.257976101807696
+  },
+  "families": {
+    "choice": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 16,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "coverage": 1.0,
+      "nll": 0.003059488976923374,
+      "brier": 6.881580747825548e-05,
+      "reliability_bins": [
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 16,
+          "accuracy": 1,
+          "mean_confidence": 0.9969610761222059
+        }
+      ],
+      "ece_10_equal_width": 0.003038923877794142
+    },
+    "boolean": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 16,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "coverage": 1.0,
+      "nll": 0.0906184440705758,
+      "brier": 0.025741189482806022,
+      "reliability_bins": [
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 3,
+          "accuracy": 1,
+          "mean_confidence": 0.7832842681313412
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "accuracy": 1,
+          "mean_confidence": 0.8077679624019062
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 12,
+          "accuracy": 1,
+          "mean_confidence": 0.9592590549269677
+        }
+      ],
+      "ece_10_equal_width": 0.08320441088002858
+    },
+    "score": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 16,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "coverage": 1.0,
+      "nll": 0.04291254038849162,
+      "brier": 0.005956384944335935,
+      "reliability_bins": [
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 3,
+          "accuracy": 1,
+          "mean_confidence": 0.8773636297184447
+        },
+        {
+          "lower": 0.9,
+          "upper": 1.0,
+          "count": 13,
+          "accuracy": 1,
+          "mean_confidence": 0.9779637886140696
+        }
+      ],
+      "ece_10_equal_width": 0.04089874117886004
+    }
+  },
+  "timings": [
+    {
+      "rows": 3,
+      "compile_ms": 157.16845900169574,
+      "inference_ms": 328.1599580004695,
+      "computed_tokens": 143,
+      "reused_prefix_tokens": 252,
+      "backend_details": {},
+      "state_wall_ms": 487.0443339968915
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.39429200382438,
+      "inference_ms": 287.0933750018594,
+      "computed_tokens": 152,
+      "reused_prefix_tokens": 249,
+      "backend_details": {},
+      "state_wall_ms": 444.319665999501
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.4020840014564,
+      "inference_ms": 333.4856250003213,
+      "computed_tokens": 161,
+      "reused_prefix_tokens": 249,
+      "backend_details": {},
+      "state_wall_ms": 490.9211249978398
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.7858749986044,
+      "inference_ms": 325.0949579960434,
+      "computed_tokens": 142,
+      "reused_prefix_tokens": 246,
+      "backend_details": {},
+      "state_wall_ms": 482.5821249978617
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.92516600392992,
+      "inference_ms": 324.2980830036686,
+      "computed_tokens": 144,
+      "reused_prefix_tokens": 258,
+      "backend_details": {},
+      "state_wall_ms": 481.91666600177996
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.26445899397368,
+      "inference_ms": 327.3395830037771,
+      "computed_tokens": 154,
+      "reused_prefix_tokens": 243,
+      "backend_details": {},
+      "state_wall_ms": 484.3883339999593
+    },
+    {
+      "rows": 3,
+      "compile_ms": 157.34133400110295,
+      "inference_ms": 329.9729170030332,
+      "computed_tokens": 161,
+      "reused_prefix_tokens": 261,
+      "backend_details": {},
+      "state_wall_ms": 488.2264160041814
+    },
+    {
+      "rows": 3,
+      "compile_ms": 157.19933299988043,
+      "inference_ms": 325.4175420006504,
+      "computed_tokens": 142,
+      "reused_prefix_tokens": 264,
+      "backend_details": {},
+      "state_wall_ms": 483.2995410033618
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.4056669958518,
+      "inference_ms": 325.70704099634895,
+      "computed_tokens": 145,
+      "reused_prefix_tokens": 258,
+      "backend_details": {},
+      "state_wall_ms": 482.79237499809824
+    },
+    {
+      "rows": 3,
+      "compile_ms": 155.40941600193037,
+      "inference_ms": 327.15258299867855,
+      "computed_tokens": 154,
+      "reused_prefix_tokens": 246,
+      "backend_details": {},
+      "state_wall_ms": 483.3641669974895
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.89033299713628,
+      "inference_ms": 329.07454199448694,
+      "computed_tokens": 161,
+      "reused_prefix_tokens": 261,
+      "backend_details": {},
+      "state_wall_ms": 486.8216249960824
+    },
+    {
+      "rows": 3,
+      "compile_ms": 155.67733299394604,
+      "inference_ms": 325.9821249957895,
+      "computed_tokens": 143,
+      "reused_prefix_tokens": 246,
+      "backend_details": {},
+      "state_wall_ms": 482.3686249947059
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.85654200206045,
+      "inference_ms": 325.94416700158035,
+      "computed_tokens": 142,
+      "reused_prefix_tokens": 258,
+      "backend_details": {},
+      "state_wall_ms": 483.469958002388
+    },
+    {
+      "rows": 3,
+      "compile_ms": 155.72770799917635,
+      "inference_ms": 285.68612500384916,
+      "computed_tokens": 152,
+      "reused_prefix_tokens": 249,
+      "backend_details": {},
+      "state_wall_ms": 442.2208749965648
+    },
+    {
+      "rows": 3,
+      "compile_ms": 156.3319999986561,
+      "inference_ms": 328.73533299425617,
+      "computed_tokens": 161,
+      "reused_prefix_tokens": 255,
+      "backend_details": {},
+      "state_wall_ms": 485.9457080019638
+    },
+    {
+      "rows": 3,
+      "compile_ms": 155.5657089993474,
+      "inference_ms": 324.7278750059195,
+      "computed_tokens": 145,
+      "reused_prefix_tokens": 246,
+      "backend_details": {},
+      "state_wall_ms": 480.51599999598693
+    }
+  ],
+  "predictions": [
+    {
+      "id": "test-delivery-0-route",
+      "family": "choice",
+      "group_id": "test-delivery-0",
+      "gold_index": 1,
+      "gold_id": "delivery",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "billing",
+        "delivery"
+      ],
+      "logits": [
+        21.5317325592041,
+        29.842994689941406
+      ],
+      "probabilities": [
+        0.0002456733292846276,
+        0.9997543266707153
+      ],
+      "selected": "delivery",
+      "value": "delivery",
+      "normalized_entropy": 0.003300249953102421,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-0-money",
+      "family": "boolean",
+      "group_id": "test-delivery-0",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        25.434619903564453,
+        26.749469757080078
+      ],
+      "probabilities": [
+        0.21167641977799573,
+        0.7883235802220042
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.7446749588348442,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-0-urgency",
+      "family": "score",
+      "group_id": "test-delivery-0",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        28.359188079833984,
+        20.780012130737305,
+        19.1074161529541
+      ],
+      "probabilities": [
+        0.9993934445079734,
+        0.0005106721858357428,
+        9.588330619087204e-05
+      ],
+      "selected": "0.0",
+      "value": 0.0007024387982174869,
+      "normalized_entropy": 0.004882800243354408,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-1-route",
+      "family": "choice",
+      "group_id": "test-delivery-1",
+      "gold_index": 2,
+      "gold_id": "delivery",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "billing",
+        "returns",
+        "delivery"
+      ],
+      "logits": [
+        20.89540672302246,
+        20.0871639251709,
+        28.231592178344727
+      ],
+      "probabilities": [
+        0.0006509179948105726,
+        0.000290075393967324,
+        0.999059006611222
+      ],
+      "selected": "delivery",
+      "value": "delivery",
+      "normalized_entropy": 0.007353995440104325,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-1-money",
+      "family": "boolean",
+      "group_id": "test-delivery-1",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        25.11797332763672,
+        27.630207061767578
+      ],
+      "probabilities": [
+        0.07500498751039678,
+        0.9249950124896033
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.38432962105372603,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-1-urgency",
+      "family": "score",
+      "group_id": "test-delivery-1",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.49932098388672,
+        27.661558151245117,
+        23.050376892089844
+      ],
+      "probabilities": [
+        0.04022816703668386,
+        0.950325531068563,
+        0.009446301894753213
+      ],
+      "selected": "1.0",
+      "value": 0.9692181348580694,
+      "normalized_entropy": 0.20181851808080756,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-2-route",
+      "family": "choice",
+      "group_id": "test-delivery-2",
+      "gold_index": 3,
+      "gold_id": "delivery",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "returns",
+        "account",
+        "billing",
+        "delivery"
+      ],
+      "logits": [
+        21.998737335205078,
+        19.94930648803711,
+        18.897687911987305,
+        27.803485870361328
+      ],
+      "probabilities": [
+        0.0030025923879158844,
+        0.00038675850363906964,
+        0.00013512251705142994,
+        0.9964755265913935
+      ],
+      "selected": "delivery",
+      "value": "delivery",
+      "normalized_entropy": 0.018178705743301226,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-2-money",
+      "family": "boolean",
+      "group_id": "test-delivery-2",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        24.68094825744629,
+        29.435152053833008
+      ],
+      "probabilities": [
+        0.008541810449821769,
+        0.9914581895501783
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.07096329588412786,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-2-urgency",
+      "family": "score",
+      "group_id": "test-delivery-2",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        23.814420700073242,
+        23.06325912475586,
+        26.314180374145508
+      ],
+      "probabilities": [
+        0.07325264214024925,
+        0.03456192843846918,
+        0.8921854294212817
+      ],
+      "selected": "2.0",
+      "value": 1.8189327872810326,
+      "normalized_entropy": 0.3727915663565165,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-3-route",
+      "family": "choice",
+      "group_id": "test-delivery-3",
+      "gold_index": 0,
+      "gold_id": "delivery",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "delivery",
+        "account"
+      ],
+      "logits": [
+        28.050081253051758,
+        21.871673583984375
+      ],
+      "probabilities": [
+        0.9979305641584196,
+        0.002069435841580334
+      ],
+      "selected": "delivery",
+      "value": "delivery",
+      "normalized_entropy": 0.021434694930085645,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-3-money",
+      "family": "boolean",
+      "group_id": "test-delivery-3",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        24.947568893432617,
+        27.555572509765625
+      ],
+      "probabilities": [
+        0.06862509412929288,
+        0.9313749058707071
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.3607716973348959,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-delivery-3-urgency",
+      "family": "score",
+      "group_id": "test-delivery-3",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        27.883834838867188,
+        21.090925216674805,
+        19.115524291992188
+      ],
+      "probabilities": [
+        0.9987243428679137,
+        0.00112026939240152,
+        0.00015538773968480887
+      ],
+      "selected": "0.0",
+      "value": 0.0014310448717711377,
+      "normalized_entropy": 0.009328903629430662,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-0-route",
+      "family": "choice",
+      "group_id": "test-returns-0",
+      "gold_index": 0,
+      "gold_id": "returns",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "returns",
+        "account"
+      ],
+      "logits": [
+        29.009429931640625,
+        21.4417724609375
+      ],
+      "probabilities": [
+        0.9994833651602213,
+        0.0005166348397787685
+      ],
+      "selected": "returns",
+      "value": "returns",
+      "normalized_entropy": 0.0063860662938022665,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-0-money",
+      "family": "boolean",
+      "group_id": "test-returns-0",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        27.261838912963867,
+        23.925214767456055
+      ],
+      "probabilities": [
+        0.9656640850256897,
+        0.03433591497431041
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.2156905350949823,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-0-urgency",
+      "family": "score",
+      "group_id": "test-returns-0",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.307903289794922,
+        28.17951011657715,
+        22.905935287475586
+      ],
+      "probabilities": [
+        0.020298141022546148,
+        0.9747062400976255,
+        0.004995618879828385
+      ],
+      "selected": "1.0",
+      "value": 0.9846974778572823,
+      "normalized_entropy": 0.11883203771738823,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-1-route",
+      "family": "choice",
+      "group_id": "test-returns-1",
+      "gold_index": 0,
+      "gold_id": "returns",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "returns",
+        "account",
+        "billing"
+      ],
+      "logits": [
+        28.471057891845703,
+        20.706165313720703,
+        22.22089958190918
+      ],
+      "probabilities": [
+        0.9976510070051131,
+        0.00042337834996556187,
+        0.0019256146449213687
+      ],
+      "selected": "returns",
+      "value": "returns",
+      "normalized_entropy": 0.016088150634526416,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-1-money",
+      "family": "boolean",
+      "group_id": "test-returns-1",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        27.734813690185547,
+        23.01884651184082
+      ],
+      "probabilities": [
+        0.9911282087496986,
+        0.008871791250301199
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.0732174315720491,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-1-urgency",
+      "family": "score",
+      "group_id": "test-returns-1",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.087772369384766,
+        23.08448028564453,
+        26.126041412353516
+      ],
+      "probabilities": [
+        0.11057080145855502,
+        0.040543033648354265,
+        0.8488861648930908
+      ],
+      "selected": "2.0",
+      "value": 1.7383153634345359,
+      "normalized_entropy": 0.4665133870409937,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-2-route",
+      "family": "choice",
+      "group_id": "test-returns-2",
+      "gold_index": 1,
+      "gold_id": "returns",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "billing",
+        "returns",
+        "account",
+        "delivery"
+      ],
+      "logits": [
+        22.352100372314453,
+        27.916053771972656,
+        19.926952362060547,
+        23.966720581054688
+      ],
+      "probabilities": [
+        0.0037457883754149594,
+        0.9770965876323306,
+        0.00033137125981226947,
+        0.01882625273244214
+      ],
+      "selected": "returns",
+      "value": "returns",
+      "normalized_entropy": 0.08729002231827256,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-2-money",
+      "family": "boolean",
+      "group_id": "test-returns-2",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        27.34789276123047,
+        23.118011474609375
+      ],
+      "probabilities": [
+        0.9856546654800135,
+        0.014345334519986576
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.10838720508493853,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-2-urgency",
+      "family": "score",
+      "group_id": "test-returns-2",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        28.69293212890625,
+        20.620859146118164,
+        18.905406951904297
+      ],
+      "probabilities": [
+        0.9996318523432726,
+        0.0003120206463243179,
+        5.6127010403208724e-05
+      ],
+      "selected": "0.0",
+      "value": 0.00042427466713073535,
+      "normalized_entropy": 0.003127776224473454,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-3-route",
+      "family": "choice",
+      "group_id": "test-returns-3",
+      "gold_index": 1,
+      "gold_id": "returns",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "delivery",
+        "returns"
+      ],
+      "logits": [
+        23.199039459228516,
+        30.446243286132812
+      ],
+      "probabilities": [
+        0.0007116561231147533,
+        0.9992883438768851
+      ],
+      "selected": "returns",
+      "value": "returns",
+      "normalized_entropy": 0.00846779243143409,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-3-money",
+      "family": "boolean",
+      "group_id": "test-returns-3",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        26.88389015197754,
+        23.902816772460938
+      ],
+      "probabilities": [
+        0.9517117239899338,
+        0.048288276010066286
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.2790806924761531,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-returns-3-urgency",
+      "family": "score",
+      "group_id": "test-returns-3",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.23828887939453,
+        27.906227111816406,
+        23.31085968017578
+      ],
+      "probabilities": [
+        0.024650802732151516,
+        0.9655980956415624,
+        0.009751101626286039
+      ],
+      "selected": "1.0",
+      "value": 0.9851002988941345,
+      "normalized_entropy": 0.1549546639848137,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-0-route",
+      "family": "choice",
+      "group_id": "test-billing-0",
+      "gold_index": 1,
+      "gold_id": "billing",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "billing"
+      ],
+      "logits": [
+        21.440969467163086,
+        30.683917999267578
+      ],
+      "probabilities": [
+        9.678240766503222e-05,
+        0.999903217592335
+      ],
+      "selected": "billing",
+      "value": "billing",
+      "normalized_entropy": 0.0014302040490803227,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-0-money",
+      "family": "boolean",
+      "group_id": "test-billing-0",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        26.412105560302734,
+        24.167781829833984
+      ],
+      "probabilities": [
+        0.904159785872081,
+        0.09584021412791897
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.45566894836278227,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-0-urgency",
+      "family": "score",
+      "group_id": "test-billing-0",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        23.898067474365234,
+        22.054500579833984,
+        26.81585693359375
+      ],
+      "probabilities": [
+        0.05086832638662563,
+        0.008050011853802466,
+        0.9410816617595719
+      ],
+      "selected": "2.0",
+      "value": 1.8902133353729462,
+      "normalized_entropy": 0.2252636398218342,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-1-route",
+      "family": "choice",
+      "group_id": "test-billing-1",
+      "gold_index": 2,
+      "gold_id": "billing",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "returns",
+        "billing"
+      ],
+      "logits": [
+        21.25262451171875,
+        20.436887741088867,
+        29.28509521484375
+      ],
+      "probabilities": [
+        0.0003245928347175513,
+        0.00014357173561044858,
+        0.9995318354296719
+      ],
+      "selected": "billing",
+      "value": "billing",
+      "normalized_entropy": 0.003955816968155707,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-1-money",
+      "family": "boolean",
+      "group_id": "test-billing-1",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        27.231231689453125,
+        23.80255889892578
+      ],
+      "probabilities": [
+        0.9685887130137024,
+        0.031411286986297526
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.20142075289180406,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-1-urgency",
+      "family": "score",
+      "group_id": "test-billing-1",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        28.577177047729492,
+        19.644683837890625,
+        17.85512351989746
+      ],
+      "probabilities": [
+        0.9998459421133824,
+        0.0001320080992119896,
+        2.204978740561107e-05
+      ],
+      "selected": "0.0",
+      "value": 0.00017610767402321173,
+      "normalized_entropy": 0.0014287571890815155,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-2-route",
+      "family": "choice",
+      "group_id": "test-billing-2",
+      "gold_index": 3,
+      "gold_id": "billing",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "returns",
+        "delivery",
+        "billing"
+      ],
+      "logits": [
+        21.594633102416992,
+        21.17254638671875,
+        19.64002799987793,
+        29.838197708129883
+      ],
+      "probabilities": [
+        0.0002628210738210195,
+        0.00017232578037607832,
+        3.722082328647268e-05,
+        0.9995276323225164
+      ],
+      "selected": "billing",
+      "value": "billing",
+      "normalized_entropy": 0.003254692008822517,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-2-money",
+      "family": "boolean",
+      "group_id": "test-billing-2",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        26.255817413330078,
+        25.00077247619629
+      ],
+      "probabilities": [
+        0.7781719420863555,
+        0.22182805791364438
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.7634914630117237,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-2-urgency",
+      "family": "score",
+      "group_id": "test-billing-2",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.444263458251953,
+        27.57856559753418,
+        25.0374698638916
+      ],
+      "probabilities": [
+        0.03878617789025945,
+        0.8910192948409618,
+        0.07019452726877869
+      ],
+      "selected": "1.0",
+      "value": 1.031408349378519,
+      "normalized_entropy": 0.37804766510327487,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-3-route",
+      "family": "choice",
+      "group_id": "test-billing-3",
+      "gold_index": 1,
+      "gold_id": "billing",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "delivery",
+        "billing"
+      ],
+      "logits": [
+        21.97810173034668,
+        30.079208374023438
+      ],
+      "probabilities": [
+        0.0003031115097640281,
+        0.9996968884902359
+      ],
+      "selected": "billing",
+      "value": "billing",
+      "normalized_entropy": 0.003979957215780033,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-3-money",
+      "family": "boolean",
+      "group_id": "test-billing-3",
+      "gold_index": 0,
+      "gold_id": "true",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        26.13050079345703,
+        24.694929122924805
+      ],
+      "probabilities": [
+        0.8077679624019062,
+        0.19223203759809396
+      ],
+      "selected": "true",
+      "value": true,
+      "normalized_entropy": 0.7061174279004302,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-billing-3-urgency",
+      "family": "score",
+      "group_id": "test-billing-3",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        23.410980224609375,
+        20.782394409179688,
+        27.4625301361084
+      ],
+      "probabilities": [
+        0.01707689131690639,
+        0.00123261798328758,
+        0.981690490699806
+      ],
+      "selected": "2.0",
+      "value": 1.9646135993828995,
+      "normalized_entropy": 0.08729297570725963,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-0-route",
+      "family": "choice",
+      "group_id": "test-account-0",
+      "gold_index": 0,
+      "gold_id": "account",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "delivery"
+      ],
+      "logits": [
+        28.1192569732666,
+        22.439313888549805
+      ],
+      "probabilities": [
+        0.9965978613276195,
+        0.0034021386723805044
+      ],
+      "selected": "account",
+      "value": "account",
+      "normalized_entropy": 0.03279518949046456,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-0-money",
+      "family": "boolean",
+      "group_id": "test-account-0",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        24.970558166503906,
+        28.161396026611328
+      ],
+      "probabilities": [
+        0.039511969840199467,
+        0.9604880301598006
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.2400500974456278,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-0-urgency",
+      "family": "score",
+      "group_id": "test-account-0",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        28.258068084716797,
+        20.367549896240234,
+        18.608978271484375
+      ],
+      "probabilities": [
+        0.9995614326132819,
+        0.00037411143437218253,
+        6.445595234585566e-05
+      ],
+      "selected": "0.0",
+      "value": 0.0005030233390638938,
+      "normalized_entropy": 0.0036523694277986124,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-1-route",
+      "family": "choice",
+      "group_id": "test-account-1",
+      "gold_index": 2,
+      "gold_id": "account",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "billing",
+        "delivery",
+        "account"
+      ],
+      "logits": [
+        22.327381134033203,
+        21.422067642211914,
+        27.32773780822754
+      ],
+      "probabilities": [
+        0.006672426359709376,
+        0.002698429869462688,
+        0.990629143770828
+      ],
+      "selected": "account",
+      "value": "account",
+      "normalized_entropy": 0.053445230861301304,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-1-money",
+      "family": "boolean",
+      "group_id": "test-account-1",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        25.85155487060547,
+        27.13689422607422
+      ],
+      "probabilities": [
+        0.21664271791433612,
+        0.7833572820856638
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.7539896492010332,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-1-urgency",
+      "family": "score",
+      "group_id": "test-account-1",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        24.45348358154297,
+        27.53261947631836,
+        23.6572322845459
+      ],
+      "probabilities": [
+        0.04312087227915457,
+        0.9374309017047234,
+        0.019448226016121863
+      ],
+      "selected": "1.0",
+      "value": 0.9763273537369671,
+      "normalized_entropy": 0.24827381158026188,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-2-route",
+      "family": "choice",
+      "group_id": "test-account-2",
+      "gold_index": 0,
+      "gold_id": "account",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "delivery",
+        "billing",
+        "returns"
+      ],
+      "logits": [
+        28.835397720336914,
+        20.513710021972656,
+        19.52155113220215,
+        19.360586166381836
+      ],
+      "probabilities": [
+        0.9995900548106309,
+        0.00024308540204946944,
+        9.013007823479556e-05,
+        7.67297090848759e-05
+      ],
+      "selected": "account",
+      "value": "account",
+      "normalized_entropy": 0.0028849336820142677,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-2-money",
+      "family": "boolean",
+      "group_id": "test-account-2",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        24.749061584472656,
+        28.30264663696289
+      ],
+      "probabilities": [
+        0.027825429562821826,
+        0.9721745704371783
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.18336642717552515,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-2-urgency",
+      "family": "score",
+      "group_id": "test-account-2",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        23.6053524017334,
+        21.83163070678711,
+        27.100780487060547
+      ],
+      "probabilities": [
+        0.0292962197714472,
+        0.004971575514058406,
+        0.9657322047144944
+      ],
+      "selected": "2.0",
+      "value": 1.9364359849430473,
+      "normalized_entropy": 0.14879453933978798,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-3-route",
+      "family": "choice",
+      "group_id": "test-account-3",
+      "gold_index": 0,
+      "gold_id": "account",
+      "correct": true,
+      "provenance": {},
+      "type": "choice",
+      "option_ids": [
+        "account",
+        "billing"
+      ],
+      "logits": [
+        28.771371841430664,
+        21.687889099121094
+      ],
+      "probabilities": [
+        0.9991618565051553,
+        0.0008381434948446534
+      ],
+      "selected": "account",
+      "value": "account",
+      "normalized_entropy": 0.009774936845773149,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-3-money",
+      "family": "boolean",
+      "group_id": "test-account-3",
+      "gold_index": 1,
+      "gold_id": "false",
+      "correct": true,
+      "provenance": {},
+      "type": "boolean",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "logits": [
+        24.893230438232422,
+        28.172500610351562
+      ],
+      "probabilities": [
+        0.03628923151497438,
+        0.9637107684850256
+      ],
+      "selected": "false",
+      "value": false,
+      "normalized_entropy": 0.2250117448829177,
+      "logit_space": "raw_logits"
+    },
+    {
+      "id": "test-account-3-urgency",
+      "family": "score",
+      "group_id": "test-account-3",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "correct": true,
+      "provenance": {},
+      "type": "score",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "logits": [
+        28.20012092590332,
+        19.50043487548828,
+        17.65369415283203
+      ],
+      "probabilities": [
+        0.9998071118507349,
+        0.00016660597622610138,
+        2.6282173039075232e-05
+      ],
+      "selected": "0.0",
+      "value": 0.00021917032230425184,
+      "normalized_entropy": 0.00174721280205921,
+      "logit_space": "raw_logits"
+    }
+  ],
+  "limitations": [
+    "Scores use this runtime's prompt, not the original SemIf scorer prompt.",
+    "Vocabulary mode uses label-token scores; head mode uses learned candidate scores.",
+    "Probabilities are uncalibrated. No fitting or temperature tuning on evaluation rows.",
+    "Quality is dataset-specific; preserve source provenance and label limitations.",
+    "Runtime errors abort the run; partial success is never published as full coverage.",
+    "Wall time includes per-state prefill and fanout, excludes model load and warm-up."
+  ]
+}

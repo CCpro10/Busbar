@@ -93,6 +93,12 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         "cached_batched_full": ("cached", "full", False),
     }
     engine_managed = backend.identity.get("backend") == "vllm-metal"
+    if getattr(backend, "default_projection", None) == "head":
+        strategies = {
+            name: (mode, "head", serial)
+            for name, (mode, _, serial) in strategies.items()
+            if name != "cached_batched_full"
+        }
     if engine_managed:
         strategies = {
             name: (mode, "full", serial)
@@ -201,7 +207,8 @@ def benchmark(backend, context_tokens=4096, questions=16, repeats=3):
         "target_prefix_tokens": context_tokens,
         "actual_prefix_tokens": compiled.snapshot.token_count,
         "suffix_tokens": [
-            len(runtime.compiler.question(q).token_ids) for q in request.questions.values()
+            sum(len(p.token_ids) for p in runtime.compiler.question(q).paths)
+            for q in request.questions.values()
         ],
         "questions": questions,
         "repeats": repeats,

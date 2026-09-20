@@ -59,13 +59,16 @@ def exercise(base_url: str) -> dict:
         )
         assert len(fanout["decisions"]) == 64
         engine_managed = "engine_cached_tokens" in fanout["backend_details"]
-        assert fanout["batches"] == (1 if engine_managed else 8)
+        paths = fanout["backend_details"].get("candidate_paths", 64)
+        assert fanout["batches"] == (1 if engine_managed else paths // 8)
         assert fanout["computed_tokens"] < fanout["reused_prefix_tokens"]
         repeated = call("POST", "/v1/decisions", request)
         numerical = repeat_checks(decisions["decisions"], repeated["decisions"])
         call("POST", "/v1/decisions", {**request, "questions": {}}, expected=422)
         if engine_managed:
             call("POST", "/v1/decisions", {**request, "projection": "selected"}, expected=422)
+        elif fanout["projection"] == "head":
+            call("POST", "/v1/decisions", {**request, "projection": "full"}, expected=422)
         call("POST", "/v1/decisions", {**request, "namespace": "wrong"}, expected=404)
         changed = call("PUT", f"/v1/contexts/{key}", {**context, "state": {"unused": False}})
         assert changed["snapshot"]["id"] != key

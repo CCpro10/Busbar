@@ -45,7 +45,7 @@ class Runtime:
         if max_contexts < 1 or max_cache_bytes < 1 or not 0 < ttl_seconds < float("inf"):
             raise ValueError("cache count, byte budget and finite TTL must be positive")
         self.backend = backend
-        self.compiler = Compiler(backend.tokenizer)
+        self.compiler = getattr(backend, "compiler", None) or Compiler(backend.tokenizer)
         self.max_contexts = max_contexts
         self.max_cache_bytes = max_cache_bytes
         self.ttl_seconds = ttl_seconds
@@ -208,8 +208,9 @@ class Runtime:
             entry = self._entry(request.snapshot_id, request.namespace)
             mark = time.perf_counter()
             compiled = [self.compiler.question(q) for q in request.questions.values()]
+            paths = [path for question in compiled for path in question.paths]
             if any(
-                len(entry.tokens) + len(q.token_ids) > self.backend.max_tokens for q in compiled
+                len(entry.tokens) + len(path.token_ids) > self.backend.max_tokens for path in paths
             ):
                 raise ValueError(
                     "context plus question exceeds token limit; input was not truncated"
@@ -218,25 +219,32 @@ class Runtime:
             projection = request.projection
             if projection == "auto":
                 projection = getattr(self.backend, "default_projection", "selected")
-            sequences = [q.token_ids if cached else entry.tokens + q.token_ids for q in compiled]
+            sequences = [p.token_ids if cached else entry.tokens + p.token_ids for p in paths]
             compile_ms = (time.perf_counter() - mark) * 1000
             mark = time.perf_counter()
             output = self.backend.score(
                 sequences,
-                [q.label_ids for q in compiled],
+                [p.label_ids for p in paths],
                 entry.prefix if cached else None,
                 projection,
             )
             inference_ms = (time.perf_counter() - mark) * 1000
-            if len(output.logits) != len(compiled):
-                raise RuntimeError("backend returned the wrong number of decisions")
+            if len(output.logits) != len(paths) or any(
+                len(scores) != len(path.label_ids)
+                for scores, path in zip(output.logits, paths, strict=True)
+            ):
+                raise RuntimeError("backend returned the wrong number of readout scores")
+            # Group scalar candidate paths back into one categorical decision.
+            grouped, offset = [], 0
+            for question in compiled:
+                end = offset + len(question.paths)
+                grouped.append([value for scores in output.logits[offset:end] for value in scores])
+                offset = end
             decisions = {
                 name: read_decision(question, logits).model_copy(
                     update={"logit_space": output.details.get("logit_space", "raw_logits")}
                 )
-                for (name, question), logits in zip(
-                    request.questions.items(), output.logits, strict=True
-                )
+                for (name, question), logits in zip(request.questions.items(), grouped, strict=True)
             }
             self._touch(entry)
             return DecisionResult(
@@ -248,7 +256,7 @@ class Runtime:
                 reused_prefix_tokens=(
                     output.reused_tokens
                     if output.reused_tokens is not None
-                    else len(entry.tokens) * len(compiled)
+                    else len(entry.tokens) * len(paths)
                     if cached
                     else 0
                 ),
@@ -258,4 +266,7 @@ class Runtime:
                 inference_ms=inference_ms,
                 total_ms=(time.perf_counter() - started) * 1000,
                 backend_details=output.details,
+                probability_status=output.details.get(
+                    "probability_status", "conditional label probabilities; uncalibrated"
+                ),
             )

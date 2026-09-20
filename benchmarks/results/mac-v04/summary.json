@@ -1,0 +1,307 @@
+{
+  "scope": "authored support demo; 16 held-out ticket groups, 48 related questions; not a general leaderboard",
+  "quality": {
+    "qwen3-06": {
+      "quick": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 41,
+        "accuracy": 0.8541666666666666,
+        "balanced_accuracy": 0.8944444444444445,
+        "coverage": 1.0,
+        "nll": 0.430564196227124,
+        "brier": 0.2611202587414392,
+        "reliability_bins": [
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 2,
+            "accuracy": 0.5,
+            "mean_confidence": 0.5507357882533257
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 4,
+            "accuracy": 1,
+            "mean_confidence": 0.6421783953803759
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 1,
+            "accuracy": 1,
+            "mean_confidence": 0.733260218035408
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 5,
+            "accuracy": 0.6,
+            "mean_confidence": 0.8538152977004154
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 36,
+            "accuracy": 0.8888888888888888,
+            "mean_confidence": 0.9805232581716947
+          }
+        ],
+        "ece_10_equal_width": 0.1326544074923506,
+        "mean_family_balanced_accuracy": 0.8527777777777777,
+        "wall_seconds": 1.2460461250011576,
+        "decisions_per_second": 38.52184845882443
+      },
+      "head": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 33,
+        "accuracy": 0.6875,
+        "balanced_accuracy": 0.6972222222222222,
+        "coverage": 1.0,
+        "nll": 0.6016228027986227,
+        "brier": 0.36464657757354313,
+        "reliability_bins": [
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "count": 4,
+            "accuracy": 0,
+            "mean_confidence": 0.37314036873002726
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 8,
+            "accuracy": 0.375,
+            "mean_confidence": 0.44597205371755494
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 18,
+            "accuracy": 0.6666666666666666,
+            "mean_confidence": 0.5439804188674583
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 5,
+            "accuracy": 1,
+            "mean_confidence": 0.6726602423310313
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 2,
+            "accuracy": 1,
+            "mean_confidence": 0.7229632258254425
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 8,
+            "accuracy": 1,
+            "mean_confidence": 0.8467211004652195
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 3,
+            "accuracy": 1,
+            "mean_confidence": 0.9233491474723068
+          }
+        ],
+        "ece_10_equal_width": 0.16490930115836624,
+        "mean_family_balanced_accuracy": 0.6763888888888889,
+        "wall_seconds": 2.110643458996492,
+        "decisions_per_second": 22.741879873364145
+      }
+    },
+    "minicpm5": {
+      "quick": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 47,
+        "accuracy": 0.9791666666666666,
+        "balanced_accuracy": 0.9777777777777777,
+        "coverage": 1.0,
+        "nll": 0.050673291514252865,
+        "brier": 0.027483857916196,
+        "reliability_bins": [
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 1,
+            "accuracy": 0,
+            "mean_confidence": 0.5800447126794012
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 1,
+            "accuracy": 1,
+            "mean_confidence": 0.6098745611663337
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 2,
+            "accuracy": 1,
+            "mean_confidence": 0.7466942444915625
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 2,
+            "accuracy": 1,
+            "mean_confidence": 0.8810581615860299
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 42,
+            "accuracy": 1,
+            "mean_confidence": 0.9946662009095998
+          }
+        ],
+        "ece_10_equal_width": 0.040389268774056075,
+        "mean_family_balanced_accuracy": 0.9777777777777777,
+        "wall_seconds": 4.461765750005725,
+        "decisions_per_second": 10.758072630760235
+      },
+      "head": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 43,
+        "accuracy": 0.8958333333333334,
+        "balanced_accuracy": 0.9055555555555556,
+        "coverage": 1.0,
+        "nll": 0.25421119182392776,
+        "brier": 0.15632120398718397,
+        "reliability_bins": [
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "count": 1,
+            "accuracy": 1,
+            "mean_confidence": 0.45188965873838044
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "count": 3,
+            "accuracy": 0.6666666666666666,
+            "mean_confidence": 0.5290046354253506
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "count": 7,
+            "accuracy": 0.5714285714285714,
+            "mean_confidence": 0.6342346162258073
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 6,
+            "accuracy": 0.8333333333333334,
+            "mean_confidence": 0.749854664562137
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 7,
+            "accuracy": 1,
+            "mean_confidence": 0.8603558566553907
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 24,
+            "accuracy": 1,
+            "mean_confidence": 0.976586307665196
+          }
+        ],
+        "ece_10_equal_width": 0.07168850793001995,
+        "mean_family_balanced_accuracy": 0.8916666666666667,
+        "wall_seconds": 6.72080641699722,
+        "decisions_per_second": 7.142000084782364
+      }
+    },
+    "qwen35": {
+      "quick": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 48,
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "coverage": 1.0,
+        "nll": 0.04553015781199694,
+        "brier": 0.010588796744873405,
+        "reliability_bins": [
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "count": 3,
+            "accuracy": 1,
+            "mean_confidence": 0.7832842681313412
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 4,
+            "accuracy": 1,
+            "mean_confidence": 0.8599647128893101
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 41,
+            "accuracy": 1,
+            "mean_confidence": 0.9799028080258978
+          }
+        ],
+        "ece_10_equal_width": 0.0423806919788943,
+        "mean_family_balanced_accuracy": 1.0,
+        "wall_seconds": 7.670211458003905,
+        "decisions_per_second": 6.257976101807696
+      },
+      "head": {
+        "rows": 48,
+        "answered": 48,
+        "correct": 48,
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "coverage": 1.0,
+        "nll": 0.020647722012625956,
+        "brier": 0.003052479968778689,
+        "reliability_bins": [
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "count": 3,
+            "accuracy": 1,
+            "mean_confidence": 0.8751510817992871
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "count": 45,
+            "accuracy": 1,
+            "mean_confidence": 0.9871754191432274
+          }
+        ],
+        "ece_10_equal_width": 0.019826101940768892,
+        "mean_family_balanced_accuracy": 1.0,
+        "wall_seconds": 11.891055708001659,
+        "decisions_per_second": 4.036647475101821
+      }
+    }
+  },
+  "http": {
+    "requests": 17,
+    "result": "passed"
+  }
+}

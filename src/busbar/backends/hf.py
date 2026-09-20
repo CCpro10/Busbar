@@ -65,6 +65,8 @@ class HFBackend:
 
     def score(self, sequences, labels, prefix, projection) -> BackendResult:
         """Compare selected/full projection from independently cloned native cache branches."""
+        if projection not in ("selected", "full"):
+            raise ValueError("HF vocabulary backend requires selected or full projection")
         torch = self.torch
         results = []
         with torch.inference_mode():

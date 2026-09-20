@@ -7,7 +7,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from .compiler import canonical_json
+from .compiler import alternatives, canonical_json
 from .runtime import Runtime
 from .schemas import ChoiceQuestion, ContextSpec, DecisionRequest
 
@@ -62,15 +62,38 @@ def metrics(records: list[dict]) -> dict:
     return result
 
 
-def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
-    """Run all frozen rows, grouping identical states while keeping per-row gold provenance."""
+def _evaluation_groups(backend, source, data_format, allow_training_data):
+    """Normalize public datasets while retaining the exact context instructions and labels."""
     import json
 
-    payload = source.read_bytes()
-    rows = [json.loads(line) for line in payload.splitlines() if line.strip()]
+    groups = defaultdict(list)
+    if data_format == "native":
+        from .datasets import read_dataset
+        from .head_artifact import overlaps_provenance
+
+        rows = read_dataset(source)
+        if not allow_training_data:
+            for split in getattr(backend, "training_splits", {}).values():
+                if overlaps_provenance(rows, split):
+                    raise ValueError(
+                        "evaluation overlaps head training/validation data; "
+                        "use held-out data or explicitly --allow-training-data"
+                    )
+        for item in rows:
+            row = {
+                "id": item.id,
+                "family": item.question.type,
+                "group_id": item.group_id,
+                "label": item.gold_index,
+                "options": [{"id": key} for key, _ in alternatives(item.question)],
+            }
+            groups[canonical_json(item.context.model_dump())].append((row, item.question))
+        return groups
+    if data_format != "semif" or allow_training_data:
+        raise ValueError("expected semif or native format; training override is native-only")
+    rows = [json.loads(line) for line in source.read_bytes().splitlines() if line.strip()]
     if not rows or len({row["id"] for row in rows}) != len(rows):
         raise ValueError("evaluation needs nonempty rows with unique IDs")
-    groups = defaultdict(list)
     for row in rows:
         question = ChoiceQuestion(type="choice", question=row["question"], options=row["options"])
         if (
@@ -79,7 +102,24 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
             or not 0 <= row["label"] < len(question.options)
         ):
             raise ValueError(f"invalid gold label: {row['id']}")
-        groups[canonical_json(row["state"])].append((row, question))
+        groups[canonical_json(ContextSpec(state=row["state"]).model_dump())].append((row, question))
+    return groups
+
+
+def evaluate(
+    backend,
+    source: Path,
+    mode="cached",
+    projection="auto",
+    *,
+    data_format="semif",
+    allow_training_data=False,
+) -> dict:
+    """Run all frozen rows, grouping identical states while keeping per-row gold provenance."""
+    import json
+
+    payload = source.read_bytes()
+    groups = _evaluation_groups(backend, source, data_format, allow_training_data)
     runtime = Runtime(backend)
     # Warm an unrelated request; it is excluded from both accuracy and elapsed time.
     warm = runtime.compile_context(ContextSpec(state="The box is blue."))
@@ -93,13 +133,15 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
     runtime.clear()
     results, timings = [], []
     started = time.perf_counter()
-    for group in groups.values():
+    for context_json, group in groups.items():
         mark = time.perf_counter()
-        compiled = runtime.compile_context(ContextSpec(state=group[0][0]["state"]))
+        spec = ContextSpec.model_validate(json.loads(context_json))
+        compiled = runtime.compile_context(spec)
         for start in range(0, len(group), 64):
             batch = group[start : start + 64]
             request = DecisionRequest(
                 snapshot_id=compiled.snapshot.id,
+                namespace=spec.namespace,
                 questions={row["id"]: question for row, question in batch},
                 mode=mode,
                 projection=projection,
@@ -130,7 +172,7 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
                         **decision.model_dump(),
                     }
                 )
-        runtime.delete_context(compiled.snapshot.id)
+        runtime.delete_context(compiled.snapshot.id, spec.namespace)
         timings[-1]["state_wall_ms"] = (time.perf_counter() - mark) * 1000
     elapsed = time.perf_counter() - started
     families = defaultdict(list)
@@ -148,6 +190,8 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
         "model": backend.identity,
         "input_name": source.name,
         "input_sha256": hashlib.sha256(payload).hexdigest(),
+        "data_format": data_format,
+        "allow_training_data": allow_training_data,
         "mode": mode,
         "projection": projection,
         "summary": summary,
@@ -156,8 +200,12 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
         "predictions": results,
         "limitations": [
             "Scores use this runtime's prompt, not the original SemIf scorer prompt.",
-            "Label argmax equals constrained one-token decoding at temperature zero.",
-            "Probabilities are uncalibrated. No fitting or temperature tuning on evaluation rows.",
+            "Vocabulary mode uses label-token scores; head mode uses learned candidate scores.",
+            (
+                "Training-data reuse explicitly allowed; this is not held-out evaluation."
+                if allow_training_data
+                else "Uncalibrated probabilities; no fitting or temperature tuning on these rows."
+            ),
             "Quality is dataset-specific; preserve source provenance and label limitations.",
             "Runtime errors abort the run; partial success is never published as full coverage.",
             "Wall time includes per-state prefill and fanout, excludes model load and warm-up.",

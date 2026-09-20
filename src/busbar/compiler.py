@@ -47,11 +47,18 @@ def alternatives(question: Question) -> tuple[tuple[str, str], ...]:
 
 
 @dataclass(frozen=True)
-class CompiledQuestion:
-    """A suffix and validated single-token labels, reusable across snapshots."""
+class ReadoutPath:
+    """One Transformer input suffix and the output rows read from its final hidden state."""
 
     token_ids: tuple[int, ...]
     label_ids: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class CompiledQuestion:
+    """One vocabulary path or several candidate paths, concatenated in option order."""
+
+    paths: tuple[ReadoutPath, ...]
 
 
 class Compiler:
@@ -113,10 +120,53 @@ class Compiler:
             label_ids.append(slot[0])
         if len(set(label_ids)) != len(label_ids):
             raise ValueError("label token IDs collide")
-        return CompiledQuestion(tuple(ids), tuple(label_ids))
+        return CompiledQuestion((ReadoutPath(tuple(ids), tuple(label_ids)),))
 
     def clear(self):
         """Release cached question text when clearing all runtime state."""
+        self._suffix.cache_clear()
+
+
+class CandidateCompiler:
+    """Encode each candidate independently, without token labels or option-position hints."""
+
+    version = "busbar-candidate-v1"
+
+    def __init__(self, tokenizer):
+        """Bound candidate text caching and require an explicit end-of-path token."""
+        self.tokenizer = tokenizer
+        if not isinstance(tokenizer.eos_token_id, int) or tokenizer.eos_token_id < 0:
+            raise ValueError("candidate encoder requires an EOS token")
+        self._suffix = lru_cache(maxsize=512)(self._compile_suffix)
+
+    def context(self, spec: ContextSpec) -> tuple[int, ...]:
+        """Encode a stable shared prefix; training and fresh inference use these exact IDs."""
+        text = f"Instructions:\n{spec.instructions}\nState:\n{canonical_json(spec.state)}\n"
+        return tuple(self.tokenizer.encode(text, add_special_tokens=False))
+
+    def question(self, question: Question) -> CompiledQuestion:
+        """Exclude application IDs and temperature from the learned compatibility function."""
+        return self._suffix(
+            question.type, question.question, tuple(text for _, text in alternatives(question))
+        )
+
+    def _compile_suffix(self, kind, question, descriptions):
+        """Use a shared scalar output row for each independently encoded semantic candidate."""
+        stem = tuple(
+            self.tokenizer.encode(
+                f"Question type: {kind}\nQuestion:\n{question}\n", add_special_tokens=False
+            )
+        )
+        paths = []
+        for description in descriptions:
+            tokens = self.tokenizer.encode(
+                f"Candidate:\n{description}\nDecision:", add_special_tokens=False
+            )
+            paths.append(ReadoutPath(stem + tuple(tokens) + (self.tokenizer.eos_token_id,), (0,)))
+        return CompiledQuestion(tuple(paths))
+
+    def clear(self):
+        """Release question text when clearing all snapshots."""
         self._suffix.cache_clear()
 
 

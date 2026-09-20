@@ -41,6 +41,8 @@ def _model_classes(config, *, dtype):
 class MLXBackend:
     """Dense ChatML models, including hybrid Qwen3.5 attention and recurrent state."""
 
+    projections = ("selected", "full")
+
     def __init__(
         self, model: str, revision: str, *, batch_size=8, max_tokens=8192, dtype="float16"
     ):
@@ -125,11 +127,9 @@ class MLXBackend:
             selected.append(hidden[i] @ self._rows[ids].T)
         return selected
 
-    def score(self, sequences, labels, prefix, projection) -> BackendResult:
-        """Merge into new batch caches; never pass the stored prefix into a mutating forward."""
+    def hidden_batches(self, sequences, prefix):
+        """Yield final hidden states from independent cache branches in bounded batches."""
         mx = self.mx
-        results = [None] * len(sequences)
-        batches = 0
         for indices in length_batches(sequences, self.batch_size):
             # Native merge allocates independent buffers; branches cannot mutate the snapshot.
             cache = (
@@ -139,6 +139,16 @@ class MLXBackend:
             )
             inputs = mx.array([sequences[i] for i in indices])
             hidden = self.model.model(inputs, cache=cache)[:, -1, :]
+            yield indices, hidden
+
+    def score(self, sequences, labels, prefix, projection) -> BackendResult:
+        """Project native hidden states and restore caller order after length bucketing."""
+        if projection not in self.projections:
+            raise ValueError(f"unsupported projection {projection}; expected {self.projections}")
+        mx = self.mx
+        results = [None] * len(sequences)
+        batches = 0
+        for indices, hidden in self.hidden_batches(sequences, prefix):
             projected = self._project(hidden, [labels[i] for i in indices], projection)
             mx.eval(projected)
             for index, values in zip(indices, projected, strict=True):

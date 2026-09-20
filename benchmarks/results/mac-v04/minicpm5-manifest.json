@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "architecture": "layernorm-linear-v1",
+  "encoder_version": "busbar-candidate-v1",
+  "model": "openbmb/MiniCPM5-2B",
+  "revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+  "dtype": "float32",
+  "hidden_size": 2048,
+  "weights_sha256": "561ec2d860133338a9bcd70b384ca557b89ec1049e45af5ddea01679286c076d",
+  "training_sha256": "da5cc5939737dfc56ae3f813e4bc5d752fca251c696a7068268f71510722df85"
+}

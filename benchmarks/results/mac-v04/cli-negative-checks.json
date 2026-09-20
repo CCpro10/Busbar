@@ -1,0 +1,14 @@
+{
+  "ancestor_training_as_validation": {
+    "exit": 2,
+    "error": "busbar: validation overlaps training data from the initial head"
+  },
+  "existing_version_overwrite": {
+    "exit": 2,
+    "error": "busbar: output already exists; choose a new path or version directory"
+  },
+  "incompatible_backbone": {
+    "exit": 2,
+    "error": "busbar: head model mismatch: expected Qwen/Qwen3-0.6B, got openbmb/MiniCPM5-2B"
+  }
+}

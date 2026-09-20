@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "architecture": "layernorm-linear-v1",
+  "encoder_version": "busbar-candidate-v1",
+  "model": "Qwen/Qwen3-0.6B",
+  "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+  "dtype": "float32",
+  "hidden_size": 1024,
+  "weights_sha256": "8c7bdac3797f18d818221ad6feb64a64bd336fafb188581e77fe0250f0f1f9ed",
+  "training_sha256": "718f56b99ad01f1daf5b82f21d2850ec90f88a79f2b9e260b70aa298b1ac9cd2"
+}

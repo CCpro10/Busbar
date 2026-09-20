@@ -1,0 +1,1709 @@
+{
+  "model": {
+    "source": "C-Tianyu/NanoJev",
+    "revision": "047b927b30882a1138fc504821b82ac145a4b81a",
+    "device": "mps",
+    "parameter_storage": "float32",
+    "dtype": "bfloat16_autocast",
+    "base_model": "Qwen/Qwen3-0.6B",
+    "set_head": "attention",
+    "checkpoint_max_tokens": 8192,
+    "batch_questions": 4
+  },
+  "summary": {
+    "rows": 48,
+    "answered": 48,
+    "correct": 24,
+    "accuracy": 0.5,
+    "balanced_accuracy": 0.5,
+    "coverage": 1.0,
+    "nll": 1.0513330091687054,
+    "brier": 0.6651439530812068,
+    "reliability_bins": [
+      {
+        "lower": 0.2,
+        "upper": 0.3,
+        "count": 1,
+        "accuracy": 0,
+        "mean_confidence": 0.29128095507621765
+      },
+      {
+        "lower": 0.3,
+        "upper": 0.4,
+        "count": 3,
+        "accuracy": 0.3333333333333333,
+        "mean_confidence": 0.347185085217158
+      },
+      {
+        "lower": 0.4,
+        "upper": 0.5,
+        "count": 20,
+        "accuracy": 0.6,
+        "mean_confidence": 0.45828784108161924
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 5,
+        "accuracy": 0.2,
+        "mean_confidence": 0.5559611201286316
+      },
+      {
+        "lower": 0.6,
+        "upper": 0.7,
+        "count": 1,
+        "accuracy": 1,
+        "mean_confidence": 0.6909762620925903
+      },
+      {
+        "lower": 0.7,
+        "upper": 0.8,
+        "count": 10,
+        "accuracy": 0.3,
+        "mean_confidence": 0.7662917137145996
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "count": 8,
+        "accuracy": 0.75,
+        "mean_confidence": 0.8283639326691628
+      }
+    ],
+    "ece_10_equal_width": 0.21970286096135774,
+    "mean_family_balanced_accuracy": 0.5138888888888888,
+    "wall_seconds": 3.3485288330048206
+  },
+  "families": {
+    "choice": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 6,
+      "accuracy": 0.375,
+      "balanced_accuracy": 0.375,
+      "coverage": 1.0,
+      "nll": 0.9325582598077037,
+      "brier": 0.5859719936798394,
+      "reliability_bins": [
+        {
+          "lower": 0.2,
+          "upper": 0.3,
+          "count": 1,
+          "accuracy": 0,
+          "mean_confidence": 0.29128095507621765
+        },
+        {
+          "lower": 0.3,
+          "upper": 0.4,
+          "count": 3,
+          "accuracy": 0.3333333333333333,
+          "mean_confidence": 0.347185085217158
+        },
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 4,
+          "accuracy": 0.5,
+          "mean_confidence": 0.43363139033317566
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 5,
+          "accuracy": 0.2,
+          "mean_confidence": 0.5559611201286316
+        },
+        {
+          "lower": 0.6,
+          "upper": 0.7,
+          "count": 1,
+          "accuracy": 1,
+          "mean_confidence": 0.6909762620925903
+        },
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 1,
+          "accuracy": 0,
+          "mean_confidence": 0.7162185907363892
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 1,
+          "accuracy": 1,
+          "mean_confidence": 0.8665847778320312
+        }
+      ],
+      "ece_10_equal_width": 0.2210483625531197
+    },
+    "boolean": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 8,
+      "accuracy": 0.5,
+      "balanced_accuracy": 0.5,
+      "coverage": 1.0,
+      "nll": 0.8773415906146727,
+      "brier": 0.6531422927374116,
+      "reliability_bins": [
+        {
+          "lower": 0.7,
+          "upper": 0.8,
+          "count": 9,
+          "accuracy": 0.3333333333333333,
+          "mean_confidence": 0.7718553940455118
+        },
+        {
+          "lower": 0.8,
+          "upper": 0.9,
+          "count": 7,
+          "accuracy": 0.7142857142857143,
+          "mean_confidence": 0.8229038119316101
+        }
+      ],
+      "ece_10_equal_width": 0.29418907687067986
+    },
+    "score": {
+      "rows": 16,
+      "answered": 16,
+      "correct": 10,
+      "accuracy": 0.625,
+      "balanced_accuracy": 0.6666666666666666,
+      "coverage": 1.0,
+      "nll": 1.3440991770837396,
+      "brier": 0.7563175728263694,
+      "reliability_bins": [
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 16,
+          "accuracy": 0.625,
+          "mean_confidence": 0.46445195376873016
+        }
+      ],
+      "ece_10_equal_width": 0.16054804623126984
+    }
+  },
+  "predictions": [
+    {
+      "id": "test-delivery-0-route",
+      "family": "choice",
+      "group_id": "test-delivery-0",
+      "gold_index": 1,
+      "gold_id": "delivery",
+      "option_ids": [
+        "billing",
+        "delivery"
+      ],
+      "selected": "delivery",
+      "correct": true,
+      "probabilities": [
+        0.3090237081050873,
+        0.6909762620925903
+      ],
+      "logits": [
+        0.4375,
+        1.2421875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        67
+      ]
+    },
+    {
+      "id": "test-delivery-0-money",
+      "family": "boolean",
+      "group_id": "test-delivery-0",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7895584106445312,
+        0.21044161915779114
+      ],
+      "logits": [
+        1.580078125,
+        0.2578125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        76,
+        75
+      ]
+    },
+    {
+      "id": "test-delivery-0-urgency",
+      "family": "score",
+      "group_id": "test-delivery-0",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": false,
+      "probabilities": [
+        0.09311650693416595,
+        0.45167049765586853,
+        0.4552130103111267
+      ],
+      "logits": [
+        -0.8134765625,
+        0.765625,
+        0.7734375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        72,
+        70,
+        69
+      ]
+    },
+    {
+      "id": "test-delivery-1-route",
+      "family": "choice",
+      "group_id": "test-delivery-1",
+      "gold_index": 2,
+      "gold_id": "delivery",
+      "option_ids": [
+        "billing",
+        "returns",
+        "delivery"
+      ],
+      "selected": "delivery",
+      "correct": true,
+      "probabilities": [
+        0.20070910453796387,
+        0.3522554636001587,
+        0.44703543186187744
+      ],
+      "logits": [
+        0.47265625,
+        1.03515625,
+        1.2734375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        69,
+        68,
+        66
+      ]
+    },
+    {
+      "id": "test-delivery-1-money",
+      "family": "boolean",
+      "group_id": "test-delivery-1",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7687332034111023,
+        0.2312668263912201
+      ],
+      "logits": [
+        1.591796875,
+        0.390625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        75,
+        74
+      ]
+    },
+    {
+      "id": "test-delivery-1-urgency",
+      "family": "score",
+      "group_id": "test-delivery-1",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": true,
+      "probabilities": [
+        0.08971023559570312,
+        0.45692282915115356,
+        0.4533670246601105
+      ],
+      "logits": [
+        -0.8154296875,
+        0.8125,
+        0.8046875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        69,
+        68
+      ]
+    },
+    {
+      "id": "test-delivery-2-route",
+      "family": "choice",
+      "group_id": "test-delivery-2",
+      "gold_index": 3,
+      "gold_id": "delivery",
+      "option_ids": [
+        "returns",
+        "account",
+        "billing",
+        "delivery"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.2400161772966385,
+        0.3411317467689514,
+        0.10945900529623032,
+        0.3093930780887604
+      ],
+      "logits": [
+        1.0625,
+        1.4140625,
+        0.27734375,
+        1.31640625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        68,
+        68,
+        69,
+        66
+      ]
+    },
+    {
+      "id": "test-delivery-2-money",
+      "family": "boolean",
+      "group_id": "test-delivery-2",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.8213309049606323,
+        0.17866908013820648
+      ],
+      "logits": [
+        1.560546875,
+        0.03515625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        75,
+        74
+      ]
+    },
+    {
+      "id": "test-delivery-2-urgency",
+      "family": "score",
+      "group_id": "test-delivery-2",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": true,
+      "probabilities": [
+        0.08569213002920151,
+        0.41973692178726196,
+        0.4945709705352783
+      ],
+      "logits": [
+        -0.7373046875,
+        0.8515625,
+        1.015625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        69,
+        68
+      ]
+    },
+    {
+      "id": "test-delivery-3-route",
+      "family": "choice",
+      "group_id": "test-delivery-3",
+      "gold_index": 0,
+      "gold_id": "delivery",
+      "option_ids": [
+        "delivery",
+        "account"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.4469774663448334,
+        0.553022563457489
+      ],
+      "logits": [
+        1.169921875,
+        1.3828125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        65,
+        67
+      ]
+    },
+    {
+      "id": "test-delivery-3-money",
+      "family": "boolean",
+      "group_id": "test-delivery-3",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7975567579269409,
+        0.2024431824684143
+      ],
+      "logits": [
+        1.546875,
+        0.17578125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        73
+      ]
+    },
+    {
+      "id": "test-delivery-3-urgency",
+      "family": "score",
+      "group_id": "test-delivery-3",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": false,
+      "probabilities": [
+        0.09783920645713806,
+        0.45108041167259216,
+        0.45108041167259216
+      ],
+      "logits": [
+        -0.7939453125,
+        0.734375,
+        0.734375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        68,
+        67
+      ]
+    },
+    {
+      "id": "test-returns-0-route",
+      "family": "choice",
+      "group_id": "test-returns-0",
+      "gold_index": 0,
+      "gold_id": "returns",
+      "option_ids": [
+        "returns",
+        "account"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.4287117123603821,
+        0.5712883472442627
+      ],
+      "logits": [
+        1.03515625,
+        1.322265625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        71
+      ]
+    },
+    {
+      "id": "test-returns-0-money",
+      "family": "boolean",
+      "group_id": "test-returns-0",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.7711548805236816,
+        0.22884513437747955
+      ],
+      "logits": [
+        1.28125,
+        0.06640625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        78,
+        77
+      ]
+    },
+    {
+      "id": "test-returns-0-urgency",
+      "family": "score",
+      "group_id": "test-returns-0",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": true,
+      "probabilities": [
+        0.09613339602947235,
+        0.4713403880596161,
+        0.43252623081207275
+      ],
+      "logits": [
+        -0.76953125,
+        0.8203125,
+        0.734375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        72,
+        71
+      ]
+    },
+    {
+      "id": "test-returns-1-route",
+      "family": "choice",
+      "group_id": "test-returns-1",
+      "gold_index": 0,
+      "gold_id": "returns",
+      "option_ids": [
+        "returns",
+        "account",
+        "billing"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.3673798143863678,
+        0.4328792095184326,
+        0.1997409462928772
+      ],
+      "logits": [
+        1.15234375,
+        1.31640625,
+        0.54296875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        66,
+        66,
+        67
+      ]
+    },
+    {
+      "id": "test-returns-1-money",
+      "family": "boolean",
+      "group_id": "test-returns-1",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.8415654301643372,
+        0.15843459963798523
+      ],
+      "logits": [
+        1.517578125,
+        -0.15234375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        73,
+        72
+      ]
+    },
+    {
+      "id": "test-returns-1-urgency",
+      "family": "score",
+      "group_id": "test-returns-1",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": true,
+      "probabilities": [
+        0.09960346668958664,
+        0.43086570501327515,
+        0.46953085064888
+      ],
+      "logits": [
+        -0.667724609375,
+        0.796875,
+        0.8828125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        69,
+        67,
+        66
+      ]
+    },
+    {
+      "id": "test-returns-2-route",
+      "family": "choice",
+      "group_id": "test-returns-2",
+      "gold_index": 1,
+      "gold_id": "returns",
+      "option_ids": [
+        "billing",
+        "returns",
+        "account",
+        "delivery"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.14542357623577118,
+        0.23238620162010193,
+        0.32899972796440125,
+        0.29319050908088684
+      ],
+      "logits": [
+        0.46484375,
+        0.93359375,
+        1.28125,
+        1.166015625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        73,
+        72,
+        72,
+        70
+      ]
+    },
+    {
+      "id": "test-returns-2-money",
+      "family": "boolean",
+      "group_id": "test-returns-2",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.7490872144699097,
+        0.25091278553009033
+      ],
+      "logits": [
+        1.33984375,
+        0.24609375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        79,
+        78
+      ]
+    },
+    {
+      "id": "test-returns-2-urgency",
+      "family": "score",
+      "group_id": "test-returns-2",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": false,
+      "probabilities": [
+        0.09853027015924454,
+        0.4524955153465271,
+        0.4489741623401642
+      ],
+      "logits": [
+        -0.6845703125,
+        0.83984375,
+        0.83203125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        75,
+        73,
+        72
+      ]
+    },
+    {
+      "id": "test-returns-3-route",
+      "family": "choice",
+      "group_id": "test-returns-3",
+      "gold_index": 1,
+      "gold_id": "returns",
+      "option_ids": [
+        "delivery",
+        "returns"
+      ],
+      "selected": "delivery",
+      "correct": false,
+      "probabilities": [
+        0.5563995838165283,
+        0.4436004161834717
+      ],
+      "logits": [
+        1.265625,
+        1.0390625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        73
+      ]
+    },
+    {
+      "id": "test-returns-3-money",
+      "family": "boolean",
+      "group_id": "test-returns-3",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.801314651966095,
+        0.19868536293506622
+      ],
+      "logits": [
+        1.67578125,
+        0.28125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        80,
+        79
+      ]
+    },
+    {
+      "id": "test-returns-3-urgency",
+      "family": "score",
+      "group_id": "test-returns-3",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": true,
+      "probabilities": [
+        0.09226443618535995,
+        0.466275155544281,
+        0.44146043062210083
+      ],
+      "logits": [
+        -0.7646484375,
+        0.85546875,
+        0.80078125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        76,
+        74,
+        73
+      ]
+    },
+    {
+      "id": "test-billing-0-route",
+      "family": "choice",
+      "group_id": "test-billing-0",
+      "gold_index": 1,
+      "gold_id": "billing",
+      "option_ids": [
+        "account",
+        "billing"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.7162185907363892,
+        0.28378137946128845
+      ],
+      "logits": [
+        1.375,
+        0.44921875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "test-billing-0-money",
+      "family": "boolean",
+      "group_id": "test-billing-0",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.7969253659248352,
+        0.2030746340751648
+      ],
+      "logits": [
+        1.41796875,
+        0.05078125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        78,
+        77
+      ]
+    },
+    {
+      "id": "test-billing-0-urgency",
+      "family": "score",
+      "group_id": "test-billing-0",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": true,
+      "probabilities": [
+        0.1004830002784729,
+        0.4129467308521271,
+        0.48657017946243286
+      ],
+      "logits": [
+        -0.647705078125,
+        0.765625,
+        0.9296875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        72,
+        71
+      ]
+    },
+    {
+      "id": "test-billing-1-route",
+      "family": "choice",
+      "group_id": "test-billing-1",
+      "gold_index": 2,
+      "gold_id": "billing",
+      "option_ids": [
+        "account",
+        "returns",
+        "billing"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.4230579435825348,
+        0.3419342637062073,
+        0.23500777781009674
+      ],
+      "logits": [
+        1.359375,
+        1.146484375,
+        0.771484375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        67,
+        67,
+        68
+      ]
+    },
+    {
+      "id": "test-billing-1-money",
+      "family": "boolean",
+      "group_id": "test-billing-1",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.8122723698616028,
+        0.18772760033607483
+      ],
+      "logits": [
+        1.58203125,
+        0.1171875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        73
+      ]
+    },
+    {
+      "id": "test-billing-1-urgency",
+      "family": "score",
+      "group_id": "test-billing-1",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": false,
+      "probabilities": [
+        0.09180603176355362,
+        0.4540969729423523,
+        0.4540969729423523
+      ],
+      "logits": [
+        -0.7587890625,
+        0.83984375,
+        0.83984375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        68,
+        67
+      ]
+    },
+    {
+      "id": "test-billing-2-route",
+      "family": "choice",
+      "group_id": "test-billing-2",
+      "gold_index": 3,
+      "gold_id": "billing",
+      "option_ids": [
+        "account",
+        "returns",
+        "delivery",
+        "billing"
+      ],
+      "selected": "account",
+      "correct": false,
+      "probabilities": [
+        0.29128095507621765,
+        0.2448045313358307,
+        0.2862055003643036,
+        0.17770905792713165
+      ],
+      "logits": [
+        1.4609375,
+        1.287109375,
+        1.443359375,
+        0.966796875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        72,
+        72,
+        70,
+        73
+      ]
+    },
+    {
+      "id": "test-billing-2-money",
+      "family": "boolean",
+      "group_id": "test-billing-2",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.840520977973938,
+        0.1594790518283844
+      ],
+      "logits": [
+        1.53515625,
+        -0.126953125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        79,
+        78
+      ]
+    },
+    {
+      "id": "test-billing-2-urgency",
+      "family": "score",
+      "group_id": "test-billing-2",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": true,
+      "probabilities": [
+        0.10220587998628616,
+        0.47167304158210754,
+        0.4261211156845093
+      ],
+      "logits": [
+        -0.666015625,
+        0.86328125,
+        0.76171875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        75,
+        73,
+        72
+      ]
+    },
+    {
+      "id": "test-billing-3-route",
+      "family": "choice",
+      "group_id": "test-billing-3",
+      "gold_index": 1,
+      "gold_id": "billing",
+      "option_ids": [
+        "delivery",
+        "billing"
+      ],
+      "selected": "delivery",
+      "correct": false,
+      "probabilities": [
+        0.5087881684303284,
+        0.49121183156967163
+      ],
+      "logits": [
+        1.224609375,
+        1.189453125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        65,
+        68
+      ]
+    },
+    {
+      "id": "test-billing-3-money",
+      "family": "boolean",
+      "group_id": "test-billing-3",
+      "gold_index": 0,
+      "gold_id": "true",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": true,
+      "probabilities": [
+        0.8283842206001282,
+        0.1716158241033554
+      ],
+      "logits": [
+        1.53125,
+        -0.04296875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        73
+      ]
+    },
+    {
+      "id": "test-billing-3-urgency",
+      "family": "score",
+      "group_id": "test-billing-3",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": true,
+      "probabilities": [
+        0.09810199588537216,
+        0.4342222511768341,
+        0.4676757752895355
+      ],
+      "logits": [
+        -0.682861328125,
+        0.8046875,
+        0.87890625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        68,
+        67
+      ]
+    },
+    {
+      "id": "test-account-0-route",
+      "family": "choice",
+      "group_id": "test-account-0",
+      "gold_index": 0,
+      "gold_id": "account",
+      "option_ids": [
+        "account",
+        "delivery"
+      ],
+      "selected": "account",
+      "correct": true,
+      "probabilities": [
+        0.5903069376945496,
+        0.40969306230545044
+      ],
+      "logits": [
+        1.74609375,
+        1.380859375
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        69
+      ]
+    },
+    {
+      "id": "test-account-0-money",
+      "family": "boolean",
+      "group_id": "test-account-0",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7476159334182739,
+        0.2523840665817261
+      ],
+      "logits": [
+        1.5078125,
+        0.421875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        78,
+        77
+      ]
+    },
+    {
+      "id": "test-account-0-urgency",
+      "family": "score",
+      "group_id": "test-account-0",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": false,
+      "probabilities": [
+        0.10194341838359833,
+        0.44990527629852295,
+        0.44815123081207275
+      ],
+      "logits": [
+        -0.668212890625,
+        0.81640625,
+        0.8125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        72,
+        71
+      ]
+    },
+    {
+      "id": "test-account-1-route",
+      "family": "choice",
+      "group_id": "test-account-1",
+      "gold_index": 2,
+      "gold_id": "account",
+      "option_ids": [
+        "billing",
+        "delivery",
+        "account"
+      ],
+      "selected": "account",
+      "correct": true,
+      "probabilities": [
+        0.19642505049705505,
+        0.3720219135284424,
+        0.4315529763698578
+      ],
+      "logits": [
+        0.6015625,
+        1.240234375,
+        1.388671875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        69,
+        66,
+        68
+      ]
+    },
+    {
+      "id": "test-account-1-money",
+      "family": "boolean",
+      "group_id": "test-account-1",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7889086008071899,
+        0.21109139919281006
+      ],
+      "logits": [
+        1.630859375,
+        0.3125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        75,
+        74
+      ]
+    },
+    {
+      "id": "test-account-1-urgency",
+      "family": "score",
+      "group_id": "test-account-1",
+      "gold_index": 1,
+      "gold_id": "1.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "1.0",
+      "correct": true,
+      "probabilities": [
+        0.09128765016794205,
+        0.46677687764167786,
+        0.4419354498386383
+      ],
+      "logits": [
+        -0.7958984375,
+        0.8359375,
+        0.78125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        71,
+        69,
+        68
+      ]
+    },
+    {
+      "id": "test-account-2-route",
+      "family": "choice",
+      "group_id": "test-account-2",
+      "gold_index": 0,
+      "gold_id": "account",
+      "option_ids": [
+        "account",
+        "delivery",
+        "billing",
+        "returns"
+      ],
+      "selected": "account",
+      "correct": true,
+      "probabilities": [
+        0.37142378091812134,
+        0.2717394232749939,
+        0.13243523240089417,
+        0.22440162301063538
+      ],
+      "logits": [
+        1.4765625,
+        1.1640625,
+        0.4453125,
+        0.97265625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        68,
+        71,
+        70
+      ]
+    },
+    {
+      "id": "test-account-2-money",
+      "family": "boolean",
+      "group_id": "test-account-2",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.7371581792831421,
+        0.2628418505191803
+      ],
+      "logits": [
+        1.53125,
+        0.5
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        77,
+        76
+      ]
+    },
+    {
+      "id": "test-account-2-urgency",
+      "family": "score",
+      "group_id": "test-account-2",
+      "gold_index": 2,
+      "gold_id": "2.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": true,
+      "probabilities": [
+        0.09651241451501846,
+        0.4420398473739624,
+        0.46144774556159973
+      ],
+      "logits": [
+        -0.584228515625,
+        0.9375,
+        0.98046875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        73,
+        71,
+        70
+      ]
+    },
+    {
+      "id": "test-account-3-route",
+      "family": "choice",
+      "group_id": "test-account-3",
+      "gold_index": 0,
+      "gold_id": "account",
+      "option_ids": [
+        "account",
+        "billing"
+      ],
+      "selected": "account",
+      "correct": true,
+      "probabilities": [
+        0.8665847778320312,
+        0.13341520726680756
+      ],
+      "logits": [
+        2.19921875,
+        0.328125
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        67,
+        68
+      ]
+    },
+    {
+      "id": "test-account-3-money",
+      "family": "boolean",
+      "group_id": "test-account-3",
+      "gold_index": 1,
+      "gold_id": "false",
+      "option_ids": [
+        "true",
+        "false"
+      ],
+      "selected": "true",
+      "correct": false,
+      "probabilities": [
+        0.8149381279945374,
+        0.18506190180778503
+      ],
+      "logits": [
+        1.529296875,
+        0.046875
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        74,
+        73
+      ]
+    },
+    {
+      "id": "test-account-3-urgency",
+      "family": "score",
+      "group_id": "test-account-3",
+      "gold_index": 0,
+      "gold_id": "0.0",
+      "option_ids": [
+        "0.0",
+        "1.0",
+        "2.0"
+      ],
+      "selected": "2.0",
+      "correct": false,
+      "probabilities": [
+        0.10097800940275192,
+        0.4433656930923462,
+        0.4556562602519989
+      ],
+      "logits": [
+        -0.7802734375,
+        0.69921875,
+        0.7265625
+      ],
+      "provenance": {
+        "source": "authored Busbar support demo; 16 held-out tickets",
+        "mapping": "all types evaluated as categorical decisions"
+      },
+      "candidate_path_tokens": [
+        70,
+        68,
+        67
+      ]
+    }
+  ],
+  "scope": "Original trained root checkpoint and original model/encoding functions. Mac device port, not official CUDA service timing. No retraining. Failures remain in the denominator. This is out-of-domain quality evaluation.",
+  "schema_version": 1,
+  "project": "nanojev",
+  "task": "quality",
+  "upstream_revision": "618cea6d906d54e128360786d12f703fff2b1245",
+  "input_name": "test-categorical.jsonl",
+  "input_sha256": "29d9ef03f413e1b7b4df649eedcdfdd2b599be2c13b96693bd77a19065aff1ec",
+  "versions": {
+    "mlx": "0.32.2",
+    "mlx-lm": "0.32.0",
+    "torch": "2.10.0",
+    "transformers": "5.17.0",
+    "busbar-runtime": "0.3.0",
+    "semif-phase1": "0.1.0"
+  }
+}

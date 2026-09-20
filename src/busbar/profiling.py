@@ -58,8 +58,11 @@ def staged_score(backend, sequences, labels, prefix, projection):
 
 def profile(backend, context_tokens=4096, questions=16, repeats=30):
     """Separate scheduling noise from the actual vocabulary head and KV branch work."""
-    if backend.identity["backend"] != "mlx":
-        raise ValueError("phase profiling requires the native MLX backend")
+    if (
+        backend.identity["backend"] != "mlx"
+        or getattr(backend, "default_projection", None) == "head"
+    ):
+        raise ValueError("vocabulary phase profiling requires the native MLX vocabulary scorer")
     if not 1 <= questions <= 64 or not 3 <= repeats <= 100:
         raise ValueError("profile needs 1–64 questions and 3–100 repeats")
     mx = backend.mx
@@ -80,7 +83,8 @@ def profile(backend, context_tokens=4096, questions=16, repeats=30):
         )
         for index in range(questions)
     ]
-    sequences, labels = [q.token_ids for q in compiled], [q.label_ids for q in compiled]
+    sequences = [q.paths[0].token_ids for q in compiled]
+    labels = [q.paths[0].label_ids for q in compiled]
     for projection in ("selected", "full"):
         backend.score(sequences, labels, prefix, projection)
         staged_score(backend, sequences, labels, prefix, projection)
