@@ -1,0 +1,222 @@
+{
+  "result": "passed",
+  "scope": "Same original three-type HTTP fixture, two fresh requests, no APC reads; diagnostic only, no universal numerical guarantee.",
+  "checks": {
+    "eligible": {
+      "selected_unchanged": true,
+      "max_probability_delta": 0.0
+    },
+    "route": {
+      "selected_unchanged": true,
+      "max_probability_delta": 0.0
+    },
+    "condition": {
+      "selected_unchanged": true,
+      "max_probability_delta": 0.0
+    }
+  },
+  "events": [
+    {
+      "method": "POST",
+      "path": "/v1/contexts",
+      "body": {
+        "snapshot": {
+          "id": "9caab28dc3c98ce885d25f4c9723e37a9d1902eaba7c9d2b13c9e75744d2b43e",
+          "namespace": "minicpm-fresh-diagnostic",
+          "token_count": 122,
+          "cache_bytes": 0,
+          "model": "openbmb/MiniCPM5-2B",
+          "revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+          "created_at": 1789928868.049386,
+          "expires_at": 1789929468.0493867
+        },
+        "reused": false,
+        "prefill_tokens": 122,
+        "elapsed_ms": 104.54425000352785
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/decisions",
+      "body": {
+        "snapshot_id": "9caab28dc3c98ce885d25f4c9723e37a9d1902eaba7c9d2b13c9e75744d2b43e",
+        "decisions": {
+          "eligible": {
+            "type": "boolean",
+            "option_ids": [
+              "true",
+              "false"
+            ],
+            "logits": [
+              -5.255256652832031,
+              -0.0052565219812095165
+            ],
+            "probabilities": [
+              0.005220125014066352,
+              0.9947798749859337
+            ],
+            "selected": "false",
+            "value": false,
+            "normalized_entropy": 0.047088779109256663,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "route": {
+            "type": "choice",
+            "option_ids": [
+              "returns",
+              "delivery",
+              "payment"
+            ],
+            "logits": [
+              -1.1920928244535389e-07,
+              -20.625,
+              -23.875
+            ],
+            "probabilities": [
+              0.9999999988539658,
+              1.1032561625975523e-09,
+              4.2777883740185594e-11
+            ],
+            "selected": "returns",
+            "value": "returns",
+            "normalized_entropy": 2.268499506644608e-08,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "condition": {
+            "type": "score",
+            "option_ids": [
+              "0.0",
+              "1.0",
+              "2.0"
+            ],
+            "logits": [
+              -0.9794479608535767,
+              -5.229447841644287,
+              -0.47944796085357666
+            ],
+            "probabilities": [
+              0.3755183787634764,
+              0.005356482630352857,
+              0.6191251386061708
+            ],
+            "selected": "2.0",
+            "value": 1.2436067598426945,
+            "normalized_entropy": 0.6304775147532413,
+            "logit_space": "vocabulary_logprobs"
+          }
+        },
+        "mode": "fresh",
+        "projection": "full",
+        "prefix_tokens": 122,
+        "reused_prefix_tokens": 0,
+        "computed_tokens": 526,
+        "batches": 1,
+        "compile_ms": 0.014917000953573734,
+        "inference_ms": 374.64933300361736,
+        "total_ms": 374.7208330023568,
+        "backend_details": {
+          "engine_cached_tokens": 0,
+          "generated_tokens": 3,
+          "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+          "logit_space": "vocabulary_logprobs"
+        },
+        "probability_status": "conditional label probabilities; uncalibrated"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/decisions",
+      "body": {
+        "snapshot_id": "9caab28dc3c98ce885d25f4c9723e37a9d1902eaba7c9d2b13c9e75744d2b43e",
+        "decisions": {
+          "eligible": {
+            "type": "boolean",
+            "option_ids": [
+              "true",
+              "false"
+            ],
+            "logits": [
+              -5.255256652832031,
+              -0.0052565219812095165
+            ],
+            "probabilities": [
+              0.005220125014066352,
+              0.9947798749859337
+            ],
+            "selected": "false",
+            "value": false,
+            "normalized_entropy": 0.047088779109256663,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "route": {
+            "type": "choice",
+            "option_ids": [
+              "returns",
+              "delivery",
+              "payment"
+            ],
+            "logits": [
+              -1.1920928244535389e-07,
+              -20.625,
+              -23.875
+            ],
+            "probabilities": [
+              0.9999999988539658,
+              1.1032561625975523e-09,
+              4.2777883740185594e-11
+            ],
+            "selected": "returns",
+            "value": "returns",
+            "normalized_entropy": 2.268499506644608e-08,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "condition": {
+            "type": "score",
+            "option_ids": [
+              "0.0",
+              "1.0",
+              "2.0"
+            ],
+            "logits": [
+              -0.9794479608535767,
+              -5.229447841644287,
+              -0.47944796085357666
+            ],
+            "probabilities": [
+              0.3755183787634764,
+              0.005356482630352857,
+              0.6191251386061708
+            ],
+            "selected": "2.0",
+            "value": 1.2436067598426945,
+            "normalized_entropy": 0.6304775147532413,
+            "logit_space": "vocabulary_logprobs"
+          }
+        },
+        "mode": "fresh",
+        "projection": "full",
+        "prefix_tokens": 122,
+        "reused_prefix_tokens": 0,
+        "computed_tokens": 526,
+        "batches": 1,
+        "compile_ms": 0.011250005627516657,
+        "inference_ms": 372.95504100620747,
+        "total_ms": 373.02029200509423,
+        "backend_details": {
+          "engine_cached_tokens": 0,
+          "generated_tokens": 3,
+          "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+          "logit_space": "vocabulary_logprobs"
+        },
+        "probability_status": "conditional label probabilities; uncalibrated"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/contexts?namespace=minicpm-fresh-diagnostic",
+      "body": {
+        "deleted_count": 1
+      }
+    }
+  ]
+}

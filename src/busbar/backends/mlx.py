@@ -1,19 +1,54 @@
 """Apple GPU execution using MLX-LM's native model and branchable KV caches."""
 
 import re
+from pathlib import Path
 
 from .base import BackendResult, PrefixState, length_batches
 
 
+def _model_classes(config, *, dtype):
+    """Use the loader's extension point to promote weights before FP32 sanitization.
+
+    Qwen3.5 folds ``1 + norm.weight`` into RMSNorm while loading. Casting only
+    afterwards would retain BF16 rounding and invalidate the FP32 HF reference.
+    BF16 production loading keeps the upstream conversion unchanged.
+    """
+    import importlib
+
+    import mlx.core as mx
+
+    family = config.get("model_type")
+    if family not in ("qwen2", "qwen3", "qwen3_5", "llama") or any(
+        config.get(key) or config.get("text_config", {}).get(key)
+        for key in ("quantization", "quantization_config", "model_file")
+    ):
+        raise ValueError("MLX supports native, dense, unquantized Qwen2/3/3.5 and Llama")
+    module = importlib.import_module(f"mlx_lm.models.{family}")
+    if dtype != "float32":
+        return module.Model, module.ModelArgs
+
+    class Float32Model(module.Model):
+        """Preserve checkpoint precision before architecture-specific arithmetic."""
+
+        def sanitize(self, weights):
+            """Promote source weights before invoking the unchanged native sanitizer."""
+            weights = {key: value.astype(mx.float32) for key, value in weights.items()}
+            return super().sanitize(weights)
+
+    return Float32Model, module.ModelArgs
+
+
 class MLXBackend:
-    """Dense Qwen2/3 adapter with native prefix reuse and suffix batching."""
+    """Dense ChatML models, including hybrid Qwen3.5 attention and recurrent state."""
 
     def __init__(
         self, model: str, revision: str, *, batch_size=8, max_tokens=8192, dtype="float16"
     ):
         """Pin checkpoint/tokenizer revisions and reject unsupported or quantized head layouts."""
         import mlx.core as mx
-        from mlx_lm import load
+        from huggingface_hub import snapshot_download
+        from mlx.utils import tree_map_with_path
+        from mlx_lm.utils import DEFAULT_ALLOW_PATTERNS, load_model, load_tokenizer
 
         if not mx.metal.is_available():
             raise RuntimeError("MLX backend requires an Apple Silicon Mac with Metal")
@@ -26,25 +61,36 @@ class MLXBackend:
         ):
             raise ValueError("invalid dtype, batch size or context limit")
         self.mx = mx
-        self.model, self.tokenizer, config = load(
-            model,
-            revision=revision,
-            tokenizer_config={"trust_remote_code": False},
-            return_config=True,
+        path = Path(
+            snapshot_download(model, revision=revision, allow_patterns=DEFAULT_ALLOW_PATTERNS)
         )
-        if config.get("model_type") not in ("qwen2", "qwen3") or config.get("quantization"):
-            raise ValueError("MLX supports dense, unquantized Qwen2/3 checkpoints only")
-        self.model.set_dtype(getattr(mx, dtype))
+        self.model, config = load_model(
+            path, get_model_classes=lambda config: _model_classes(config, dtype=dtype)
+        )
+        self.tokenizer = load_tokenizer(
+            path, {"trust_remote_code": False}, eos_token_ids=config.get("eos_token_id")
+        )
+        # MLX-LM sanitizes multimodal checkpoints into their native text model.
+        # Preserve architecture-specific FP32 parameters such as GDN's A_log.
+        cast = getattr(self.model, "cast_predicate", lambda _: True)
+        self.model.update(
+            tree_map_with_path(
+                lambda path, value: value.astype(getattr(mx, dtype)) if cast(path) else value,
+                self.model.parameters(),
+            )
+        )
+        self.model = getattr(self.model, "language_model", self.model)
+        text_config = config.get("text_config", config)
         self.model.eval()
         mx.eval(self.model.parameters())
         self.head = (
             self.model.model.embed_tokens
-            if config.get("tie_word_embeddings")
+            if text_config.get("tie_word_embeddings")
             else self.model.lm_head
         )
-        self.tied = bool(config.get("tie_word_embeddings"))
+        self.tied = bool(text_config.get("tie_word_embeddings"))
         self.batch_size = batch_size
-        self.max_tokens = min(max_tokens, config["max_position_embeddings"])
+        self.max_tokens = min(max_tokens, text_config["max_position_embeddings"])
         self.identity = {
             "backend": "mlx",
             "model": model,
@@ -81,8 +127,6 @@ class MLXBackend:
 
     def score(self, sequences, labels, prefix, projection) -> BackendResult:
         """Merge into new batch caches; never pass the stored prefix into a mutating forward."""
-        from mlx_lm.models.cache import BatchKVCache
-
         mx = self.mx
         results = [None] * len(sequences)
         batches = 0
@@ -91,7 +135,7 @@ class MLXBackend:
             cache = (
                 None
                 if prefix is None
-                else [BatchKVCache.merge([layer] * len(indices)) for layer in prefix.cache]
+                else [layer.merge([layer] * len(indices)) for layer in prefix.cache]
             )
             inputs = mx.array([sequences[i] for i in indices])
             hidden = self.model.model(inputs, cache=cache)[:, -1, :]

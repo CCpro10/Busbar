@@ -21,7 +21,7 @@ class PrecisionInspector:
         runner = self.model_runner
         counts = Counter()
         tensors = tree_flatten(runner.model.parameters())
-        # The pinned plugin hides original Qwen attention modules behind _inner;
+        # The pinned plugin hides original attention modules behind _inner;
         # MLX's public parameters() walk excludes those private wrapper members.
         for layer in runner.model.layers:
             inner = getattr(layer.self_attn, "_inner", None)
@@ -84,10 +84,12 @@ class VLLMMetalBackend:
         if not isinstance(current_platform, MetalPlatform):
             raise RuntimeError("vLLM Metal plugin is not active; use the documented environment")
         config = AutoConfig.from_pretrained(model, revision=revision, trust_remote_code=False)
-        if config.model_type not in ("qwen2", "qwen3") or getattr(
+        if config.model_type not in ("qwen2", "qwen3", "llama") or getattr(
             config, "quantization_config", None
         ):
-            raise ValueError("Busbar validates dense, unquantized Qwen2/3 checkpoints only")
+            raise ValueError(
+                "Busbar Metal validates dense, unquantized Qwen2/3 and Llama checkpoints"
+            )
         engine_limit = min(max_tokens, config.max_position_embeddings)
         # Unlike native readout, vLLM requires room for its one generated token.
         # Expose the true input capacity so Runtime rejects overflow before inference.
@@ -119,7 +121,7 @@ class VLLMMetalBackend:
         ):
             raise ValueError(
                 "vLLM Metal did not cast checkpoint weights to the requested dtype; "
-                "use --dtype bfloat16 for the validated Qwen checkpoints"
+                "use --dtype bfloat16 for the validated checkpoints"
             )
         self.identity = {
             "backend": "vllm-metal",

@@ -1,0 +1,432 @@
+{
+  "model": {
+    "source": "C-Tianyu/NanoJev",
+    "revision": "047b927b30882a1138fc504821b82ac145a4b81a",
+    "device": "cpu",
+    "parameter_storage": "float32",
+    "dtype": "float32",
+    "base_model": "Qwen/Qwen3-0.6B",
+    "set_head": "attention",
+    "checkpoint_max_tokens": 8192,
+    "batch_questions": 4
+  },
+  "summary": {
+    "rows": 8,
+    "answered": 8,
+    "correct": 3,
+    "accuracy": 0.375,
+    "balanced_accuracy": 0.3333333333333333,
+    "coverage": 1.0,
+    "nll": 1.1347951764105675,
+    "brier": 0.6805015198404838,
+    "reliability_bins": [
+      {
+        "lower": 0.4,
+        "upper": 0.5,
+        "count": 4,
+        "accuracy": 0,
+        "mean_confidence": 0.4783453196287155
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.6,
+        "count": 4,
+        "accuracy": 0.75,
+        "mean_confidence": 0.5208665877580643
+      }
+    ],
+    "ece_10_equal_width": 0.3537393659353256,
+    "mean_family_balanced_accuracy": 0.3333333333333333,
+    "wall_seconds": 0.8454687080011354
+  },
+  "families": {
+    "evidence_interpretation": {
+      "rows": 8,
+      "answered": 8,
+      "correct": 3,
+      "accuracy": 0.375,
+      "balanced_accuracy": 0.3333333333333333,
+      "coverage": 1.0,
+      "nll": 1.1347951764105675,
+      "brier": 0.6805015198404838,
+      "reliability_bins": [
+        {
+          "lower": 0.4,
+          "upper": 0.5,
+          "count": 4,
+          "accuracy": 0,
+          "mean_confidence": 0.4783453196287155
+        },
+        {
+          "lower": 0.5,
+          "upper": 0.6,
+          "count": 4,
+          "accuracy": 0.75,
+          "mean_confidence": 0.5208665877580643
+        }
+      ],
+      "ece_10_equal_width": 0.3537393659353256
+    }
+  },
+  "predictions": [
+    {
+      "id": "a3f18f3a63d45345942b",
+      "family": "evidence_interpretation",
+      "group_id": "2fdaa8a61e6e989dd866",
+      "gold_index": 2,
+      "gold_id": "contradicted",
+      "option_ids": [
+        "supported",
+        "insufficient",
+        "contradicted"
+      ],
+      "selected": "supported",
+      "correct": false,
+      "probabilities": [
+        0.4790176451206207,
+        0.31583425402641296,
+        0.20514808595180511
+      ],
+      "logits": [
+        0.949787974357605,
+        0.5332680940628052,
+        0.10178267955780029
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The optician ordered replacement lenses. The workshop confirms they have not yet been fitted to the customer's glasses.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_intent_outcome",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Fitting is explicitly not complete.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e01",
+        "variant": "original"
+      },
+      "candidate_path_tokens": [
+        56,
+        58,
+        58
+      ]
+    },
+    {
+      "id": "f40beba9088c8db8bbd6",
+      "family": "evidence_interpretation",
+      "group_id": "2fdaa8a61e6e989dd866",
+      "gold_index": 0,
+      "gold_id": "supported",
+      "option_ids": [
+        "supported",
+        "insufficient",
+        "contradicted"
+      ],
+      "selected": "supported",
+      "correct": true,
+      "probabilities": [
+        0.5081672668457031,
+        0.3130291700363159,
+        0.17880350351333618
+      ],
+      "logits": [
+        1.3658583164215088,
+        0.8813439607620239,
+        0.3213351368904114
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The optician ordered replacement lenses. The workshop confirms they have not yet been fitted to the customer's glasses.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_intent_outcome",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Ordering is explicitly complete.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e01",
+        "variant": "criterion_reversal"
+      },
+      "candidate_path_tokens": [
+        54,
+        56,
+        56
+      ]
+    },
+    {
+      "id": "0b43ea8e24e74d621f1b",
+      "family": "evidence_interpretation",
+      "group_id": "2fdaa8a61e6e989dd866",
+      "gold_index": 1,
+      "gold_id": "supported",
+      "option_ids": [
+        "insufficient",
+        "supported",
+        "contradicted"
+      ],
+      "selected": "supported",
+      "correct": true,
+      "probabilities": [
+        0.2733843922615051,
+        0.5415105223655701,
+        0.18510504066944122
+      ],
+      "logits": [
+        0.6088770627975464,
+        1.292360782623291,
+        0.21892166137695312
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The workshop confirms it fitted the replacement lenses to the customer's glasses.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_intent_outcome",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Fitting is now explicitly complete.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e01",
+        "variant": "evidence_change"
+      },
+      "candidate_path_tokens": [
+        50,
+        48,
+        50
+      ]
+    },
+    {
+      "id": "942ec65dac0bfb9874f9",
+      "family": "evidence_interpretation",
+      "group_id": "2fdaa8a61e6e989dd866",
+      "gold_index": 0,
+      "gold_id": "insufficient",
+      "option_ids": [
+        "insufficient",
+        "supported",
+        "contradicted"
+      ],
+      "selected": "supported",
+      "correct": false,
+      "probabilities": [
+        0.31405118107795715,
+        0.4876045286655426,
+        0.19834432005882263
+      ],
+      "logits": [
+        0.6337378621101379,
+        1.0736865997314453,
+        0.1741863489151001
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The optician records a glasses prescription but no order or fitting status.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_intent_outcome",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Prescription details settle no fitting status.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e01",
+        "variant": "missing"
+      },
+      "candidate_path_tokens": [
+        50,
+        48,
+        50
+      ]
+    },
+    {
+      "id": "e0c140e9222d1bce5647",
+      "family": "evidence_interpretation",
+      "group_id": "f4bea3d3bcc01056740d",
+      "gold_index": 0,
+      "gold_id": "supported",
+      "option_ids": [
+        "supported",
+        "contradicted",
+        "insufficient"
+      ],
+      "selected": "supported",
+      "correct": true,
+      "probabilities": [
+        0.5096672177314758,
+        0.18285751342773438,
+        0.3074752390384674
+      ],
+      "logits": [
+        1.2376930713653564,
+        0.21264231204986572,
+        0.7323296070098877
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The guest writes, \"The listing says towels are supplied. I agree: fresh towels were provided during my stay.\"",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_stance",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "The guest explicitly agrees.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e02",
+        "variant": "original"
+      },
+      "candidate_path_tokens": [
+        60,
+        62,
+        62
+      ]
+    },
+    {
+      "id": "8e8c3804a3c15ebb31e3",
+      "family": "evidence_interpretation",
+      "group_id": "f4bea3d3bcc01056740d",
+      "gold_index": 2,
+      "gold_id": "contradicted",
+      "option_ids": [
+        "insufficient",
+        "supported",
+        "contradicted"
+      ],
+      "selected": "supported",
+      "correct": false,
+      "probabilities": [
+        0.28768274188041687,
+        0.5241213440895081,
+        0.1881958395242691
+      ],
+      "logits": [
+        0.6139253973960876,
+        1.2137902975082397,
+        0.18955016136169434
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The guest writes, \"The listing says towels are supplied. I agree: fresh towels were provided during my stay.\"",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_stance",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Agreement contradicts disputing the statement.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e02",
+        "variant": "criterion_reversal"
+      },
+      "candidate_path_tokens": [
+        59,
+        57,
+        59
+      ]
+    },
+    {
+      "id": "56c419b12cd37cbe790c",
+      "family": "evidence_interpretation",
+      "group_id": "f4bea3d3bcc01056740d",
+      "gold_index": 0,
+      "gold_id": "contradicted",
+      "option_ids": [
+        "contradicted",
+        "insufficient",
+        "supported"
+      ],
+      "selected": "supported",
+      "correct": false,
+      "probabilities": [
+        0.18777798116207123,
+        0.32024434208869934,
+        0.491977721452713
+      ],
+      "logits": [
+        0.25911128520965576,
+        0.7929352521896362,
+        1.2222844362258911
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The guest writes, \"The listing says towels are supplied, but none were provided. I dispute that statement.\"",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_stance",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "The guest now explicitly disputes it.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e02",
+        "variant": "evidence_change"
+      },
+      "candidate_path_tokens": [
+        61,
+        61,
+        59
+      ]
+    },
+    {
+      "id": "75b470586834df8c568d",
+      "family": "evidence_interpretation",
+      "group_id": "f4bea3d3bcc01056740d",
+      "gold_index": 2,
+      "gold_id": "insufficient",
+      "option_ids": [
+        "supported",
+        "contradicted",
+        "insufficient"
+      ],
+      "selected": "supported",
+      "correct": false,
+      "probabilities": [
+        0.4547813832759857,
+        0.18786779046058655,
+        0.3573508858680725
+      ],
+      "logits": [
+        1.1536632776260376,
+        0.2695849537849426,
+        0.9125645756721497
+      ],
+      "provenance": {
+        "annotation_status": "all_source_groups_independently_model_reviewed_not_human_adjudicated",
+        "evidence_span": "The guest forwards the listing but provides no comment about towels or the stay.",
+        "evidence_span_note": "Complete short situation retained; rationale identifies decisive evidence.",
+        "generator_revision": "semantic-eval-v1",
+        "kind": "authored_synthetic",
+        "mechanism": "familiar_stance",
+        "partition": "familiar_mechanism_new_situation",
+        "rationale": "Forwarding does not settle endorsement.",
+        "rights": "Project authored; no copied external text",
+        "source": "project-authored",
+        "source_key": "i_e02",
+        "variant": "missing"
+      },
+      "candidate_path_tokens": [
+        52,
+        54,
+        54
+      ]
+    }
+  ],
+  "scope": "Original trained root checkpoint and original model/encoding functions. Mac device port, not official CUDA service timing. No retraining. Failures remain in the denominator. This is out-of-domain quality evaluation.",
+  "schema_version": 1,
+  "project": "nanojev",
+  "task": "quality",
+  "upstream_revision": "618cea6d906d54e128360786d12f703fff2b1245",
+  "input_name": "diagnostic-first8.jsonl",
+  "input_sha256": "38adc94aacb752f26e7723baca6b256c3aee2b6a4f1ab711942214b0090f323d",
+  "versions": {
+    "mlx": "0.32.2",
+    "mlx-lm": "0.32.0",
+    "torch": "2.10.0",
+    "transformers": "5.17.0",
+    "busbar-runtime": "0.3.0",
+    "semif-phase1": "0.1.0"
+  }
+}

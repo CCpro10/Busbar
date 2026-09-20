@@ -7,6 +7,24 @@ from pathlib import Path
 import httpx
 
 
+def repeat_checks(first, second):
+    """Record every numerical failure without skipping the remaining lifecycle/cleanup checks."""
+    checks = {}
+    for name, original in first.items():
+        repeated = second[name]
+        delta = max(
+            abs(a - b)
+            for a, b in zip(original["probabilities"], repeated["probabilities"], strict=True)
+        )
+        checks[name] = {
+            "selected_unchanged": original["selected"] == repeated["selected"],
+            "max_probability_delta": delta,
+            "probability_tolerance": 0.02,
+            "passed": original["selected"] == repeated["selected"] and delta < 0.02,
+        }
+    return checks
+
+
 def exercise(base_url: str) -> dict:
     """Cover cross-request reuse, all decision types, fanout and snapshot removal."""
     example = json.loads(Path(__file__).with_name("returns.json").read_text())
@@ -44,17 +62,7 @@ def exercise(base_url: str) -> dict:
         assert fanout["batches"] == (1 if engine_managed else 8)
         assert fanout["computed_tokens"] < fanout["reused_prefix_tokens"]
         repeated = call("POST", "/v1/decisions", request)
-        for name, first in decisions["decisions"].items():
-            second = repeated["decisions"][name]
-            assert first["selected"] == second["selected"]
-            # APC changes prefill shapes; low-precision kernels can differ slightly.
-            assert (
-                max(
-                    abs(a - b)
-                    for a, b in zip(first["probabilities"], second["probabilities"], strict=True)
-                )
-                < 0.02
-            )
+        numerical = repeat_checks(decisions["decisions"], repeated["decisions"])
         call("POST", "/v1/decisions", {**request, "questions": {}}, expected=422)
         if engine_managed:
             call("POST", "/v1/decisions", {**request, "projection": "selected"}, expected=422)
@@ -67,7 +75,16 @@ def exercise(base_url: str) -> dict:
         call("POST", "/v1/decisions", request, expected=404)
         call("DELETE", "/v1/contexts?namespace=http-smoke")
         assert call("GET", "/v1/contexts?namespace=http-smoke") == []
-    return {"result": "passed", "transport": "real HTTP/TCP", "health": health, "events": events}
+    return {
+        "result": "passed"
+        if all(row["passed"] for row in numerical.values())
+        else "numerical_gate_failed",
+        "protocol": "passed",
+        "repeat_numerical_checks": numerical,
+        "transport": "real HTTP/TCP",
+        "health": health,
+        "events": events,
+    }
 
 
 def main():
@@ -83,7 +100,9 @@ def main():
     with args.output.open("x") as file:
         json.dump(result, file, indent=2)
         file.write("\n")
-    print(f"passed: {len(result['events'])} HTTP requests; 64-question fanout")
+    print(f"{result['result']}: {len(result['events'])} HTTP requests; 64-question fanout")
+    if result["result"] != "passed":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

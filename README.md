@@ -2,9 +2,9 @@
 
 A context-reuse decision runtime for LLM agents.
 
-Busbar 把上下文编译成可复用的 `ContextSnapshot`：后续 Boolean、Choice、Score 判断复用共同前缀。面向 Apple Silicon Mac，支持 Qwen3-0.6B、Qwen2.5-3B-Instruct；MLX 使用独立 KV 分支，vLLM Metal 使用引擎的分页前缀缓存，HF/PyTorch 提供 CPU 正确性参考。
+Busbar 把上下文编译成可复用的 `ContextSnapshot`：后续 Boolean、Choice、Score 判断复用共同前缀。面向 Apple Silicon Mac，新增 MiniCPM5-2B（实际约 2.52B）和 Qwen3.5-4B；MLX 使用独立缓存分支，vLLM Metal 使用引擎的分页前缀缓存，HF/PyTorch 提供 CPU 正确性参考。
 
-M4 Pro、48 GiB 本机已跑通未量化 3B 和 vLLM Metal。相同 BF16、SemIf 144 条样例中，0.6B / MLX 准确率 54.17%，3B / MLX 为 68.75%，3B / vLLM Metal 为 68.06%。3B / vLLM Metal 在 2048-token 公共前缀、8 题测试中，从逐题重算的 14.64 秒降至复用前缀批量判断的 0.48 秒。完整条件、概率差异、退出限制和原始数据见 [0.2 本机报告](docs/mac-v02.md)；旧版数据见 [0.1 验收记录](docs/acceptance.md)。
+M4 Pro、48 GiB 本机实测，相同 BF16 和 Busbar 提示词，Qwen3.5-4B 在 SemIf authored144 / 外部 WANLI256 上准确率为 **89.58% / 67.97%**，Qwen2.5-3B 为 68.75% / 55.47%，MiniCPM5 为 72.92% / 52.34%。新版模型的综合榜单能力不等于单步决策能力；本场景优先推荐 Qwen3.5-4B。SemIf、NanoJev 的真实交叉对照、速度与质量边界见 [0.3 本机报告](docs/mac-v03.md)。历史结果：[0.2](docs/mac-v02.md)、[0.1](docs/acceptance.md)。
 
 ```text
 Context JSON → 稳定序列化与分词 → 一次 prefill → ContextSnapshot
@@ -26,13 +26,14 @@ uv run busbar run examples/returns.json
 
 默认固定模型 `Qwen/Qwen3-0.6B`、revision `c1899de289a04d12100db370d81485cdf75e47ca`，MLX 使用 FP16，关闭额外思考与文本生成。输入、模型权重和推理均在本机；下载模型需要网络。
 
-运行较大的模型（约 6.2 GB 权重，本机 48 GiB 内存已验证）：
+运行较强的模型（均未量化，本机 48 GiB 内存已验证）：
 
 ```bash
-uv run busbar run examples/returns.json --model Qwen/Qwen2.5-3B-Instruct
+uv run busbar run examples/returns.json --model Qwen/Qwen3.5-4B --dtype bfloat16
+uv run busbar run examples/returns.json --model openbmb/MiniCPM5-2B --dtype bfloat16
 ```
 
-这个型号自动使用固定 revision `aa8e72537993ba99e69dfaafa59ed015b17504d1`。其他型号必须显式指定 `--revision`；不会把 0.6B 的版本号误用于新模型。
+这两个型号都内置了不可变 revision。MiniCPM5 下载约 5 GB；Qwen3.5 下载约 9.3 GB 的官方多模态 checkpoint，原生后端只加载文本模型，不提供视觉接口。其他型号必须显式指定 `--revision`；默认仍保留 0.6B，避免升级后自动触发大模型下载。
 
 ## vLLM Metal
 
@@ -41,14 +42,16 @@ uv run busbar run examples/returns.json --model Qwen/Qwen2.5-3B-Instruct
 ```bash
 bash scripts/setup-metal.sh
 .venv-metal/bin/busbar run examples/returns.json \
-  --backend vllm-metal --model Qwen/Qwen2.5-3B-Instruct
+  --backend vllm-metal --model openbmb/MiniCPM5-2B
 .venv-metal/bin/busbar serve --backend vllm-metal \
-  --model Qwen/Qwen2.5-3B-Instruct --port 8787
+  --model openbmb/MiniCPM5-2B --port 8787
 ```
 
 安装脚本使用官方 vLLM 0.29.0 / vLLM Metal 0.29.0 wheels，完整依赖版本记录在 `requirements-metal.lock`；安装后执行依赖兼容性检查。默认 BF16，`--memory-fraction 0.35` 限制引擎缓存预算。后端通过只读 worker 扩展验证真实权重类型，避免当前插件保留 BF16 权重、但命令行声称 FP16 的情况；MLX 对照跑分也要指定 `--dtype bfloat16`。先停掉同端口的旧服务，再启动新后端。
 
 此后端真实执行完整词表头，每题请求一个生成 token，同时读取所有候选 token 的原始 log probabilities，随后在候选内重新归一化。它们与原始 logits 相差一个共同常数，softmax 比例保持一致；响应以 `logit_space="vocabulary_logprobs"` 标注。`projection="auto"` 自动选择 `full`；显式要求 `selected` 会拒绝，不声称已实现候选行投影。
+
+**MiniCPM5 的 Metal 缓存模式仍有限制：** 原始退货示例重复请求时，Score 最大概率变化约 0.122，最高分等级发生变化，严格数值门禁未通过。17 项 HTTP 功能流程可以完成；`mode="fresh"` 的两次实测结果一致，但会失去前缀复用收益。现阶段优先使用 Qwen3.5-4B＋MLX；不要把 MiniCPM5/Metal 的“可以运行”理解成已保证缓存命中前后的数值稳定。失败记录与复现见 [0.3 报告](docs/mac-v03.md)。
 
 **已知上游退出问题：** 当前 macOS 15.6.1 + PyTorch 2.13.0 环境在引擎退出清理时可能发生 `empty_host_cache()` 段错误；独立调用也能复现，上游 [#765](https://github.com/vllm-project/vllm-metal/pull/765) 记录了同类问题。推理与常驻服务可工作，暂不宣称干净的 worker 退出。没有修改依赖源码或屏蔽错误。
 
@@ -133,7 +136,8 @@ curl http://127.0.0.1:8787/v1/decisions \
 - 一个模型操作占用一把锁。一个请求内可以 GPU batch，多 HTTP 请求目前依次执行；没有声称实现 continuous batching。
 - 原生后端完整输入默认最多 8192 token；vLLM Metal 从此预算预留一个输出 token，因此最多接受 8191 个输入 token。超限拒绝，不静默截断。空题集、重复选项、非有限数值、错误字段会返回 422；缺失、过期、淘汰和跨 namespace ID 返回 404。
 - namespace 提供本地隔离，不是身份认证。此版只提供本机服务。
-- 支持 dense、未量化的 Qwen2/3。模型适配显式检查；HF reference 默认 CPU FP32、串行执行。
+- MLX/HF 支持 dense、未量化的 Qwen2/3/3.5 和 Llama 架构（含 MiniCPM5）；vLLM Metal 当前验证 Qwen2/3 和 MiniCPM5，尚未开放 Qwen3.5。模型适配显式检查；HF reference 默认 CPU FP32、串行执行。
+- Qwen3.5 的缓存同时包含注意力 K/V 与递归状态，分支必须独立复制两者。MLX-LM 固定到包含 GDN 归一化修复的提交；其 `A_log` 保持 FP32。FP32 参考加载会在权重转换运算前提升精度，避免继承 BF16 舍入误差。
 
 MLX/HF 的 `projection="selected"` 在词表投影前取出 A–P 对应权重；`projection="full"` 计算完整词表后取相同标签。默认 `auto` 在 MLX/HF 使用 `selected`，在 vLLM Metal 使用 `full`。候选行投影是次要优化，核心仍是避免重复 prefill；共享词表权重继续保留以处理输入 token。
 
@@ -154,10 +158,10 @@ uv run busbar benchmark --context-tokens 4096 --questions 16 --repeats 3 \
 
 # 原始 144 条公开样例：质量、Brier、NLL、ECE 与逐条答案。
 uv run busbar evaluate benchmarks/data/semif-authored144.jsonl \
-  --model Qwen/Qwen2.5-3B-Instruct --dtype bfloat16 --output local-results/quality-3b.json
+  --model Qwen/Qwen3.5-4B --dtype bfloat16 --output local-results/quality-qwen35.json
 .venv-metal/bin/busbar evaluate benchmarks/data/semif-authored144.jsonl \
-  --backend vllm-metal --model Qwen/Qwen2.5-3B-Instruct \
-  --output local-results/quality-3b-metal.json
+  --backend vllm-metal --model openbmb/MiniCPM5-2B \
+  --output local-results/quality-minicpm5-metal.json
 
 # 对照正常执行与增加同步点的阶段计时，独占 GPU 运行。
 uv run busbar profile --model Qwen/Qwen2.5-3B-Instruct \

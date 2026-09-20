@@ -1,0 +1,1651 @@
+[
+  {
+    "method": "DELETE",
+    "path": "/v1/contexts?namespace=minicpm-repeat-diagnostic",
+    "body": {
+      "deleted_count": 0
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v1/contexts",
+    "body": {
+      "snapshot": {
+        "id": "6ccc97ec9988cf20e55ef61bd152ecd8a57545209454a12319b1417c4ac1e8e9",
+        "namespace": "minicpm-repeat-diagnostic",
+        "token_count": 122,
+        "cache_bytes": 0,
+        "model": "openbmb/MiniCPM5-2B",
+        "revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+        "created_at": 1789928708.0734432,
+        "expires_at": 1789929308.073442
+      },
+      "reused": false,
+      "prefill_tokens": 122,
+      "elapsed_ms": 106.91945799771929
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v1/decisions",
+    "body": {
+      "snapshot_id": "6ccc97ec9988cf20e55ef61bd152ecd8a57545209454a12319b1417c4ac1e8e9",
+      "decisions": {
+        "eligible": {
+          "type": "boolean",
+          "option_ids": [
+            "true",
+            "false"
+          ],
+          "logits": [
+            -5.255253791809082,
+            -0.005253676325082779
+          ],
+          "probabilities": [
+            0.005220125093864346,
+            0.9947798749061356
+          ],
+          "selected": "false",
+          "value": false,
+          "normalized_entropy": 0.047088779713658664,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.75,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999989930646,
+            9.73620030320584e-10,
+            3.331544538811762e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.00373565821529e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "condition": {
+          "type": "score",
+          "option_ids": [
+            "0.0",
+            "1.0",
+            "2.0"
+          ],
+          "logits": [
+            -0.9809681177139282,
+            -4.980967998504639,
+            -0.4809681475162506
+          ],
+          "probabilities": [
+            0.37494794841771956,
+            0.006867412043949943,
+            0.6181846395383305
+          ],
+          "selected": "2.0",
+          "value": 1.243236691120611,
+          "normalized_entropy": 0.6365716277618692,
+          "logit_space": "vocabulary_logprobs"
+        }
+      },
+      "mode": "cached",
+      "projection": "full",
+      "prefix_tokens": 122,
+      "reused_prefix_tokens": 336,
+      "computed_tokens": 190,
+      "batches": 1,
+      "compile_ms": 0.01200000406242907,
+      "inference_ms": 177.11870900529902,
+      "total_ms": 177.1999999982654,
+      "backend_details": {
+        "engine_cached_tokens": 336,
+        "generated_tokens": 3,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "probability_status": "conditional label probabilities; uncalibrated"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v1/decisions",
+    "body": {
+      "snapshot_id": "6ccc97ec9988cf20e55ef61bd152ecd8a57545209454a12319b1417c4ac1e8e9",
+      "decisions": {
+        "route0": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route1": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route2": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route3": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route4": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route5": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route6": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route7": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route8": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route9": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route10": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route11": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route12": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route13": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route14": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route15": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route16": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route17": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route18": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route19": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route20": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route21": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route22": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route23": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route24": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route25": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route26": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route27": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route28": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route29": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route30": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route31": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route32": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route33": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route34": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route35": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route36": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route37": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route38": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route39": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route40": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route41": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route42": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route43": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route44": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route45": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route46": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route47": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route48": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route49": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route50": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route51": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route52": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route53": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route54": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route55": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route56": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.625,
+            -24.125
+          ],
+          "probabilities": [
+            0.9999999988634285,
+            1.1032560310896246e-09,
+            3.331544538379873e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.247832335397557e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route57": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route58": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route59": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route60": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route61": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route62": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route63": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.5,
+            -23.875
+          ],
+          "probabilities": [
+            0.9999999987070693,
+            1.2501528647703816e-09,
+            4.277787863438115e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 2.543425603433858e-08,
+          "logit_space": "vocabulary_logprobs"
+        }
+      },
+      "mode": "cached",
+      "projection": "full",
+      "prefix_tokens": 122,
+      "reused_prefix_tokens": 7808,
+      "computed_tokens": 512,
+      "batches": 1,
+      "compile_ms": 0.043000000005122274,
+      "inference_ms": 703.2180419992073,
+      "total_ms": 703.5248750034953,
+      "backend_details": {
+        "engine_cached_tokens": 11264,
+        "generated_tokens": 64,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "probability_status": "conditional label probabilities; uncalibrated"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/v1/decisions",
+    "body": {
+      "snapshot_id": "6ccc97ec9988cf20e55ef61bd152ecd8a57545209454a12319b1417c4ac1e8e9",
+      "decisions": {
+        "eligible": {
+          "type": "boolean",
+          "option_ids": [
+            "true",
+            "false"
+          ],
+          "logits": [
+            -5.379645824432373,
+            -0.0046457452699542046
+          ],
+          "probabilities": [
+            0.004609571816151394,
+            0.9953904281838485
+          ],
+          "selected": "false",
+          "value": false,
+          "normalized_entropy": 0.04241044089203429,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "route": {
+          "type": "choice",
+          "option_ids": [
+            "returns",
+            "delivery",
+            "payment"
+          ],
+          "logits": [
+            0.0,
+            -20.75,
+            -24.1875
+          ],
+          "probabilities": [
+            0.999999998995083,
+            9.73620030322549e-10,
+            3.129696459110982e-11
+          ],
+          "selected": "returns",
+          "value": "returns",
+          "normalized_entropy": 1.9992974979230905e-08,
+          "logit_space": "vocabulary_logprobs"
+        },
+        "condition": {
+          "type": "score",
+          "option_ids": [
+            "0.0",
+            "1.0",
+            "2.0"
+          ],
+          "logits": [
+            -0.7002540230751038,
+            -4.950253963470459,
+            -0.7002540230751038
+          ],
+          "probabilities": [
+            0.496459194748866,
+            0.007081610502268106,
+            0.496459194748866
+          ],
+          "selected": "0.0",
+          "value": 1.0000000000000002,
+          "normalized_entropy": 0.6647939736549018,
+          "logit_space": "vocabulary_logprobs"
+        }
+      },
+      "mode": "cached",
+      "projection": "full",
+      "prefix_tokens": 122,
+      "reused_prefix_tokens": 366,
+      "computed_tokens": 30,
+      "batches": 1,
+      "compile_ms": 0.009916999260894954,
+      "inference_ms": 75.46425000327872,
+      "total_ms": 75.53712499793619,
+      "backend_details": {
+        "engine_cached_tokens": 496,
+        "generated_tokens": 3,
+        "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+        "logit_space": "vocabulary_logprobs"
+      },
+      "probability_status": "conditional label probabilities; uncalibrated"
+    }
+  },
+  {
+    "method": "DELETE",
+    "path": "/v1/contexts?namespace=minicpm-repeat-diagnostic",
+    "body": {
+      "deleted_count": 1
+    }
+  },
+  {
+    "method": "DELETE",
+    "path": "/v1/contexts?namespace=http-smoke",
+    "body": {
+      "deleted_count": 1
+    }
+  }
+]

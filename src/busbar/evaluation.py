@@ -158,7 +158,7 @@ def evaluate(backend, source: Path, mode="cached", projection="auto") -> dict:
             "Scores use this runtime's prompt, not the original SemIf scorer prompt.",
             "Label argmax equals constrained one-token decoding at temperature zero.",
             "Probabilities are uncalibrated. No fitting or temperature tuning on evaluation rows.",
-            "SemIf authored144 labels are model-reviewed synthetic labels, not human-adjudicated.",
+            "Quality is dataset-specific; preserve source provenance and label limitations.",
             "Runtime errors abort the run; partial success is never published as full coverage.",
             "Wall time includes per-state prefill and fanout, excludes model load and warm-up.",
         ],

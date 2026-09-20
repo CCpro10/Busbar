@@ -1,0 +1,224 @@
+{
+  "scope": "Immediate cached repeat, without intervening fanout; same immutable context and questions.",
+  "checks": {
+    "eligible": {
+      "first": "false",
+      "second": "false",
+      "max_probability_delta": 0.0006105532777129523
+    },
+    "route": {
+      "first": "returns",
+      "second": "returns",
+      "max_probability_delta": 2.0184807970077955e-12
+    },
+    "condition": {
+      "first": "2.0",
+      "second": "0.0",
+      "max_probability_delta": 0.12172544478946445
+    }
+  },
+  "events": [
+    {
+      "method": "POST",
+      "path": "/v1/contexts",
+      "body": {
+        "snapshot": {
+          "id": "393a59812ca3a0520f258ea8f3a0bf44f03be76e34a41f7cab4ad5ad1e0f2daa",
+          "namespace": "minicpm-immediate-repeat",
+          "token_count": 122,
+          "cache_bytes": 0,
+          "model": "openbmb/MiniCPM5-2B",
+          "revision": "12a3808a956f869c767195e9266b59c4d21d92e2",
+          "created_at": 1789928895.2171168,
+          "expires_at": 1789929495.217117
+        },
+        "reused": false,
+        "prefill_tokens": 122,
+        "elapsed_ms": 104.26449999795295
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/decisions",
+      "body": {
+        "snapshot_id": "393a59812ca3a0520f258ea8f3a0bf44f03be76e34a41f7cab4ad5ad1e0f2daa",
+        "decisions": {
+          "eligible": {
+            "type": "boolean",
+            "option_ids": [
+              "true",
+              "false"
+            ],
+            "logits": [
+              -5.255253791809082,
+              -0.005253676325082779
+            ],
+            "probabilities": [
+              0.005220125093864346,
+              0.9947798749061356
+            ],
+            "selected": "false",
+            "value": false,
+            "normalized_entropy": 0.047088779713658664,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "route": {
+            "type": "choice",
+            "option_ids": [
+              "returns",
+              "delivery",
+              "payment"
+            ],
+            "logits": [
+              0.0,
+              -20.75,
+              -24.125
+            ],
+            "probabilities": [
+              0.9999999989930646,
+              9.73620030320584e-10,
+              3.331544538811762e-11
+            ],
+            "selected": "returns",
+            "value": "returns",
+            "normalized_entropy": 2.00373565821529e-08,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "condition": {
+            "type": "score",
+            "option_ids": [
+              "0.0",
+              "1.0",
+              "2.0"
+            ],
+            "logits": [
+              -0.9809681177139282,
+              -4.980967998504639,
+              -0.4809681475162506
+            ],
+            "probabilities": [
+              0.37494794841771956,
+              0.006867412043949943,
+              0.6181846395383305
+            ],
+            "selected": "2.0",
+            "value": 1.243236691120611,
+            "normalized_entropy": 0.6365716277618692,
+            "logit_space": "vocabulary_logprobs"
+          }
+        },
+        "mode": "cached",
+        "projection": "full",
+        "prefix_tokens": 122,
+        "reused_prefix_tokens": 336,
+        "computed_tokens": 190,
+        "batches": 1,
+        "compile_ms": 0.01424999936716631,
+        "inference_ms": 178.79954200179782,
+        "total_ms": 178.87037499895087,
+        "backend_details": {
+          "engine_cached_tokens": 336,
+          "generated_tokens": 3,
+          "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+          "logit_space": "vocabulary_logprobs"
+        },
+        "probability_status": "conditional label probabilities; uncalibrated"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/decisions",
+      "body": {
+        "snapshot_id": "393a59812ca3a0520f258ea8f3a0bf44f03be76e34a41f7cab4ad5ad1e0f2daa",
+        "decisions": {
+          "eligible": {
+            "type": "boolean",
+            "option_ids": [
+              "true",
+              "false"
+            ],
+            "logits": [
+              -5.379645824432373,
+              -0.0046457452699542046
+            ],
+            "probabilities": [
+              0.004609571816151394,
+              0.9953904281838485
+            ],
+            "selected": "false",
+            "value": false,
+            "normalized_entropy": 0.04241044089203429,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "route": {
+            "type": "choice",
+            "option_ids": [
+              "returns",
+              "delivery",
+              "payment"
+            ],
+            "logits": [
+              0.0,
+              -20.75,
+              -24.1875
+            ],
+            "probabilities": [
+              0.999999998995083,
+              9.73620030322549e-10,
+              3.129696459110982e-11
+            ],
+            "selected": "returns",
+            "value": "returns",
+            "normalized_entropy": 1.9992974979230905e-08,
+            "logit_space": "vocabulary_logprobs"
+          },
+          "condition": {
+            "type": "score",
+            "option_ids": [
+              "0.0",
+              "1.0",
+              "2.0"
+            ],
+            "logits": [
+              -0.7002540230751038,
+              -4.950253963470459,
+              -0.7002540230751038
+            ],
+            "probabilities": [
+              0.496459194748866,
+              0.007081610502268106,
+              0.496459194748866
+            ],
+            "selected": "0.0",
+            "value": 1.0000000000000002,
+            "normalized_entropy": 0.6647939736549018,
+            "logit_space": "vocabulary_logprobs"
+          }
+        },
+        "mode": "cached",
+        "projection": "full",
+        "prefix_tokens": 122,
+        "reused_prefix_tokens": 366,
+        "computed_tokens": 30,
+        "batches": 1,
+        "compile_ms": 0.009915995178744197,
+        "inference_ms": 74.05124999786494,
+        "total_ms": 74.112750000495,
+        "backend_details": {
+          "engine_cached_tokens": 496,
+          "generated_tokens": 3,
+          "batches_meaning": "one engine submission; internal scheduling is engine-owned",
+          "logit_space": "vocabulary_logprobs"
+        },
+        "probability_status": "conditional label probabilities; uncalibrated"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/contexts?namespace=minicpm-immediate-repeat",
+      "body": {
+        "deleted_count": 1
+      }
+    }
+  ]
+}

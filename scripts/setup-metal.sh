@@ -14,4 +14,4 @@ fi
 uv pip install --python "$busbar_env/bin/python" \
   -r "$busbar_root/requirements-metal.lock" -e "$busbar_root"
 uv pip check --python "$busbar_env/bin/python"
-echo "Ready: $busbar_env/bin/busbar serve --backend vllm-metal --model Qwen/Qwen2.5-3B-Instruct"
+echo "Ready: $busbar_env/bin/busbar serve --backend vllm-metal --model openbmb/MiniCPM5-2B"

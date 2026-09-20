@@ -1,4 +1,4 @@
-"""Compile stable context messages and cacheable question suffixes for Qwen chat models."""
+"""Compile stable context messages and cacheable suffixes for validated ChatML models."""
 
 import hashlib
 import json
@@ -63,7 +63,7 @@ class Compiler:
         self._suffix = lru_cache(maxsize=512)(self._compile_suffix)
 
     def render(self, messages, generation: bool) -> str:
-        """Disable Qwen thinking so the next token is the decision label."""
+        """Disable supported thinking templates so the next token is the decision label."""
         return self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=generation, enable_thinking=False
         )

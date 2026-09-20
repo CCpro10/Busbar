@@ -1,0 +1,11 @@
+{
+  "scope": "First eight fixture rows chosen before port comparison; FP32 CPU versus FP32 MPS, original NanoJev model and token builder unchanged. CUDA not tested.",
+  "rows": 8,
+  "max_probability_delta": 8.642673492431641e-07,
+  "max_logit_delta": 3.635883331298828e-06,
+  "argmax_disagreements": 0,
+  "source_files_identical_between_revisions": [
+    "scripts/train_toy_decisions.py",
+    "scripts/predict_toy_decisions.py"
+  ]
+}

@@ -14,22 +14,26 @@ class HFBackend:
     ):
         """Load on CPU with explicit precision and immutable model/tokenizer versions."""
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 
         if not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise ValueError("revision must be a full immutable Hugging Face commit SHA")
         if dtype not in ("float16", "bfloat16", "float32") or max_tokens < 1:
             raise ValueError("invalid dtype or context limit")
         self.torch = torch
+        config = AutoConfig.from_pretrained(model, revision=revision, trust_remote_code=False)
+        if config.model_type == "qwen3_5":
+            config = config.get_text_config()
+        if config.model_type not in ("qwen2", "qwen3", "qwen3_5_text", "llama"):
+            raise ValueError("HF supports dense Qwen2/3/3.5 and Llama checkpoints")
         self.model = AutoModelForCausalLM.from_pretrained(
             model,
             revision=revision,
+            config=config,
             dtype=getattr(torch, dtype),
             trust_remote_code=False,
             attn_implementation="eager",
         ).eval()
-        if self.model.config.model_type not in ("qwen2", "qwen3"):
-            raise ValueError("HF supports dense Qwen2/3 checkpoints only")
         self.tokenizer = AutoTokenizer.from_pretrained(
             model, revision=revision, trust_remote_code=False
         )
@@ -49,11 +53,14 @@ class HFBackend:
         with torch.inference_mode():
             output = self.model.model(torch.tensor([token_ids]), use_cache=True)
         cache = output.past_key_values
-        nbytes = sum(
-            value.numel() * value.element_size()
-            for layer in cache.layers
-            for value in (layer.keys, layer.values)
-        )
+        # Hybrid layers retain convolution/recurrent tensors instead of K/V.
+        nbytes = 0
+        for layer in cache.layers:
+            for name in ("keys", "values", "conv_states", "recurrent_states"):
+                values = getattr(layer, name, None)
+                for value in values if isinstance(values, (list, tuple)) else (values,):
+                    if isinstance(value, torch.Tensor):
+                        nbytes += value.numel() * value.element_size()
         return PrefixState(cache, nbytes)
 
     def score(self, sequences, labels, prefix, projection) -> BackendResult:

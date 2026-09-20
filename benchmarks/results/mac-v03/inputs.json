@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-21",
+  "hardware": {
+    "chip": "Apple M4 Pro",
+    "memory_bytes": 51539607552,
+    "os": "macOS 15.6.1",
+    "architecture": "arm64"
+  },
+  "native_python": "3.13.13",
+  "metal_python": "3.12.13",
+  "models": {
+    "openbmb/MiniCPM5-2B": "12a3808a956f869c767195e9266b59c4d21d92e2",
+    "Qwen/Qwen3.5-4B": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "C-Tianyu/NanoJev": "047b927b30882a1138fc504821b82ac145a4b81a"
+  },
+  "data_sha256": {
+    "benchmarks/data/semif-authored144.jsonl": "8162d1c73f925af64453f1ec05ef36d583b3815bf698e60f0d454bd11537e079",
+    "local-results/v03/wanli256.jsonl": "40b795d82c8e53c0dbae132f5fc87c33bf0517340c69169474049e784f311c0f",
+    "local-results/v03/wanli-test.jsonl": "4276e0af7fcdf657d1ab7beb54eaf025fda592a76c9ee86b63b7871953fc74fd",
+    "../jev-research/repos/SemIf/benchmarks/data/shape777.jsonl": "8dcf414b12fc2684e3c4ca5f3ebfd3f525f5346fec4a9bc67eb65138101f55f1",
+    "../jev-research/repos/SemIf/benchmarks/manifests/source-selection.jsonl": "81d98a4195971e1fe046673928730b7112a6a7677baf046505761f2504b424c7"
+  },
+  "nano_source_sha256": {
+    "scripts/train_toy_decisions.py": "4f39babd5575e43d7acf3eca357329a93c60041f334bc2bd7424929bf9c0da86",
+    "scripts/predict_toy_decisions.py": "6eedc49aaf9a81763677e3cff4e87fc4e499bfc5decf0bb4678f452f578dd92b"
+  },
+  "nano_checkpoint_sha256": {
+    "config.json": "901038b5f1785c748c3fb4d35131e910951f2178f9a8bf024ff57aca556a30e9",
+    "best.safetensors": "f68c47d66998231b86b7e91b4ed5e82ae23acf104c8b7cd6d165c3ac7b7ffe1b",
+    "tokenizer/tokenizer_config.json": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95",
+    "tokenizer/tokenizer.json": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+    "tokenizer/chat_template.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "backbone_config/config.json": "30c011854471509747858ac07ffb8a4dab2bc6c04035b184729b69500c557c54"
+  },
+  "native_environment": "benchmarks/requirements-compare.lock",
+  "metal_environment": "requirements-metal.lock",
+  "note": "Published timings run sequentially on one Mac. These are decision-only, no-thinking evaluations, not generative reasoning leaderboard reproductions.",
+  "implementation_sha256": {
+    "src/busbar/__init__.py": "8761ea0fb9efdc8e08495f436b18bff2ba5f82dd3542dfcbb06c0a0460c62a92",
+    "src/busbar/backends/__init__.py": "1fd58c09b844c2ee6693cef92b5d12f8c56e76ce4d1b62e8e433ef85a205d4cc",
+    "src/busbar/backends/base.py": "0abdd347af89d6f22378b30645ffde850141139b2bc66d37b6db47179d6869c3",
+    "src/busbar/backends/hf.py": "9f86ab9c82f2bfa84619ee835961d7d9f116b4b093979870a2aa90058b5496f8",
+    "src/busbar/backends/mlx.py": "4fb64e9535be4bfae14b0278c07fbc011313d37e01ec4f23c5608f772c2ab063",
+    "src/busbar/backends/vllm_metal.py": "f4ef14dfd47f462b0e3a12b91358e961308cd07a7260ccad9ae3cfd38bdedba2",
+    "src/busbar/benchmark.py": "13dd3818d4bf28f01ffbecb80803ce131a991494b23dc89e9c7a133d9a9a5d1d",
+    "src/busbar/cli.py": "03e80863d62f473d36bdc582d1932d23a7f1762e18528301d609c6b398ca3174",
+    "src/busbar/compiler.py": "97401e8ca26cc9a9b9d8438e340010c286e7dadf5ce68d9758ffb5aaedb51694",
+    "src/busbar/evaluation.py": "8b670d9fabe1ddbd066e2da7feacb1f984700c432d65ee8b546cbea63bd3ca4e",
+    "src/busbar/profiling.py": "e38d8cdc213283456e5e55fbef9ac7e27e2b0cafd931e3767667d0757721b9ef",
+    "src/busbar/runtime.py": "edb9f3ce5f72d3ea3f42201154038a4694c9caed8f23d63e82525718dfde8ed0",
+    "src/busbar/schemas.py": "57ce05e77d6e6d65d05107cedecf922221a077361a6f0e64c6ddff669edd1085",
+    "src/busbar/server.py": "ea18f28456b90056141a46d7811a22063d1afe428c75fd1faf3e982204f65e50",
+    "benchmarks/compare_projects.py": "be306d4904b275622b710e7f5f0565ca131f10dbc3f4ab471f3658b98b633d8b",
+    "benchmarks/summarize_comparison.py": "a846a5082d89ec6b881db1f347bcfe633b76dd05907f489c67fb01681f1749b4",
+    "examples/http_smoke.py": "6a90337933083ea9cef1278a786d34bc1646744ec2011464cabe71add177a923"
+  },
+  "model_parameters": {
+    "MiniCPM5-2B": 2516756480,
+    "Qwen3.5-4B_text": 4205751296
+  }
+}

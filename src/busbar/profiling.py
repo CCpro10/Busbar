@@ -26,15 +26,13 @@ def distribution(values):
 
 def staged_score(backend, sequences, labels, prefix, projection):
     """Force GPU completion at each boundary; report these as intrusive diagnostic timings."""
-    from mlx_lm.models.cache import BatchKVCache
-
     mx = backend.mx
     phases = dict(
         kv_branch_ms=0.0, input_ms=0.0, transformer_ms=0.0, projection_ms=0.0, readout_ms=0.0
     )
     for indices in length_batches(sequences, backend.batch_size):
         mark = time.perf_counter()
-        cache = [BatchKVCache.merge([layer] * len(indices)) for layer in prefix.cache]
+        cache = [layer.merge([layer] * len(indices)) for layer in prefix.cache]
         mx.eval([layer.state for layer in cache])
         phases["kv_branch_ms"] += (time.perf_counter() - mark) * 1000
         mark = time.perf_counter()

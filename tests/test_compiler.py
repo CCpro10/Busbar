@@ -61,3 +61,19 @@ def test_qwen25_default_system_is_not_injected_inside_cached_conversation(backen
     assert text.count("<|im_start|>system") == 1
     assert "DEFAULT" not in text
     assert text.count("<|im_start|>user") == 2
+
+
+def test_chatml_bos_is_kept_once_across_cached_question(backend, monkeypatch):
+    """MiniCPM's conversation BOS belongs to the prefix, never to each cached question."""
+    original = backend.tokenizer.apply_chat_template
+
+    def with_bos(messages, **kwargs):
+        """Represent a ChatML template that always adds one conversation BOS."""
+        return "<s>" + original(messages, **kwargs)
+
+    monkeypatch.setattr(backend.tokenizer, "apply_chat_template", with_bos)
+    compiler = Compiler(backend.tokenizer)
+    context = compiler.context(ContextSpec(state="blue box"))
+    question = compiler.question(BooleanQuestion(type="boolean", question="Is the box blue?"))
+    reconstructed = backend.tokenizer.decode(context + question.token_ids)
+    assert reconstructed.startswith("<s>") and reconstructed.count("<s>") == 1

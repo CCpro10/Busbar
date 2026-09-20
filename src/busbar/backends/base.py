@@ -8,6 +8,8 @@ DEFAULT_REVISION = "c1899de289a04d12100db370d81485cdf75e47ca"
 MODEL_REVISIONS = {
     DEFAULT_MODEL: DEFAULT_REVISION,
     "Qwen/Qwen2.5-3B-Instruct": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+    "Qwen/Qwen3.5-4B": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "openbmb/MiniCPM5-2B": "12a3808a956f869c767195e9266b59c4d21d92e2",
 }
 
 
