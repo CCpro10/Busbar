@@ -63,8 +63,9 @@ profile 只支持原生 MLX 词表模式。普通端到端计时用于延迟结�
 
 ## 对比其他项目
 
-[对照脚本](../benchmarks/compare_projects.py) 和 [汇总脚本](../benchmarks/summarize_comparison.py) 保存 SemIf、NanoJev 与 Busbar 的实际输出。可比性取决于相同 checkpoint、dtype、数据、提示模板、候选语义及执行路径；换了任一项，就要在结论旁说明。
+[对照脚本](../benchmarks/compare_projects.py) 和 [汇总脚本](../benchmarks/summarize_comparison.py) 保存 SemIf、NanoJev 与 Busbar 的实际输出。与官方 Jev 的对照走另一条路径：TypeSafe 不公开其评测题目，因此使用公开了题目、标签和 `jev-1.13.0` 逐题作答的 Typed Decision Bench，由 [run_tdb.py](../benchmarks/run_tdb.py) 作答、[tdb_score.py](../benchmarks/tdb_score.py) 以上游评分函数打分，见 [同题对照](jev-comparison.md)。可比性取决于相同 checkpoint、dtype、数据、提示模板、候选语义及执行路径；换了任一项，就要在结论旁说明。
 
+- [官方 Jev 同题对照](jev-comparison.md)：Typed Decision Bench 4,370 题上与托管 `jev-1.13.0` 的同口径比较，以及候选上限放开到 26 的实测依据。
 - [0.3 本机报告](mac-v03.md)：较新小模型、SemIf/NanoJev 对照、外部 WANLI，以及 Metal 失败记录。
 - [0.4 本机报告](mac-v04.md)：三个底座训练头与快捷模式的质量/速度对照，NanoJev 原版与功能对齐两种口径。
 - [0.4.1 质量整理](quality-v041.md)：本次代码改进与兼容性回归，不新增通用质量或速度排名。

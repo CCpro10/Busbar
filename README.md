@@ -93,7 +93,7 @@ uv run busbar serve --head models/heads/support-v1 --port 8787
 
 ## 证据与当前边界
 
-仓库包含普通回归、实际模型数值测试、真实 HTTP 验证，以及 SemIf、NanoJev 和 Busbar 的对照原始结果。[验证指南](docs/validation.md) 区分实现正确性、任务质量、端到端延迟与输出头微测量；[0.3](docs/mac-v03.md) 和 [0.4](docs/mac-v04.md) 给出实际设置、逐题结果、比较和失败记录。
+仓库包含普通回归、实际模型数值测试、真实 HTTP 验证，以及 SemIf、NanoJev 和 Busbar 的对照原始结果。[与官方 Jev 的同题对照](docs/jev-comparison.md) 在 Typed Decision Bench 的 4,370 道公开题上用上游评分函数比较 Busbar 与托管 `jev-1.13.0`。[验证指南](docs/validation.md) 区分实现正确性、任务质量、端到端延迟与输出头微测量；[0.3](docs/mac-v03.md) 和 [0.4](docs/mac-v04.md) 给出实际设置、逐题结果、比较和失败记录。
 
 当前服务面向本机：一个进程驻留一个模型，模型操作串行，请求内部可以分批；KV 在内存中，重启后重建。namespace 不提供认证。MiniCPM5/vLLM Metal 的缓存数值一致性尚未通过已有门禁；首次接入可使用原生 MLX。Linux 服务引擎、连续批处理、量化和底座微调尚未实现。
 

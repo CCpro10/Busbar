@@ -35,13 +35,22 @@ def is_withheld(item: dict) -> bool:
     return not item.get("state") or not item.get("questions") or not item.get("gold")
 
 
-def load_items(bench_root: Path, keep_withheld: bool) -> dict[str, list[dict]]:
-    """Frozen suites in the runner's native format, keyed by suite name."""
+def load_items(
+    bench_root: Path, keep_withheld: bool, only: set[str] | None = None
+) -> dict[str, list[dict]]:
+    """Frozen suites in the runner's native format, keyed by suite name.
+
+    `only` restricts scoring to an explicit id set. Comparing two systems needs one shared
+    denominator: when one of them cannot represent some items, scoring the other on those
+    items would put different question sets under the same column heading.
+    """
     suites = {}
     for directory in sorted((bench_root / "suites").iterdir()):
         items = read_jsonl(directory / "items.jsonl")
         if not keep_withheld:
             items = [item for item in items if not is_withheld(item)]
+        if only is not None:
+            items = [item for item in items if item["id"] in only]
         if items:
             suites[directory.name] = items
     return suites
@@ -136,6 +145,12 @@ def main() -> None:
         action="store_true",
         help="score the ids-only items too; they count as unanswered zeros",
     )
+    parser.add_argument(
+        "--only-ids",
+        type=Path,
+        default=None,
+        help="JSON array of item ids; restricts every system to one shared denominator",
+    )
     args = parser.parse_args()
     if args.output.exists():
         parser.error("output exists")
@@ -145,11 +160,17 @@ def main() -> None:
     sys.path.insert(0, str(root / "benchmark"))
     from typed_decision_bench import site_data
 
-    suites = load_items(args.bench, args.keep_withheld)
+    only = set(json.loads(args.only_ids.read_text())) if args.only_ids else None
+    suites = load_items(args.bench, args.keep_withheld, only)
+    if only is not None:
+        found = {item["id"] for items in suites.values() for item in items}
+        if found != only:
+            parser.error(f"{len(only - found)} requested ids are absent from the frozen suites")
     report = {
         "schema_version": 1,
         "upstream_revision": revision,
         "withheld_excluded": not args.keep_withheld,
+        "restricted_to_ids": None if only is None else len(only),
         "suite_counts": {name: len(items) for name, items in suites.items()},
         "systems": {},
     }
