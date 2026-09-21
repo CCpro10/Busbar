@@ -83,7 +83,9 @@ from busbar.backends import load_backend
 
 runtime = Runtime(load_backend("mlx"))
 context = runtime.compile_context(
-    ContextSpec(namespace="ticket-1", state={"message": "I paid once, but my card was charged twice."})
+    ContextSpec(
+        namespace="ticket-1", state={"message": "I paid once, but my card was charged twice."}
+    )
 )
 result = runtime.decide(
     DecisionRequest(
