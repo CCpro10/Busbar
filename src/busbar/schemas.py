@@ -17,6 +17,13 @@ def nonblank_text(value: str) -> str:
 Name = Annotated[str, Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_.:-]+$")]
 Text = Annotated[str, Field(min_length=1, max_length=8192), AfterValidator(nonblank_text)]
 
+# The public ceiling on alternatives per question. Vocabulary readout needs one single-token
+# label per alternative, so the compiler's label alphabet must cover this count; `compiler`
+# asserts that on import instead of repeating the number. Raising it requires a label scheme
+# measured at that width, not just a longer alphabet: accuracy is a property of how the model
+# reads the labels, which tokenization alone does not establish.
+MAX_ALTERNATIVES = 26
+
 
 class Contract(BaseModel):
     """Reject misspelled fields and keep public records immutable."""
@@ -61,10 +68,10 @@ class BooleanQuestion(BaseQuestion):
 
 
 class ChoiceQuestion(BaseQuestion):
-    """Choose exactly one of 2–16 mutually exclusive alternatives."""
+    """Choose exactly one of 2–26 mutually exclusive alternatives."""
 
     type: Literal["choice"]
-    options: tuple[Option, ...] = Field(min_length=2, max_length=16)
+    options: tuple[Option, ...] = Field(min_length=2, max_length=MAX_ALTERNATIVES)
 
     @model_validator(mode="after")
     def unique_ids(self):
@@ -85,7 +92,7 @@ class ScoreQuestion(BaseQuestion):
     """Return the expectation of an explicitly described ordinal scale."""
 
     type: Literal["score"]
-    levels: tuple[ScoreLevel, ...] = Field(min_length=2, max_length=16)
+    levels: tuple[ScoreLevel, ...] = Field(min_length=2, max_length=MAX_ALTERNATIVES)
 
     @model_validator(mode="after")
     def increasing_levels(self):

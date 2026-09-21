@@ -16,7 +16,16 @@ from pydantic import (
 )
 
 from .compiler import alternatives, canonical_json
-from .schemas import ChoiceQuestion, ContextSpec, Contract, Name, Option, Question, Text
+from .schemas import (
+    MAX_ALTERNATIVES,
+    ChoiceQuestion,
+    ContextSpec,
+    Contract,
+    Name,
+    Option,
+    Question,
+    Text,
+)
 from .storage import FileSnapshot
 from .storage import file_sha256 as file_sha256
 
@@ -77,7 +86,7 @@ class SemIfExample(Contract):
     family: Text
     state: JsonValue
     question: Text
-    options: tuple[Option, ...] = Field(min_length=2, max_length=16)
+    options: tuple[Option, ...] = Field(min_length=2, max_length=MAX_ALTERNATIVES)
     label: StrictInt = Field(ge=0)
     provenance: dict[str, JsonValue] = Field(default_factory=dict)
 

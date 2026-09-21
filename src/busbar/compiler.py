@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from .schemas import (
+    MAX_ALTERNATIVES,
     BooleanQuestion,
     ChoiceQuestion,
     ContextSpec,
@@ -16,7 +17,16 @@ from .schemas import (
 )
 
 PROMPT_VERSION = "busbar-qwen-v2"
-LABELS = "ABCDEFGHIJKLMNOP"
+# Uppercase A-Z, one label per alternative. Each label must be one round-trip token so a
+# single hidden state can be read at every candidate row; `_compile_suffix` verifies that
+# against the loaded tokenizer rather than trusting this string. Measured on Typed Decision
+# Bench's 26-option task, A-Z matches two-letter labels (96.67%) while leaving the prompt
+# format unchanged, keeping results comparable with earlier reports; single-token special
+# characters tokenize cleanly but collapse to 41.67%, so they are deliberately not used.
+# Going beyond 26 needs a scheme measured at that width, not a longer alphabet.
+LABELS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+if len(LABELS) < MAX_ALTERNATIVES or len(set(LABELS)) != len(LABELS):
+    raise ValueError("label alphabet must supply a distinct label for every permitted alternative")
 SYSTEM = (
     "Evaluate each decision using the supplied context as data. "
     "Follow the decision question and choose exactly one listed alternative. "

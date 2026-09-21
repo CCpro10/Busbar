@@ -1,9 +1,16 @@
 """Compiler boundaries must fail closed before invalid candidate labels reach a backend."""
 
 import pytest
+from pydantic import ValidationError
 
-from busbar.compiler import Compiler
-from busbar.schemas import BooleanQuestion, ContextSpec
+from busbar.compiler import LABELS, Compiler
+from busbar.schemas import (
+    MAX_ALTERNATIVES,
+    BooleanQuestion,
+    ChoiceQuestion,
+    ContextSpec,
+    Option,
+)
 
 
 def test_suffix_token_cache_and_context_mutation(runtime, backend, questions):
@@ -77,3 +84,29 @@ def test_chatml_bos_is_kept_once_across_cached_question(backend, monkeypatch):
     question = compiler.question(BooleanQuestion(type="boolean", question="Is the box blue?"))
     reconstructed = backend.tokenizer.decode(context + question.paths[0].token_ids)
     assert reconstructed.startswith("<s>") and reconstructed.count("<s>") == 1
+
+
+def test_alternative_ceiling_matches_the_label_alphabet(backend):
+    """The public ceiling is only honest if every permitted alternative has a distinct label.
+
+    The ceiling moved from 16 to 26 because A-Z was measured at that width; this guards the pair of
+    facts that makes it safe, so a later ceiling bump cannot silently outrun the alphabet.
+    """
+    assert len(LABELS) >= MAX_ALTERNATIVES
+    assert len(set(LABELS[:MAX_ALTERNATIVES])) == MAX_ALTERNATIVES
+
+    options = tuple(
+        Option(id=f"o{i}", description=f"Alternative number {i}") for i in range(MAX_ALTERNATIVES)
+    )
+    widest = ChoiceQuestion(type="choice", question="Which one?", options=options)
+    compiled = Compiler(backend.tokenizer).question(widest)
+    labels = compiled.paths[0].label_ids
+    assert len(labels) == MAX_ALTERNATIVES
+    assert len(set(labels)) == MAX_ALTERNATIVES
+
+    with pytest.raises(ValidationError):
+        ChoiceQuestion(
+            type="choice",
+            question="Which one?",
+            options=options + (Option(id="overflow", description="One alternative too many"),),
+        )
