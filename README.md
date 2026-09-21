@@ -1,5 +1,9 @@
 # Busbar
 
+<p align="center">
+  <a href="README.md"><kbd>简体中文</kbd></a> &nbsp; <a href="README.en.md"><kbd>English</kbd></a>
+</p>
+
 **让应用基于同一份上下文，反复完成结构化判断。**
 
 Busbar 是一个可在 Apple Silicon Mac 上运行的开源 LLM 决策运行时。应用提交上下文后，Busbar 将它编译成可复用的 `ContextSnapshot`；后续问题复用模型已经算过的前缀，返回布尔判断、单选结果或带分布的数值评分。
@@ -24,6 +28,32 @@ Busbar 是一个可在 Apple Silicon Mac 上运行的开源 LLM 决策运行时�
 | 应用接口 | 共用 Boolean / Choice / Score 与 snapshot 生命周期 | 同左 |
 
 原生 MLX/HF 可以只计算标签对应的词表行。选择头采用 NanoJev 风格的候选描述评分：`zᵢ = wᵀ LayerNorm(hᵢ)`，再在候选之间做 softmax。两条路线都复用上下文，但选择头有 K 个候选就要运行 K 条后缀路径，**不能仅凭输出层更小就认定更快或更准**。编码、训练及取舍见 [选择头指南](docs/trainable-heads.md)。
+
+## 与官方 Jev 的跑分对比（部分题集）
+
+2026-09-21，我们在 [Typed Decision Bench v0.3](https://blobfish.ai/benchmarks/typed-decision-bench)（TDB）的**同一批 4,370 条样本**上，对比 Busbar 与官方托管模型 `jev-1.13.0`。TDB 是第三方公开评测，不是 TypeSafe 官方私有四工作流评测；Jev 一列来自上游公开的逐题作答，本次没有重新调用 Jev API。
+
+Busbar 使用 **Qwen3.5-4B、BF16、原生 MLX、快捷词表模式**，运行在 M4 Pro / 48 GiB Mac 上。**本表不包含可训练选择头或正在进行的训练优化结果。** 两边均使用上游评分函数，并在同一个样本 ID 子集上重新计算。
+
+| Suite | 样本数 | Jev DS ↑ | Busbar DS ↑ | Jev 准确率 | Busbar 准确率 |
+|---|---:|---:|---:|---:|---:|
+| data-and-operations | 722 | 82.75 | 78.40 | 78.67% | 77.42% |
+| real-time-and-agents | 1,199 | 75.81 | 70.47 | 65.47% | 58.22% |
+| retrieval-and-knowledge | 890 | 82.49 | 77.54 | 79.33% | 71.12% |
+| safety-and-quality | 1,162 | 88.91 | 85.83 | 85.89% | 80.72% |
+| workflow-control | 397 | 85.27 | 81.63 | 81.86% | 76.07% |
+| **同题子集合计** | **4,370** | **82.66** | **78.32** | **77.39%** | **71.62%** |
+
+DS 指 DecisionScore（0–100，越高越好），按每个样本的 `1 − 归一化 Brier` 聚合，衡量概率预测质量；不是准确率。此子集上，Busbar 比 Jev 低 **4.34 分 DS**、**5.77 个百分点准确率**。
+
+**覆盖范围：我们只跑了部分样本，不能视为全量榜单成绩。**
+
+- TDB 共 5,387 条样本；其中 359 条只公开 ID、未公开正文，排除后有 5,028 条可运行样本。
+- Busbar 本次回答 4,370 条：占全量 **81.12%**，占公开正文样本 **86.91%**。另外 658 条含 28–64 个候选，超过本次运行的 26 候选上限，因此排除。
+- Jev 也只在这 4,370 条上计分。上表不能与 TDB 全量榜单直接排位，也不能把差距单独归因于架构、训练方法或推理后端。
+- Busbar 本机推理与 Jev 托管 API 的计时边界不同，不据此给出速度倍数。
+
+可核对 [评分汇总 JSON](benchmarks/results/tdb-2026-09-21/compare-4370.json)（含逐 suite / task 指标、上游评分器版本及结果文件 SHA256）、[运行配置](benchmarks/results/tdb-2026-09-21/busbar-qwen35-full.manifest.json)和[详细对照与复现说明](docs/jev-comparison.md)。题目与 Jev 作答来自 [TDB 公开数据集](https://huggingface.co/datasets/SamuelChien821/typed-decision-bench)；该目录仅发布汇总与配置，不包含题目正文或逐题原始作答。
 
 ## 在 Mac 上开始
 
@@ -74,7 +104,7 @@ runtime.delete_context(context.snapshot.id, namespace="ticket-1")
 
 需要跨 HTTP 请求保留模型与缓存时，运行 `uv run busbar serve --port 8787`，打开 [本机接口文档](http://127.0.0.1:8787/docs)。先 `POST /v1/contexts`，再用返回的 ID 调用 `POST /v1/decisions`；一次可混合 1–64 道题。上下文支持创建、复用、版本化、列表/筛选、删除和 namespace 清理。
 
-Choice 支持 2–16 个带 ID 与描述的选项；Score 支持 2–16 个带描述的递增数值等级，返回概率加权期望。概率是候选集合内的归一化分数，未经业务校准；熵也不代表正确率。[接口指南](docs/api.md) 解释完整字段、生命周期、错误码与内存约束。
+Choice 支持 2–26 个带 ID 与描述的选项；Score 支持 2–26 个带描述的递增数值等级，返回概率加权期望。概率是候选集合内的归一化分数，未经业务校准；熵也不代表正确率。[接口指南](docs/api.md) 解释完整字段、生命周期、错误码与内存约束。
 
 ## 训练自己的选择头
 

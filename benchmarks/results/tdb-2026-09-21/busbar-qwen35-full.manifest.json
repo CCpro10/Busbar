@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "label": "busbar-qwen35-4b",
+  "model": {
+    "backend": "mlx",
+    "model": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "dtype": "bfloat16"
+  },
+  "batch_size": 16,
+  "questions_per_request": 16,
+  "alternative_ceiling": 26,
+  "suites": [
+    "data-and-operations",
+    "real-time-and-agents",
+    "retrieval-and-knowledge",
+    "safety-and-quality",
+    "workflow-control"
+  ],
+  "rows": 5028,
+  "answered": 4370,
+  "skipped_too_wide": 658,
+  "wall_seconds": 3644.57,
+  "result_sha256": "a1978a6e9d15bc7f11144d6dc887867ec2535deae16f098fe4e4a5a91766c24d"
+}
