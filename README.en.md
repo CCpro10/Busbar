@@ -142,4 +142,4 @@ The following guides are in Chinese:
 - [Development guide](CONTRIBUTING.md): environment, style, testing, and contribution requirements.
 - [Changelog](CHANGELOG.md) and [0.4.1 quality review](docs/quality-v041.md): changes, fixes, and validation.
 
-License: [MIT](LICENSE).
+License: [Apache License 2.0](LICENSE).

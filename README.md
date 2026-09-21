@@ -138,4 +138,4 @@ uv run busbar serve --head models/heads/support-v1 --port 8787
 - [开发指南](CONTRIBUTING.md)：环境、代码规范、测试与提交要求。
 - [变更记录](CHANGELOG.md)：版本变化；[0.4.1 整理记录](docs/quality-v041.md) 说明本次修复与验证。
 
-许可证：[MIT](LICENSE)。
+许可证：[Apache License 2.0](LICENSE)。

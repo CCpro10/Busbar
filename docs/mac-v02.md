@@ -151,7 +151,7 @@ BUSBAR_RUN_MODEL_TESTS=1 BUSBAR_TEST_MODEL=Qwen/Qwen2.5-3B-Instruct \
 ```
 
 原始数据位于 `benchmarks/results/mac-v02/`；`SHA256SUMS` 保留校验值，输出命令拒绝覆盖已有文件。
-Qwen2.5-3B 权重许可见其模型卡，Busbar 的 MIT 许可不改变模型许可。
+Qwen2.5-3B 权重许可见其模型卡，Busbar 的[源码许可](../LICENSE)不改变模型许可。
 
 ## 已知运行时限制
 
